@@ -35,31 +35,47 @@
       <div class="container overflow-y-auto">
         <div class="grid grid-cols-12 gap-4 xxl:gap-6 items-center relative z-[4] text-neutral-700 dark:text-neutral-20 py-12">
           <div class="col-span-12 lg:col-span-6 xxl:col-span-5">
-            <h3 class="mb-4 xl:mb-6">Welcome Back!</h3>
-            <p class="mb-7 xl:mb-10">Sign in to your account and join us</p>
-            <form class="">
+            <h3 class="mb-4 xl:mb-6">Barayoro!</h3>
+            <p class="mb-7 xl:mb-10">Connectez-vous à votre compte entreprise</p>
+                @if($errors->any())
+                                <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6">
+                        <ul class="list-disc list-inside text-sm">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-6">
+                        {{ session('success') }}
+                    </div>
+                 @endif
+            <form method="POST" action="{{ route('login.post') }}" class="">
+                @csrf
               <div class="form-input mb-4 xl:mb-6">
-                <input type="text" id="email" class="!rounded-full" placeholder="Enter Email" required />
-                <label for="email">Email Address</label>
+                <input name="email" type="text" id="email" class="!rounded-full" placeholder="votre email" required />
+                <label for="email">Email </label>
               </div>
               <div x-data="{showPass: false}" class="form-input rounded-3xl">
-                <input :type="showPass?'text':'password'" id="pass2" class="!rounded-full" placeholder="Textfield" />
-                <label for="pass2">Password</label>
+                <input :type="showPass?'text':'password'" name="password" id="pass2" class="!rounded-full" placeholder="Textfield" />
+                <label for="pass2">Mot de passe</label>
                 <span @click="showPass = !showPass" class="absolute ltr:right-5 rtl:left-5 top-1/2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-neutral-40 dark:hover:bg-neutral-700">
                   <i x-show="showPass" class="las la-eye text-xl"></i>
                   <i x-show="!showPass" class="las la-eye-slash text-xl"></i>
                 </span>
               </div>
               <div class="flex justify-end mt-2 mb-5">
-                <a href="forgot-password.html" class="text-secondary-300">Forgot Password</a>
+                <a href="forgot-password.html" class="text-secondary-300">Mot de passe oublié ?</a>
               </div>
-              <p class="mb-7 xl:mb-10">Don't have an account? <a href="{{ route('register') }}" class="font-semibold text-primary-300">Signup</a></p>
-              <button class="btn-primary w-full">Login</button>
+              <p class="mb-7 xl:mb-10"> Vous n'avez pas de compte ?  <a href="{{ route('register') }}" class="font-semibold text-primary-300">Créer un compt</a></p>
+              <button type="submit" class="btn-primary w-full">Se connecter</button>
             </form>
           </div>
           <div class="col-span-12 lg:col-span-6 xxl:col-start-7 flex justify-center">
             <div class="size-72 sm:size-[450px] xxl:size-[636px] rounded-full bg-neutral-30 dark:bg-neutral-700 f-center">
-              <img src="assets/images/login-1.png" alt="" />
+              <img src="{{ asset('assets/images/login-1.png') }}" alt="" />
             </div>
           </div>
         </div>

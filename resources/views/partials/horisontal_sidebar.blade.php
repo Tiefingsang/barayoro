@@ -2,15 +2,13 @@
     <div class="max-w-[1704px] mx-auto">
       <ul class="flex gap-5 items-center">
         <li class="relative group">
-          <button class="inline-flex py-3 text-sm font-medium items-center gap-2">Dashboards <i class="las la-plus group-hover:hidden text-lg"></i><i class="las la-minus hidden text-lg group-hover:inline-block"></i></button>
+          <button class="inline-flex py-3 text-sm font-medium items-center gap-2">Admin <i class="las la-plus group-hover:hidden text-lg"></i><i class="las la-minus hidden text-lg group-hover:inline-block"></i></button>
           <ul class="submenu-horiz">
-            <li><a href="index.html" class="link-horiz menu-link-horiz">Crypto</a></li>
-            <li><a href="nft.html" class="link-horiz menu-link-horiz">NFT</a></li>
-            <li><a href="music.html" class="link-horiz menu-link-horiz">Music</a></li>
-            <li><a href="app.html" class="link-horiz menu-link-horiz">App</a></li>
+            <li><a href="{{ route('dasbord.index') }}" class="link-horiz menu-link-horiz">HOME</a></li>
+
             <li><a href="e-commerce.html" class="link-horiz menu-link-horiz">E-commerce</a></li>
             <li><a href="analytics.html" class="link-horiz menu-link-horiz">Analytics</a></li>
-            <li><a href="banking.html" class="link-horiz menu-link-horiz">Banking</a></li>
+            <li><a href="{{ route('finance.index') }}" class="link-horiz menu-link-horiz">Finance</a></li>
             <li><a href="booking.html" class="link-horiz menu-link-horiz">Booking</a></li>
             <li><a href="file.html" class="link-horiz menu-link-horiz">File</a></li>
           </ul>

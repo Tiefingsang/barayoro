@@ -40,26 +40,26 @@
               </clippath>
             </defs>
           </svg>
-          <span class="h4 shrink-0 max-[380px]:hidden"><span class="text-neutral-700 dark:text-neutral-0 h4">Softify</span></span>
+          <span class="h4 shrink-0 max-[380px]:hidden"><span class="text-neutral-700 dark:text-neutral-0 h4">Barayoro</span></span>
         </a>
 
         <button :class="$store.app.menu=='horizontal'?'xl:hidden':''" @click="$store.app.toggleSidebar()"><i class="las la-bars text-2xl"></i></button>
 
         <form :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-0 dark:bg-neutral-904'" class="max-w-[357px] max-md:hidden rounded-lg border focus-within:border-primary-300 border-neutral-30 dark:border-neutral-500 p-1 flex items-center">
-          <input type="text" class="px-4 w-full bg-transparent text-sm" placeholder="Search..." />
+          <input type="text" class="px-4 w-full bg-transparent text-sm" placeholder="Rechercher..." />
           <span class="size-8 shrink-0 rounded-full f-center">
             <i class="las la-search text-xl"></i>
           </span>
         </form>
       </div>
       <div class="flex gap-3 xxl:gap-4 items-center">
-        <!-- full screen toggle btn -->
-        <button title="Toggle Fullscreen" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" id="fullscreenButton" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
+        <!-- Bouton plein écran -->
+        <button title="Basculer en plein écran" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" id="fullscreenButton" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
           <i class="las la-expand text-xl full-screen-icon"></i>
         </button>
-        <!-- Dark ligth switch -->
+        <!-- Interrupteur thème clair/sombre -->
         <button
-          title="Toggle Theme"
+          title="Changer le thème"
           :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'"
           x-cloak
           x-show="$store.app.theme === 'light'"
@@ -68,12 +68,12 @@
         >
           <i class="las la-moon"></i>
         </button>
-        <button title="Toggle Theme" x-cloak x-show="$store.app.theme === 'dark'" @click="$store.app.toggleTheme('light')" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 bg-neutral-20 text-xl dark:border-neutral-500 dark:bg-neutral-700">
+        <button title="Changer le thème" x-cloak x-show="$store.app.theme === 'dark'" @click="$store.app.toggleTheme('light')" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 bg-neutral-20 text-xl dark:border-neutral-500 dark:bg-neutral-700">
           <i class="las la-sun"></i>
         </button>
-        <!-- Language switch -->
-        <div x-data="{open:false,selected:'English',options:['English','French','Spanish','Arabic']}" class="relative">
-          <button title="Change Language" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" @click="open = !open" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
+        <!-- Sélecteur de langue -->
+        <div x-data="{open:false,selected:'Français',options:['Français','Anglais','Espagnol','Arabe']}" class="relative">
+          <button title="Changer la langue" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" @click="open = !open" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
             <i class="las la-language"></i>
           </button>
           <div @click.away="open = false" x-show="open" class="absolute w-[150px] z-20 bg-neutral-0 dark:bg-neutral-904 top-full ltr:right-0 shadow-lg rtl:left-0 p-2 rounded-xl">
@@ -85,7 +85,7 @@
           </div>
         </div>
 
-        <!-- Notification switch -->
+        <!-- Notifications -->
         <div class="relative" x-data="{open:false}">
           <span class="size-4 text-xs absolute -top-1 -right-1 f-center text-neutral-0 bg-primary-300 rounded-full"> 2 </span>
           <button title="Notifications" @click="open = !open" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
@@ -98,7 +98,7 @@
           >
             <div class="flex items-center justify-between border-b p-3 dark:border-n500 lg:px-4">
               <h5 class="h5">Notifications</h5>
-              <a href="#" class="text-xs text-primary-300"> View All </a>
+              <a href="#" class="text-xs text-primary-300"> Voir tout </a>
             </div>
             <ul class="flex w-[300px] flex-col p-4">
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
@@ -106,9 +106,9 @@
                 <div class="text-sm">
                   <div class="flex gap-1">
                     <span class="font-medium">Otwell</span>
-                    <span>Sent a message</span>
+                    <span>a envoyé un message</span>
                   </div>
-                  <span class="text-xs text-n100 dark:text-n50">1 hour ago</span>
+                  <span class="text-xs text-n100 dark:text-n50">Il y a 1 heure</span>
                 </div>
               </div>
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
@@ -116,9 +116,9 @@
                 <div class="text-sm">
                   <div class="flex gap-1">
                     <span class="font-medium">David</span>
-                    <span>Left a Comment</span>
+                    <span>a laissé un commentaire</span>
                   </div>
-                  <span class="text-xs text-n100 dark:text-n50">1 hour ago</span>
+                  <span class="text-xs text-n100 dark:text-n50">Il y a 1 heure</span>
                 </div>
               </div>
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
@@ -126,9 +126,9 @@
                 <div class="text-sm">
                   <div class="flex gap-1">
                     <span class="font-medium">Benjamin</span>
-                    <span>Sent a message</span>
+                    <span>a envoyé un message</span>
                   </div>
-                  <span class="text-xs text-n100 dark:text-n50">2 hour ago</span>
+                  <span class="text-xs text-n100 dark:text-n50">Il y a 2 heures</span>
                 </div>
               </div>
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
@@ -136,9 +136,9 @@
                 <div class="text-sm">
                   <div class="flex gap-1">
                     <span class="font-medium">Samuel</span>
-                    <span>Uploaded a file</span>
+                    <span>a téléchargé un fichier</span>
                   </div>
-                  <span class="text-xs text-n100 dark:text-n50">Yesterday</span>
+                  <span class="text-xs text-n100 dark:text-n50">Hier</span>
                 </div>
               </div>
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
@@ -146,37 +146,37 @@
                 <div class="text-sm">
                   <div class="flex gap-1">
                     <span class="font-medium">David</span>
-                    <span>Left a Comment</span>
+                    <span>a laissé un commentaire</span>
                   </div>
-                  <span class="text-xs text-n100 dark:text-n50">Yesterday</span>
+                  <span class="text-xs text-n100 dark:text-n50">Hier</span>
                 </div>
               </div>
             </ul>
           </div>
         </div>
 
-        <!-- user profile -->
+        <!-- Profil utilisateur -->
         <div x-data="dropdown" class="relative shrink-0">
-          <div title="User Profile" @click="toggle" class="size-9 cursor-pointer">
-            <img src="assets/images/users/user-s-4.png" class="rounded-full" alt="profile img" />
+          <div title="Profil utilisateur" @click="toggle" class="size-9 cursor-pointer">
+            <img src="assets/images/users/user-s-4.png" class="rounded-full" alt="photo de profil" />
           </div>
           <div @click.away="close" x-show="isOpen" class="absolute top-full z-20 rounded-md bg-neutral-0 shadow-[0px_6px_30px_0px_rgba(0,0,0,0.08)] duration-300 dark:bg-neutral-904 ltr:right-0 ltr:origin-top-right rtl:left-0 rtl:origin-top-left">
             <div class="flex flex-col items-center border-b border-neutral-30 p-3 text-center dark:border-neutral-500 lg:p-4">
-              <img src="assets/images/users/user-s-4.png" width="60" height="60" class="rounded-full" alt="profile img" />
-              <h6 class="h6 mt-2">William James</h6>
-              <span class="text-sm">james@mail.com</span>
+              <img src="assets/images/users/user-s-4.png" width="60" height="60" class="rounded-full" alt="photo de profil" />
+              <h6 class="h6 mt-2">{{ Auth::user()->name ?? 'Utilisateur' }}</h6>
+              <span class="text-sm">{{ Auth::user()->email ?? 'email@exemple.com' }}</span>
             </div>
             <ul class="flex w-[250px] flex-col p-4">
               <li>
-                <a href="user-profile.html" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
+                <a href="{{-- {{ route('profile') ?? '#' }} --}}" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
                   <span>
                     <i class="las la-user mt-0.5 text-xl"></i>
                   </span>
-                  Profile
+                  Profil
                 </a>
               </li>
               <li>
-                <a href="chat.html" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
+                <a href="{{ route('chat') ?? '#' }}" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
                   <span>
                     <i class="las la-envelope mt-0.5 text-xl"></i>
                   </span>
@@ -188,24 +188,27 @@
                   <span>
                     <i class="las la-life-ring mt-0.5 text-xl"></i>
                   </span>
-                  Help
+                  Aide
                 </a>
               </li>
               <li>
-                <a href="user-account.html" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
+                <a href="{{-- {{ route('settings') ?? '#' }} --}}" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
                   <span>
                     <i class="las la-cog mt-0.5 text-xl"></i>
                   </span>
-                  Settings
+                  Paramètres
                 </a>
               </li>
               <li>
-                <a href="login.html" class="flex items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
-                  <span>
-                    <i class="las la-sign-out-alt mt-0.5 text-xl"></i>
-                  </span>
-                  Logout
-                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                  @csrf
+                  <button type="submit" class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 duration-300 hover:bg-primary-300/10 hover:text-primary-300">
+                    <span>
+                      <i class="las la-sign-out-alt mt-0.5 text-xl"></i>
+                    </span>
+                    Déconnexion
+                  </button>
+                </form>
               </li>
             </ul>
           </div>

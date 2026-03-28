@@ -4,7 +4,7 @@
         <li class="relative group">
           <button class="inline-flex py-3 text-sm font-medium items-center gap-2">Admin <i class="las la-plus group-hover:hidden text-lg"></i><i class="las la-minus hidden text-lg group-hover:inline-block"></i></button>
           <ul class="submenu-horiz">
-            <li><a href="{{ route('dasbord.index') }}" class="link-horiz menu-link-horiz">HOME</a></li>
+            <li><a href="{{ route('dashboard') }}" class="link-horiz menu-link-horiz">HOME</a></li>
 
             <li><a href="e-commerce.html" class="link-horiz menu-link-horiz">E-commerce</a></li>
             <li><a href="analytics.html" class="link-horiz menu-link-horiz">Analytics</a></li>

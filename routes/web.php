@@ -22,6 +22,19 @@ use App\Http\Controllers\CommentController;
 |--------------------------------------------------------------------------
 */
 
+// Pages publiques
+Route::get('/conditions-utilisation', function () {
+    return view('pages.terms');
+})->name('terms');
+
+Route::get('/politique-confidentialite', function () {
+    return view('pages.privacy');
+})->name('privacy');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
 // ==================== ROUTES PUBLIQUES ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');

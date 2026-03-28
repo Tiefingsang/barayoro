@@ -71,7 +71,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ route('finance') }}" class="menu-link vertical-menu">
+          <a href="{{ route('finance.index') }}" class="menu-link vertical-menu">
             <i class="las la-piggy-bank text-xl text-primary-300"></i>
             <span>Finance</span>
           </a>
@@ -100,22 +100,22 @@
           <div x-show="opened=='user'" x-collapse>
             <ul class="submenu-v" data-submenu="user">
               <li>
-                <a href="{{ route('users.profile') }}" class="dropdown-link submenu-link-v">Profil</a>
+                <a href="" class="dropdown-link submenu-link-v">Profil</a>
               </li>
               <li>
-                <a href="{{ route('users.cards') }}" class="dropdown-link submenu-link-v">Cartes</a>
+                <a href="" class="dropdown-link submenu-link-v">Cartes</a>
               </li>
               <li>
-                <a href="{{ route('users.list') }}" class="dropdown-link submenu-link-v">Liste</a>
+                <a href="{{ route('users.index') }}" class="dropdown-link submenu-link-v">Liste</a>
               </li>
               <li>
                 <a href="{{ route('users.create') }}" class="dropdown-link submenu-link-v">Créer</a>
               </li>
               <li>
-                <a href="{{ route('users.edit') }}" class="dropdown-link submenu-link-v">Modifier</a>
+                <a href="" class="dropdown-link submenu-link-v">Modifier</a>
               </li>
               <li>
-                <a href="{{ route('users.account') }}" class="dropdown-link submenu-link-v">Compte</a>
+                <a href="{{ route('users.index') }}" class="dropdown-link submenu-link-v">Compte</a>
               </li>
             </ul>
           </div>
@@ -139,13 +139,13 @@
                 <a href="{{ route('products.list') }}" class="dropdown-link submenu-link-v">Liste produits</a>
               </li>
               <li>
-                <a href="{{ route('products.details') }}" class="dropdown-link submenu-link-v">Détails produit</a>
+                <a href="" class="dropdown-link submenu-link-v">Détails produit</a>
               </li>
               <li>
                 <a href="{{ route('products.create') }}" class="dropdown-link submenu-link-v">Créer produit</a>
               </li>
               <li>
-                <a href="{{ route('products.edit') }}" class="dropdown-link submenu-link-v">Modifier produit</a>
+                <a href="" class="dropdown-link submenu-link-v">Modifier produit</a>
               </li>
               <li>
                 <a href="{{ route('reviews.manage') }}" class="dropdown-link submenu-link-v">Gérer les avis</a>
@@ -178,7 +178,7 @@
                 <a href="{{ route('orders.list') }}" class="dropdown-link submenu-link-v">Liste des commandes</a>
               </li>
               <li>
-                <a href="{{ route('orders.details') }}" class="dropdown-link submenu-link-v">Détails commande</a>
+                <a href="" class="dropdown-link submenu-link-v">Détails commande</a>
               </li>
             </ul>
           </div>
@@ -196,23 +196,23 @@
           <div x-show="opened=='invoice'" x-collapse>
             <ul class="submenu-v" data-submenu="invoice">
               <li>
-                <a href="{{ route('invoices.list') }}" class="dropdown-link submenu-link-v">Liste des factures</a>
+                <a href="" class="dropdown-link submenu-link-v">Liste des factures</a>
               </li>
               <li>
-                <a href="{{ route('invoices.details') }}" class="dropdown-link submenu-link-v">Détails facture</a>
+                <a href="" class="dropdown-link submenu-link-v">Détails facture</a>
               </li>
               <li>
                 <a href="{{ route('invoices.create') }}" class="dropdown-link submenu-link-v">Créer facture</a>
               </li>
               <li>
-                <a href="{{ route('invoices.edit') }}" class="dropdown-link submenu-link-v">Modifier facture</a>
+                <a href="" class="dropdown-link submenu-link-v">Modifier facture</a>
               </li>
             </ul>
           </div>
         </li>
 
         <li>
-          <a href="{{ route('file.manager') }}" class="menu-link vertical-menu">
+          <a href="" class="menu-link vertical-menu">
             <i class="las la-file text-xl text-primary-300"></i>
             <span>Gestionnaire de fichiers</span>
           </a>
@@ -246,35 +246,7 @@
       <p class="text-xs font-semibold mb-3 mt-5">PAGES</p>
       <ul class="flex flex-col gap-2 bb-dashed-n30 xl:mb-5 xl:pb-5 m-text font-medium">
 
-        <!-- Blog -->
-        <li class="relative">
-          <button :class="opened=='blog' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('blog')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-newspaper text-xl text-primary-300"></i>
-              <span>Blog</span>
-            </span>
-            <i :class="opened=='blog' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='blog'" x-collapse>
-            <ul class="submenu-v" data-submenu="blog">
-              <li>
-                <a href="{{ route('blog.grid') }}" class="dropdown-link submenu-link-v">Grille</a>
-              </li>
-              <li>
-                <a href="{{ route('blog.list') }}" class="dropdown-link submenu-link-v">Liste</a>
-              </li>
-              <li>
-                <a href="{{ route('blog.details') }}" class="dropdown-link submenu-link-v">Détails</a>
-              </li>
-              <li>
-                <a href="{{ route('blog.create') }}" class="dropdown-link submenu-link-v">Créer</a>
-              </li>
-              <li>
-                <a href="{{ route('blog.edit') }}" class="dropdown-link submenu-link-v">Modifier</a>
-              </li>
-            </ul>
-          </div>
-        </li>
+
 
         <!-- Offres d'emploi -->
         <li class="relative">
@@ -291,13 +263,13 @@
                 <a href="{{ route('jobs.list') }}" class="dropdown-link submenu-link-v">Liste des offres</a>
               </li>
               <li>
-                <a href="{{ route('jobs.details') }}" class="dropdown-link submenu-link-v">Détails offre</a>
+                <a href="" class="dropdown-link submenu-link-v">Détails offre</a>
               </li>
               <li>
                 <a href="{{ route('jobs.create') }}" class="dropdown-link submenu-link-v">Créer offre</a>
               </li>
               <li>
-                <a href="{{ route('jobs.edit') }}" class="dropdown-link submenu-link-v">Modifier offre</a>
+                <a href="" class="dropdown-link submenu-link-v">Modifier offre</a>
               </li>
             </ul>
           </div>
@@ -318,13 +290,13 @@
                 <a href="{{ route('tours.list') }}" class="dropdown-link submenu-link-v">Liste des tours</a>
               </li>
               <li>
-                <a href="{{ route('tours.details') }}" class="dropdown-link submenu-link-v">Détails tour</a>
+                <a href="" class="dropdown-link submenu-link-v">Détails tour</a>
               </li>
               <li>
                 <a href="{{ route('tours.create') }}" class="dropdown-link submenu-link-v">Créer tour</a>
               </li>
               <li>
-                <a href="{{ route('tours.edit') }}" class="dropdown-link submenu-link-v">Modifier tour</a>
+                <a href="" class="dropdown-link submenu-link-v">Modifier tour</a>
               </li>
             </ul>
           </div>
@@ -366,243 +338,22 @@
           </div>
         </li>
 
-        <!-- Authentification -->
-        <li class="relative">
-          <button :class="opened=='auth' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('auth')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-user-lock text-xl text-primary-300"></i>
-              <span>Authentification</span>
-            </span>
-            <i :class="opened=='auth' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='auth'" x-collapse>
-            <ul class="submenu-v" data-submenu="auth">
-              <li>
-                <a href="{{ route('login') }}" class="dropdown-link submenu-link-v">Connexion</a>
-              </li>
-              <li>
-                <a href="{{ route('login.modern') }}" class="dropdown-link submenu-link-v">Connexion moderne</a>
-              </li>
-              <li>
-                <a href="{{ route('register') }}" class="dropdown-link submenu-link-v">Inscription</a>
-              </li>
-              <li>
-                <a href="{{ route('register.modern') }}" class="dropdown-link submenu-link-v">Inscription moderne</a>
-              </li>
-              <li>
-                <a href="{{ route('password.forgot') }}" class="dropdown-link submenu-link-v">Mot de passe oublié</a>
-              </li>
-              <li>
-                <a href="{{ route('password.forgot.modern') }}" class="dropdown-link submenu-link-v">Mot de passe oublié moderne</a>
-              </li>
-              <li>
-                <a href="{{ route('verify.email') }}" class="dropdown-link submenu-link-v">Vérifier email</a>
-              </li>
-              <li>
-                <a href="{{ route('verify.email.modern') }}" class="dropdown-link submenu-link-v">Vérifier email moderne</a>
-              </li>
-              <li>
-                <a href="{{ route('password.new') }}" class="dropdown-link submenu-link-v">Nouveau mot de passe</a>
-              </li>
-              <li>
-                <a href="{{ route('password.new.modern') }}" class="dropdown-link submenu-link-v">Nouveau mot de passe moderne</a>
-              </li>
-            </ul>
-          </div>
-        </li>
 
-        <!-- Erreurs -->
-        <li class="relative">
-          <button :class="opened=='error' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('error')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-exclamation-circle text-xl text-primary-300"></i>
-              <span>Erreurs</span>
-            </span>
-            <i :class="opened=='error' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='error'" x-collapse>
-            <ul class="submenu-v" data-submenu="error">
-              <li>
-                <a href="{{ route('error.403') }}" class="dropdown-link submenu-link-v">Erreur 403</a>
-              </li>
-              <li>
-                <a href="{{ route('error.404') }}" class="dropdown-link submenu-link-v">Erreur 404</a>
-              </li>
-              <li>
-                <a href="{{ route('error.500') }}" class="dropdown-link submenu-link-v">Erreur 500</a>
-              </li>
-            </ul>
-          </div>
-        </li>
+
+
       </ul>
 
       <p class="text-xs font-semibold mb-3 mt-5">COMPOSANTS</p>
       <ul class="flex flex-col gap-2 bb-dashed-n30 xl:mb-5 xl:pb-5 m-text font-medium">
 
-        <!-- Composants UI -->
-        <li class="relative">
-          <button :class="opened=='component' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('component')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-puzzle-piece text-xl text-primary-300"></i>
-              <span>Composants</span>
-            </span>
-            <i :class="opened=='component' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='component'" x-collapse>
-            <ul class="submenu-v" data-submenu="component">
-              <li><a href="{{ route('components.alert') }}" class="dropdown-link submenu-link-v">Alertes</a></li>
-              <li><a href="{{ route('components.accordion') }}" class="dropdown-link submenu-link-v">Accordéon</a></li>
-              <li><a href="{{ route('components.avatar') }}" class="dropdown-link submenu-link-v">Avatars</a></li>
-              <li><a href="{{ route('components.badge') }}" class="dropdown-link submenu-link-v">Badges</a></li>
-              <li><a href="{{ route('components.breadcrumbs') }}" class="dropdown-link submenu-link-v">Fil d'Ariane</a></li>
-              <li><a href="{{ route('components.buttons') }}" class="dropdown-link submenu-link-v">Boutons</a></li>
-              <li><a href="{{ route('components.chip') }}" class="dropdown-link submenu-link-v">Puces</a></li>
-              <li><a href="{{ route('components.modal') }}" class="dropdown-link submenu-link-v">Modales</a></li>
-              <li><a href="{{ route('components.list') }}" class="dropdown-link submenu-link-v">Listes</a></li>
-              <li><a href="{{ route('components.menu') }}" class="dropdown-link submenu-link-v">Menus</a></li>
-              <li><a href="{{ route('components.pagination') }}" class="dropdown-link submenu-link-v">Pagination</a></li>
-              <li><a href="{{ route('components.popover') }}" class="dropdown-link submenu-link-v">Popovers</a></li>
-              <li><a href="{{ route('components.progress') }}" class="dropdown-link submenu-link-v">Barres de progression</a></li>
-              <li><a href="{{ route('components.rating') }}" class="dropdown-link submenu-link-v">Évaluations</a></li>
-              <li><a href="{{ route('components.stepper') }}" class="dropdown-link submenu-link-v">Étapes</a></li>
-              <li><a href="{{ route('components.tabs') }}" class="dropdown-link submenu-link-v">Onglets</a></li>
-              <li><a href="{{ route('components.timeline') }}" class="dropdown-link submenu-link-v">Chronologie</a></li>
-            </ul>
-          </div>
-        </li>
 
-        <!-- Formulaires -->
-        <li class="relative">
-          <button :class="opened=='form' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('form')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="lab la-wpforms text-xl text-primary-300"></i>
-              <span>Formulaires</span>
-            </span>
-            <i :class="opened=='form' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='form'" x-collapse>
-            <ul class="submenu-v" data-submenu="form">
-              <li><a href="{{ route('forms.input') }}" class="dropdown-link submenu-link-v">Champs de saisie</a></li>
-              <li><a href="{{ route('forms.checkbox') }}" class="dropdown-link submenu-link-v">Cases à cocher</a></li>
-              <li><a href="{{ route('forms.radio') }}" class="dropdown-link submenu-link-v">Boutons radio</a></li>
-              <li><a href="{{ route('forms.switch') }}" class="dropdown-link submenu-link-v">Interrupteurs</a></li>
-              <li><a href="{{ route('forms.pickers') }}" class="dropdown-link submenu-link-v">Sélecteurs</a></li>
-            </ul>
-          </div>
-        </li>
 
-        <!-- Plugins -->
-        <li class="relative">
-          <button :class="opened=='plugin' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('plugin')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-plug text-xl text-primary-300"></i>
-              <span>Plugins</span>
-            </span>
-            <i :class="opened=='plugin' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='plugin'" x-collapse>
-            <ul class="submenu-v" data-submenu="plugin">
-              <li><a href="{{ route('plugins.carousel') }}" class="dropdown-link submenu-link-v">Carrousel</a></li>
-              <li><a href="{{ route('plugins.slider') }}" class="dropdown-link submenu-link-v">Slider</a></li>
-              <li><a href="{{ route('plugins.tooltip') }}" class="dropdown-link submenu-link-v">Info-bulles</a></li>
-              <li><a href="{{ route('plugins.editor') }}" class="dropdown-link submenu-link-v">Éditeur</a></li>
-              <li><a href="{{ route('plugins.upload') }}" class="dropdown-link submenu-link-v">Téléversement</a></li>
-              <li><a href="{{ route('plugins.toast') }}" class="dropdown-link submenu-link-v">Notifications toast</a></li>
-            </ul>
-          </div>
-        </li>
 
-        <!-- Tables -->
-        <li class="relative">
-          <button :class="opened=='table' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('table')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-table text-xl text-primary-300"></i>
-              <span>Tables</span>
-            </span>
-            <i :class="opened=='table' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='table'" x-collapse>
-            <ul class="submenu-v" data-submenu="table">
-              <li><a href="{{ route('tables.basic') }}" class="dropdown-link submenu-link-v">Table basique</a></li>
-              <li><a href="{{ route('tables.data') }}" class="dropdown-link submenu-link-v">Table de données</a></li>
-            </ul>
-          </div>
-        </li>
 
-        <li>
-          <a href="{{ route('icons') }}" class="menu-link vertical-menu">
-            <i class="las la-icons text-xl text-primary-300"></i>
-            <span>Icônes</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('charts') }}" class="menu-link vertical-menu">
-            <i class="las la-chart-pie text-xl text-primary-300"></i>
-            <span>Graphiques</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('maps') }}" class="menu-link vertical-menu">
-            <i class="las la-map text-xl text-primary-300"></i>
-            <span>Cartes</span>
-          </a>
-        </li>
-      </ul>
 
-      <p class="text-xs font-semibold mb-3 mt-5">RÔLES & PERMISSIONS</p>
-      <ul class="flex flex-col gap-2 bb-dashed-n30 xl:mb-5 xl:pb-5 m-text font-medium">
-        <li>
-          <a href="{{ route('roles') }}" class="menu-link vertical-menu">
-            <i class="las la-cog text-xl text-primary-300"></i>
-            <span>Rôles</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('permissions') }}" class="menu-link vertical-menu">
-            <i class="las la-user-check text-xl text-primary-300"></i>
-            <span>Permissions</span>
-          </a>
-        </li>
-      </ul>
 
-      <p class="text-xs font-semibold mb-3 mt-5">DOCUMENTATION</p>
-      <ul class="flex flex-col gap-2 bb-dashed-n30 xl:mb-5 xl:pb-5 m-text font-medium">
-        <li>
-          <a href="{{ route('docs.getting-started') }}" class="menu-link vertical-menu">
-            <i class="las la-life-ring text-xl text-primary-300"></i>
-            <span>Démarrage</span>
-          </a>
-        </li>
-        <li class="relative">
-          <button :class="opened=='customization' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('customization')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-cog text-xl text-primary-300"></i>
-              <span>Personnalisation</span>
-            </span>
-            <i :class="opened=='customization' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='customization'" x-collapse>
-            <ul class="submenu-v" data-submenu="customization">
-              <li><a href="{{ route('docs.configuration') }}" class="dropdown-link submenu-link-v">Configuration</a></li>
-              <li><a href="{{ route('docs.dark-mode') }}" class="dropdown-link submenu-link-v">Mode sombre</a></li>
-              <li><a href="{{ route('docs.colors') }}" class="dropdown-link submenu-link-v">Couleurs</a></li>
-              <li><a href="{{ route('docs.styling') }}" class="dropdown-link submenu-link-v">Styles</a></li>
-              <li><a href="{{ route('docs.plugins') }}" class="dropdown-link submenu-link-v">Plugins</a></li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <a href="{{ route('docs.layout') }}" class="menu-link vertical-menu">
-            <i class="las la-layout text-xl text-primary-300"></i>
-            <span>Mise en page</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('docs.changelog') }}" class="menu-link vertical-menu">
-            <i class="las la-code-branch text-xl text-primary-300"></i>
-            <span>Journal des modifications</span>
-          </a>
-        </li>
+
+
       </ul>
     </div>
   </aside>

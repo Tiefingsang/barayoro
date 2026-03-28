@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use App\Models\Company;
 
 class AuthController extends Controller
 {
@@ -57,22 +58,44 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // Validation
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'company_name' => 'required|string|max:255',
+            'admin_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8|confirmed',
+            'subscription_plan' => 'required|in:trial,premium',
+            'terms' => 'accepted',
         ]);
 
+        // Création de l'entreprise
+        $company = Company::create([
+            'uuid' => Str::uuid(),
+            'name' => $request->company_name,
+            'slug' => Str::slug($request->company_name . '-' . Str::random(6)),
+            'email' => $request->email,
+            'is_active' => true,
+            'subscription_status' => $request->subscription_plan === 'trial' ? 'active' : 'pending',
+            'subscription_expires_at' => $request->subscription_plan === 'trial' ? now()->addDays(30) : null,
+            'max_users' => $request->subscription_plan === 'trial' ? 5 : 999,
+        ]);
+
+        // Création de l'utilisateur admin
         $user = User::create([
-            'name' => $request->name,
+            'uuid' => Str::uuid(),
+            'company_id' => $company->id,
+            'name' => $request->admin_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_active' => true,
         ]);
 
+        $user->assignRole('admin');
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect()->route('dashboard')->with('success', 'Compte créé avec succès !');
     }
+
 
     /**
      * Afficher le formulaire de mot de passe oublié

@@ -1,7 +1,7 @@
 <!doctype html>
 <html dir="ltr" lang="en">
 
-<!-- Mirrored from softivuslab.com/html/softify/dist/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 28 Mar 2026 13:48:20 GMT -->
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -53,7 +53,7 @@
               <div class="flex justify-end mt-2 mb-5">
                 <a href="forgot-password.html" class="text-secondary-300">Forgot Password</a>
               </div>
-              <p class="mb-7 xl:mb-10">Don't have an account? <a href="sign-up.html" class="font-semibold text-primary-300">Signup</a></p>
+              <p class="mb-7 xl:mb-10">Don't have an account? <a href="{{ route('register') }}" class="font-semibold text-primary-300">Signup</a></p>
               <button class="btn-primary w-full">Login</button>
             </form>
           </div>

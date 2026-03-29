@@ -14,6 +14,32 @@
     <link rel="stylesheet" href="{{ asset('assets/css/swiper.min.css') }}" />
     <title>Softify - Multi Component UI Web with Client and Admin Dashboard</title>
   <script defer src="{{ asset('assets/js/app.js') }}"></script><link href="{{ asset('assets/css/style.css') }}" rel="stylesheet"></head>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
+  <style>
+        [x-cloak] { display: none !important; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .animate__animated {
+            animation-duration: 0.5s;
+        }
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .animate__fadeInRight {
+            animation-name: fadeInRight;
+        }
+    </style>
+</head>
 
   <body x-cloak x-data="customizer" :class="$store.app.isDarkMode?'dark':''" class="bg-neutral-20 dark:bg-neutral-903 relative">
     <!-- Customizer -->
@@ -163,6 +189,8 @@
     <section class="text-neutral-700 dark:text-neutral-20 bg-neutral-0 dark:bg-neutral-904">
   <!-- Topbar -->
   @include('partials.navbar')
+   <!-- Messages flash -->
+    @include('components.flash-messages')
 
   <!-- Vertical Sidebar -->
   @include('partials.sidebar')

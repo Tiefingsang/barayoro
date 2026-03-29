@@ -48,6 +48,7 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name(
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
+
 // ==================== ROUTES PROTÉGÉES ====================
 Route::middleware(['auth'])->group(function () {
 
@@ -64,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     // Gestion des utilisateurs (admin seulement)
-    Route::resource('users', UserController::class)->middleware('can:manage_users');
+    //Route::resource('users', UserController::class)->middleware('can:manage_users');
 
     // Gestion des tâches
     Route::resource('tasks', TaskController::class);
@@ -168,6 +169,16 @@ Route::middleware(['auth'])->group(function () {
     // Maintenance
     Route::get('/maintenance', [PageController::class, 'maintenance'])->name('maintenance');
     Route::get('/coming-soon', [PageController::class, 'comingSoon'])->name('coming.soon');
+
+    // // Utilisateurs
+    Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('permission:view_users');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('permission:create_users');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store')->middleware('permission:create_users');
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show')->middleware('permission:view_users');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:edit_users');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:edit_users');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:delete_users');
+    Route::put('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate')->middleware('permission:edit_users');
 });
 
 // ==================== ROUTES ADMIN ====================

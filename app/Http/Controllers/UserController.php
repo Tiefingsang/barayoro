@@ -175,7 +175,7 @@ public function show(User $user)
         $recentActivities = collect([]);
     }
 
-    return view('users.show', compact('user', 'userRole', 'recentActivities'));
+    return view('users.show', compact('user', 'userRole', 'recentActivities')); 
 }
 
 

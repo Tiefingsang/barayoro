@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -76,12 +77,19 @@ Route::middleware(['auth'])->group(function () {
     //Route::resource('users', UserController::class)->middleware('can:manage_users');
 
     // Gestion des tâches
+    // Gestion des tâches
     Route::resource('tasks', TaskController::class);
-    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.status');
+    Route::put('/tasks/{id}/restore', [TaskController::class, 'restore'])->name('tasks.restore');
+    Route::put('/tasks/{task}/status', [TaskController::class, 'updateStatus'])->name('tasks.update-status');
+    Route::get('/tasks/export/csv', [TaskController::class, 'export'])->name('tasks.export');
+
+
 
     // Gestion des projets
     Route::resource('projects', ProjectController::class);
-    Route::get('/projects/{project}/tasks', [ProjectController::class, 'tasks'])->name('projects.tasks');
+    Route::put('/projects/{id}/restore', [ProjectController::class, 'restore'])->name('projects.restore');
+    Route::put('/projects/{project}/update-progress', [ProjectController::class, 'updateProgress'])->name('projects.update-progress');
+    Route::get('/projects/export/csv', [ProjectController::class, 'export'])->name('projects.export');
 
     // Gestion des clients
     // Gestion des clients
@@ -101,7 +109,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/invoices/{invoice}/pay', [InvoiceController::class, 'pay'])->name('invoices.pay');
     Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');
     Route::put('/invoices/{invoice}/mark-as-paid', [InvoiceController::class, 'markAsPaid'])->name('invoices.mark-as-paid');
-    
+
+    // Gestion des départements
+    Route::resource('departments', DepartmentController::class);
+    Route::put('/departments/{department}/toggle-status', [DepartmentController::class, 'toggleStatus'])->name('departments.toggle-status');
+    Route::put('/departments/{id}/restore', [DepartmentController::class, 'restore'])->name('departments.restore');
+    Route::get('/departments/export/csv', [DepartmentController::class, 'export'])->name('departments.export');
+
     // Gestion des paiements
     Route::resource('payments', PaymentController::class);
 

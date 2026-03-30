@@ -205,7 +205,55 @@
           </div>
         </li>
 
-        
+
+        <!-- Départements -->
+    <li class="relative">
+        <button :class="opened=='departments' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('departments')" class="submenu-btn-v">
+            <span class="flex items-center gap-2">
+                <i class="las la-building text-xl text-primary-300"></i>
+                <span>Départements</span>
+            </span>
+            <i :class="opened=='departments' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+        </button>
+        <div x-show="opened=='departments'" x-collapse>
+            <ul class="submenu-v" data-submenu="departments">
+                <li>
+                    <a href="{{ route('departments.index') }}" class="dropdown-link submenu-link-v">Liste des départements</a>
+                </li>
+                <li>
+                    <a href="{{ route('departments.create') }}" class="dropdown-link submenu-link-v">Ajouter un département</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+
+        <!-- Projets -->
+    <!-- Projets -->
+    <li class="relative">
+        <button :class="opened=='projects' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('projects')" class="submenu-btn-v">
+            <span class="flex items-center gap-2">
+                <i class="las la-project-diagram text-xl text-primary-300"></i>
+                <span>Projets</span>
+            </span>
+            <i :class="opened=='projects' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+        </button>
+        <div x-show="opened=='projects'" x-collapse>
+            <ul class="submenu-v" data-submenu="projects">
+                <li>
+                    <a href="{{ route('projects.index') }}" class="dropdown-link submenu-link-v">Liste des projets</a>
+                </li>
+                <li>
+                    <a href="{{ route('projects.create') }}" class="dropdown-link submenu-link-v">Ajouter un projet</a>
+                </li>
+                <li>
+                    <a href="{{ route('tasks.index', ['view' => 'all']) }}" class="dropdown-link submenu-link-v">Toutes les tâches</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+
 
 
         <li>

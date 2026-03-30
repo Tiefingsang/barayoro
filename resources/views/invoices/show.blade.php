@@ -211,6 +211,7 @@
             <a href="{{ route('invoices.index') }}" class="btn-primary-outlined px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
               <i class="las la-arrow-left mr-2"></i> Retour à la liste
             </a>
+            
           </div>
         </div>
       </div>

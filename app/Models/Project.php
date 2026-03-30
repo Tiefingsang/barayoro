@@ -82,10 +82,10 @@ class Project extends Model
         return $this->hasMany(TimeEntry::class);
     }
 
-    public function expenses()
+    /* public function expenses()
     {
         return $this->hasMany(Expense::class);
-    }
+    } */
 
     public function attachments()
     {

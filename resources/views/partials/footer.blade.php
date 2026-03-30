@@ -14,7 +14,7 @@
         <a href="{{ route('help.center') }}" class="footer-link">Centre d'aide</a>
       </li>
       <li>
-    <a href="{{ route('privacy') }}" class="footer-link">Politique de confidentialité</a>
+        <a href="{{ route('privacy') }}" class="footer-link">Politique de confidentialité</a>
       </li>
     </ul>
   </div>

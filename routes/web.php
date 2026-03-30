@@ -53,6 +53,8 @@ Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name(
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+// Route pour la page de confirmation
+Route::get('/forgot-password/confirmation', [AuthController::class, 'showConfirmation'])->name('password.confirmation');
 
 
 // ==================== ROUTES PROTÉGÉES ====================

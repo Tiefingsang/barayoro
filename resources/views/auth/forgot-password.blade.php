@@ -1,6 +1,5 @@
 <!doctype html>
-<html dir="ltr" lang="en">
-
+<html dir="ltr" lang="fr">
 
 <head>
     <meta charset="UTF-8" />
@@ -11,7 +10,36 @@
     <link rel="stylesheet" href="{{ asset('assets/fonts/line-awesome/css/line-awesome.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
     <title>Softify - Multi Component UI Web with Client and Admin Dashboard</title>
-  <script defer src="{{ asset('assets/js/app.js') }}"></script><link href="{{ asset('assets/css/style.css') }}" rel="stylesheet"></head>
+  <script defer src="{{ asset('assets/js/app.js') }}"></script><link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
+  <style>
+        [x-cloak] { display: none !important; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        .animate__animated {
+            animation-duration: 0.5s;
+        }
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .animate__fadeInRight {
+            animation-name: fadeInRight;
+        }
+    </style>
+</head>
 
   <body x-cloak x-data="customizer" :class="$store.app.isDarkMode?'dark':''">
     <!-- loader -->
@@ -21,6 +49,8 @@
     <circle r="20" cy="50" cx="50"></circle>
   </svg>
 </div>
+
+@include('components.flash-messages')
 
 
     <!-- Main Content -->
@@ -35,17 +65,17 @@
       <div class="container overflow-y-auto">
         <div class="grid grid-cols-12 gap-6 items-center relative z-[4] text-neutral-700 dark:text-neutral-20">
           <div class="col-span-12 lg:col-span-6 xxl:col-span-5">
-            <h3 class="mb-4 xl:mb-6">Forgot your password?</h3>
-            <p class="mb-7 xl:mb-10">Please enter the email address associated with your account and We will email you a link to reset your password.</p>
-            <form>
+            <h3 class="mb-4 xl:mb-6">Mot de passe oublié ?</h3>
+            <p class="mb-7 xl:mb-10">Veuillez saisir l'adresse email associée à votre compte. Nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+            <form action="{{ route('password.email') }}" method="POST">
               <div class="form-input mb-7 xxl:mb-10">
-                <input name="email" type="email" id="activated" class="!rounded-full" placeholder="Textfield" />
+                <input name="email" type="email" id="activated" class="!rounded-full" placeholder="Saisissez votre email" />
                 <label for="activated">Email</label>
               </div>
 
               <div class="flex gap-4 xxl:gap-6">
-                <button class="btn-primary w-full">Send Request</button>
-                <a class="btn-primary-outlined w-full" href="{{ route('login') }}">Return to sign in</a>
+                <button class="btn-primary w-full">Envoyer la demande</button>
+                <a class="btn-primary-outlined w-full" href="{{ route('login') }}">Retour à la connexion</a>
               </div>
             </form>
           </div>
@@ -62,6 +92,5 @@
     <script src="{{ asset('assets/js/libs/alpine.persist.js') }}"></script>
     <script defer src="{{ asset('assets/js/libs/alpine.min.js') }}"></script>
   </body>
-
 
 </html>

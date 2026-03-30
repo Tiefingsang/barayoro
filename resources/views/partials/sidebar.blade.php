@@ -64,12 +64,12 @@
             <span>Analytiques</span>
           </a>
         </li>
-        <li>
+      {{--   <li>
           <a href="{{ route('ecommerce') }}" class="menu-link vertical-menu">
             <i class="las la-shopping-bag text-xl text-primary-300"></i>
             <span>E-commerce</span>
           </a>
-        </li>
+        </li> --}}
         <li>
           <a href="{{ route('finance.index') }}" class="menu-link vertical-menu">
             <i class="las la-piggy-bank text-xl text-primary-300"></i>
@@ -111,7 +111,7 @@
               <li>
                 <a href="{{ route('users.create') }}" class="dropdown-link submenu-link-v">Créer</a>
               </li>
-             
+
               <li>
                 <a href="{{ route('users.index') }}" class="dropdown-link submenu-link-v">Compte</a>
               </li>
@@ -130,35 +130,58 @@
           </button>
           <div x-show="opened=='store'" x-collapse>
             <ul class="submenu-v" data-submenu="store">
-              <li>
-                <a href="{{ route('products.grid') }}" class="dropdown-link submenu-link-v">Grille produits</a>
-              </li>
+
               <li>
                 <a href="{{ route('products.list') }}" class="dropdown-link submenu-link-v">Liste produits</a>
               </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Détails produit</a>
-              </li>
+
               <li>
                 <a href="{{ route('products.create') }}" class="dropdown-link submenu-link-v">Créer produit</a>
               </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Modifier produit</a>
-              </li>
-              <li>
-                <a href="{{ route('reviews.manage') }}" class="dropdown-link submenu-link-v">Gérer les avis</a>
-              </li>
-              <li>
-                <a href="{{ route('referrals') }}" class="dropdown-link submenu-link-v">Parrainages</a>
-              </li>
-              <li>
-                <a href="{{ route('checkout') }}" class="dropdown-link submenu-link-v">Paiement</a>
-              </li>
-              <li>
-                <a href="{{ route('checkout.success') }}" class="dropdown-link submenu-link-v">Paiement réussi</a>
-              </li>
             </ul>
           </div>
+        </li>
+
+        <!-- Clients -->
+        <li class="relative">
+            <button :class="opened=='clients' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('clients')" class="submenu-btn-v">
+                <span class="flex items-center gap-2">
+                    <i class="las la-users text-xl text-primary-300"></i>
+                    <span>Clients</span>
+                </span>
+                <i :class="opened=='clients' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+            </button>
+            <div x-show="opened=='clients'" x-collapse>
+                <ul class="submenu-v" data-submenu="clients">
+                    <li>
+                        <a href="{{ route('clients.index') }}" class="dropdown-link submenu-link-v">Liste des clients</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('clients.create') }}" class="dropdown-link submenu-link-v">Ajouter un client</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+
+
+        <li class="relative">
+            <button :class="opened=='invoices' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('invoices')" class="submenu-btn-v">
+                <span class="flex items-center gap-2">
+                    <i class="las la-file-invoice text-xl text-primary-300"></i>
+                    <span>Factures</span>
+                </span>
+                <i :class="opened=='invoices' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+            </button>
+            <div x-show="opened=='invoices'" x-collapse>
+                <ul class="submenu-v" data-submenu="invoices">
+                    <li>
+                        <a href="{{ route('invoices.index') }}" class="dropdown-link submenu-link-v">Liste des factures</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('invoices.create') }}" class="dropdown-link submenu-link-v">Créer une facture</a>
+                    </li>
+                </ul>
+            </div>
         </li>
 
         <!-- Gestion des commandes -->

@@ -84,7 +84,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/projects/{project}/tasks', [ProjectController::class, 'tasks'])->name('projects.tasks');
 
     // Gestion des clients
+    // Gestion des clients
     Route::resource('clients', ClientController::class);
+    Route::put('/clients/{id}/restore', [ClientController::class, 'restore'])->name('clients.restore');
+    Route::delete('/clients/{id}/force', [ClientController::class, 'forceDelete'])->name('clients.force-delete');
+    Route::get('/clients/export/csv', [ClientController::class, 'export'])->name('clients.export');
 
     // Gestion des produits
     Route::resource('products', ProductController::class);
@@ -95,7 +99,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('invoices', InvoiceController::class);
     Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
     Route::post('/invoices/{invoice}/pay', [InvoiceController::class, 'pay'])->name('invoices.pay');
-
+    Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])->name('invoices.send');
+    Route::put('/invoices/{invoice}/mark-as-paid', [InvoiceController::class, 'markAsPaid'])->name('invoices.mark-as-paid');
+    
     // Gestion des paiements
     Route::resource('payments', PaymentController::class);
 

@@ -35,6 +35,12 @@ Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
 
+Route::get('/help-center', function () {
+    return view('pages.help-center');
+})->name('help.center');
+
+
+
 // ==================== ROUTES PUBLIQUES ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -179,6 +185,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:edit_users');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:delete_users');
     Route::put('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate')->middleware('permission:edit_users');
+    Route::put('/users/notification', [UserController::class, 'notification'])->name('users.notification');
 });
 
 // ==================== ROUTES ADMIN ====================

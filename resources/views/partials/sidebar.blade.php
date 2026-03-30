@@ -111,9 +111,7 @@
               <li>
                 <a href="{{ route('users.create') }}" class="dropdown-link submenu-link-v">Créer</a>
               </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Modifier</a>
-              </li>
+             
               <li>
                 <a href="{{ route('users.index') }}" class="dropdown-link submenu-link-v">Compte</a>
               </li>
@@ -217,18 +215,8 @@
             <span>Gestionnaire de fichiers</span>
           </a>
         </li>
-        <li>
-          <a href="{{ route('mail') }}" class="menu-link vertical-menu">
-            <i class="las la-envelope-open-text text-xl text-primary-300"></i>
-            <span>Messagerie</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{ route('chat') }}" class="menu-link vertical-menu">
-            <i class="lab la-facebook-messenger text-xl text-primary-300"></i>
-            <span>Chat</span>
-          </a>
-        </li>
+
+
         <li>
           <a href="{{ route('calendar') }}" class="menu-link vertical-menu">
             <i class="las la-calendar-alt text-xl text-primary-300"></i>
@@ -243,105 +231,14 @@
         </li>
       </ul>
 
-      <p class="text-xs font-semibold mb-3 mt-5">PAGES</p>
-      <ul class="flex flex-col gap-2 bb-dashed-n30 xl:mb-5 xl:pb-5 m-text font-medium">
-
-
-
-        <!-- Offres d'emploi -->
-        <li class="relative">
-          <button :class="opened=='job' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('job')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-briefcase text-xl text-primary-300"></i>
-              <span>Offres d'emploi</span>
-            </span>
-            <i :class="opened=='job' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='job'" x-collapse>
-            <ul class="submenu-v" data-submenu="job">
-              <li>
-                <a href="{{ route('jobs.list') }}" class="dropdown-link submenu-link-v">Liste des offres</a>
-              </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Détails offre</a>
-              </li>
-              <li>
-                <a href="{{ route('jobs.create') }}" class="dropdown-link submenu-link-v">Créer offre</a>
-              </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Modifier offre</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <!-- Tours et voyages -->
-        <li class="relative">
-          <button :class="opened=='tour' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('tour')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-map-marked-alt text-xl text-primary-300"></i>
-              <span>Tours et voyages</span>
-            </span>
-            <i :class="opened=='tour' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='tour'" x-collapse>
-            <ul class="submenu-v" data-submenu="tour">
-              <li>
-                <a href="{{ route('tours.list') }}" class="dropdown-link submenu-link-v">Liste des tours</a>
-              </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Détails tour</a>
-              </li>
-              <li>
-                <a href="{{ route('tours.create') }}" class="dropdown-link submenu-link-v">Créer tour</a>
-              </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Modifier tour</a>
-              </li>
-            </ul>
-          </div>
-        </li>
-
-        <!-- Pages diverses -->
-        <li class="relative">
-          <button :class="opened=='pages' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('pages')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-book-open text-xl text-primary-300"></i>
-              <span>Pages</span>
-            </span>
-            <i :class="opened=='pages' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='pages'" x-collapse>
-            <ul class="submenu-v" data-submenu="pages">
-              <li>
-                <a href="{{ route('about') }}" class="dropdown-link submenu-link-v">À propos</a>
-              </li>
-              <li>
-                <a href="{{ route('contact') }}" class="dropdown-link submenu-link-v">Contact</a>
-              </li>
-              <li>
-                <a href="{{ route('faq') }}" class="dropdown-link submenu-link-v">FAQ</a>
-              </li>
-              <li>
-                <a href="{{ route('pricing') }}" class="dropdown-link submenu-link-v">Tarifs</a>
-              </li>
-              <li>
-                <a href="{{ route('payment.page') }}" class="dropdown-link submenu-link-v">Paiement</a>
-              </li>
-              <li>
-                <a href="{{ route('maintenance') }}" class="dropdown-link submenu-link-v">Maintenance</a>
-              </li>
-              <li>
-                <a href="{{ route('coming.soon') }}" class="dropdown-link submenu-link-v">Bientôt disponible</a>
-              </li>
-            </ul>
-          </div>
-        </li>
 
 
 
 
-      </ul>
+
+
+
+
 
       <p class="text-xs font-semibold mb-3 mt-5">COMPOSANTS</p>
       <ul class="flex flex-col gap-2 bb-dashed-n30 xl:mb-5 xl:pb-5 m-text font-medium">

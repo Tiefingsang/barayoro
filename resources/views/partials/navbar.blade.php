@@ -72,7 +72,7 @@
           <i class="las la-sun"></i>
         </button>
         <!-- Sélecteur de langue -->
-        <div x-data="{open:false,selected:'Français',options:['Français','Anglais','Espagnol','Arabe']}" class="relative">
+        {{-- <div x-data="{open:false,selected:'Français',options:['Français','Anglais','Espagnol','Arabe']}" class="relative">
           <button title="Changer la langue" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" @click="open = !open" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
             <i class="las la-language"></i>
           </button>
@@ -83,7 +83,7 @@
               </template>
             </ul>
           </div>
-        </div>
+        </div> --}}
 
         <!-- Notifications -->
         <div class="relative" x-data="{open:false}">
@@ -101,46 +101,8 @@
               <a href="#" class="text-xs text-primary-300"> Voir tout </a>
             </div>
             <ul class="flex w-[300px] flex-col p-4">
-              <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
-                <img src="assets/images/users/user-s-3.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
-                <div class="text-sm">
-                  <div class="flex gap-1">
-                    <span class="font-medium">Otwell</span>
-                    <span>a envoyé un message</span>
-                  </div>
-                  <span class="text-xs text-n100 dark:text-n50">Il y a 1 heure</span>
-                </div>
-              </div>
-              <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
-                <img src="assets/images/users/user-s-4.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
-                <div class="text-sm">
-                  <div class="flex gap-1">
-                    <span class="font-medium">David</span>
-                    <span>a laissé un commentaire</span>
-                  </div>
-                  <span class="text-xs text-n100 dark:text-n50">Il y a 1 heure</span>
-                </div>
-              </div>
-              <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
-                <img src="assets/images/users/user-s-2.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
-                <div class="text-sm">
-                  <div class="flex gap-1">
-                    <span class="font-medium">Benjamin</span>
-                    <span>a envoyé un message</span>
-                  </div>
-                  <span class="text-xs text-n100 dark:text-n50">Il y a 2 heures</span>
-                </div>
-              </div>
-              <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
-                <img src="assets/images/users/user-s-1.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
-                <div class="text-sm">
-                  <div class="flex gap-1">
-                    <span class="font-medium">Samuel</span>
-                    <span>a téléchargé un fichier</span>
-                  </div>
-                  <span class="text-xs text-n100 dark:text-n50">Hier</span>
-                </div>
-              </div>
+
+              
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
                 <img src="assets/images/users/user-s-2.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
                 <div class="text-sm">

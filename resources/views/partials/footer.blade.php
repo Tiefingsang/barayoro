@@ -4,17 +4,17 @@
 >
   <div :class="$store.app.menu=='horizontal' ? 'max-w-[1704px] mx-auto':''" class="flex flex-col items-center justify-center gap-3 px-4 py-5 lg:flex-row lg:justify-between xxl:px-8 xxl:py-6">
     <p class="text-sm max-md:w-full max-md:text-center">
-      Copyright @ <span id="current-year"></span>
-      <a class="text-primary-300 font-medium" href="index.html"> Softify </a>
-      . All Rights Reserved
+      Copyright © <span id="current-year"></span>
+      <a class="text-primary-300 font-medium" href="https://masadigitale.com"> Masadigitale </a>
+      . Tous droits réservés
     </p>
 
     <ul class="flex gap-3 text-sm max-lg:w-full max-lg:justify-center lg:gap-4">
       <li>
-        <a href="#" class="footer-link">Help Center</a>
+        <a href="{{ route('help.center') }}" class="footer-link">Centre d'aide</a>
       </li>
       <li>
-        <a href="#" class="footer-link">Privacy Policy</a>
+    <a href="{{ route('privacy') }}" class="footer-link">Politique de confidentialité</a>
       </li>
     </ul>
   </div>

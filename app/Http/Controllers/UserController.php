@@ -302,4 +302,9 @@ public function update(Request $request, User $user)
             abort(403, 'Accès non autorisé.');
         }
     }
+
+
+    public function notification(){
+        return view('')
+    }
 }

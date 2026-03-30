@@ -205,32 +205,8 @@
           </div>
         </li>
 
-        <!-- Gestion des factures -->
-        <li class="relative">
-          <button :class="opened=='invoice' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('invoice')" class="submenu-btn-v">
-            <span class="flex items-center gap-2">
-              <i class="las la-file-invoice text-xl text-primary-300"></i>
-              <span>Factures</span>
-            </span>
-            <i :class="opened=='invoice' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-          </button>
-          <div x-show="opened=='invoice'" x-collapse>
-            <ul class="submenu-v" data-submenu="invoice">
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Liste des factures</a>
-              </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Détails facture</a>
-              </li>
-              <li>
-                <a href="{{ route('invoices.create') }}" class="dropdown-link submenu-link-v">Créer facture</a>
-              </li>
-              <li>
-                <a href="" class="dropdown-link submenu-link-v">Modifier facture</a>
-              </li>
-            </ul>
-          </div>
-        </li>
+        
+
 
         <li>
           <a href="" class="menu-link vertical-menu">

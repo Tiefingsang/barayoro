@@ -8,19 +8,21 @@
     <link rel="shortcut icon" href="asstes/images/favicon.html" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.googleapis.com/" />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link rel="stylesheet" href="assets/fonts/line-awesome/css/line-awesome.min.css" />
-    <link rel="stylesheet" href="assets/css/animate.min.css" />
+    <link rel="stylesheet" href="{{ asset('assets/fonts/line-awesome/css/line-awesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
     <title>Softify - Multi Component UI Web with Client and Admin Dashboard</title>
-  <script defer src="assets/js/app.js"></script><link href="assets/css/style.css" rel="stylesheet"></head>
+    <script defer src="{{ asset('assets/js/app.js') }}"></script>
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+</head>
 
-  <body x-cloak x-data="customizer" :class="$store.app.isDarkMode?'dark':''">
+<body x-cloak x-data="customizer" :class="$store.app.isDarkMode?'dark':''">
     <!-- loader -->
     <!-- screen loader -->
-<div x-cloak class="screen_loader animate__animated duration-700 fixed inset-0 z-[60] grid place-content-center bg-neutral-400">
-  <svg viewBox="25 25 50 50">
-    <circle r="20" cy="50" cx="50"></circle>
-  </svg>
-</div>
+    <div x-cloak class="screen_loader animate__animated duration-700 fixed inset-0 z-[60] grid place-content-center bg-neutral-400">
+    <svg viewBox="25 25 50 50">
+        <circle r="20" cy="50" cx="50"></circle>
+    </svg>
+    </div>
 
 
     <!-- Main Content -->
@@ -67,9 +69,9 @@
                 </span>
               </div>
               <div class="flex justify-end mt-2 mb-5">
-                <a href="forgot-password.html" class="text-secondary-300">Mot de passe oublié ?</a>
+                <a href="{{ route('password.request') }}" class="text-secondary-300">Mot de passe oublié ?</a>
               </div>
-              <p class="mb-7 xl:mb-10"> Vous n'avez pas de compte ?  <a href="{{ route('register') }}" class="font-semibold text-primary-300">Créer un compt</a></p>
+              <p class="mb-7 xl:mb-10"> Vous n'avez pas de compte ?  <a href="{{ route('register') }}" class="font-semibold text-primary-300">Créer un compte</a></p>
               <button type="submit" class="btn-primary w-full">Se connecter</button>
             </form>
           </div>
@@ -82,9 +84,9 @@
       </div>
     </main>
 
-    <script src="assets/js/libs/alpine.collapse.js"></script>
-    <script src="assets/js/libs/alpine.persist.js"></script>
-    <script defer src="assets/js/libs/alpine.min.js"></script>
+    <script src="{{ asset('assets/js/libs/alpine.collapse.js') }}"></script>
+    <script src="{{ asset('assets/js/libs/alpine.persist.js') }}"></script>
+    <script defer src="{{ asset('assets/js/libs/alpine.min.js') }}"></script>
   </body>
 
 

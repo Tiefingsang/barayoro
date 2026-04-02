@@ -161,7 +161,10 @@
 
 @endsection
 
-@push('scripts')
+
+
+
+@section('scripts')
 <script>
 function toggleView() {
     const currentView = '{{ $view }}';
@@ -170,29 +173,43 @@ function toggleView() {
 }
 
 function openCreateFolderModal() {
-    document.getElementById('createFolderModal').classList.add('flex');
-    document.getElementById('createFolderModal').classList.remove('hidden');
+    const modal = document.getElementById('createFolderModal');
+    if (modal) {
+        modal.classList.add('flex');
+        modal.classList.remove('hidden');
+    }
 }
 
 function closeCreateFolderModal() {
-    document.getElementById('createFolderModal').classList.add('hidden');
-    document.getElementById('createFolderModal').classList.remove('flex');
+    const modal = document.getElementById('createFolderModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
 }
 
 function openUploadModal() {
-    document.getElementById('uploadModal').classList.add('flex');
-    document.getElementById('uploadModal').classList.remove('hidden');
+    const modal = document.getElementById('uploadModal');
+    if (modal) {
+        modal.classList.add('flex');
+        modal.classList.remove('hidden');
+    }
 }
 
 function closeUploadModal() {
-    document.getElementById('uploadModal').classList.add('hidden');
-    document.getElementById('uploadModal').classList.remove('flex');
+    const modal = document.getElementById('uploadModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
 }
 
 function openFileModal(fileId, type) {
     const modal = document.getElementById('fileModal');
     const title = document.getElementById('fileModalTitle');
     const content = document.getElementById('fileModalContent');
+
+    if (!modal) return;
 
     if (type === 'folder') {
         title.textContent = 'Actions du dossier';
@@ -230,14 +247,16 @@ function openFileModal(fileId, type) {
 }
 
 function closeFileModal() {
-    document.getElementById('fileModal').classList.add('hidden');
-    document.getElementById('fileModal').classList.remove('flex');
+    const modal = document.getElementById('fileModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
 }
 
 function renameFile(fileId, currentName) {
     const newName = prompt('Nouveau nom:', currentName);
     if (newName && newName !== currentName) {
-        // Créer un formulaire avec l'URL correcte
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/files/rename/' + fileId;
@@ -265,15 +284,40 @@ function deleteFile(fileId, fileName) {
     }
 }
 
-// Fermer le modal en cliquant en dehors
-document.getElementById('fileModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeFileModal();
-});
-document.getElementById('createFolderModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeCreateFolderModal();
-});
-document.getElementById('uploadModal')?.addEventListener('click', function(e) {
-    if (e.target === this) closeUploadModal();
+// S'assurer que les fonctions sont disponibles immédiatement
+window.toggleView = toggleView;
+window.openCreateFolderModal = openCreateFolderModal;
+window.closeCreateFolderModal = closeCreateFolderModal;
+window.openUploadModal = openUploadModal;
+window.closeUploadModal = closeUploadModal;
+window.openFileModal = openFileModal;
+window.closeFileModal = closeFileModal;
+window.renameFile = renameFile;
+window.deleteFile = deleteFile;
+
+// Fermer les modals en cliquant en dehors
+document.addEventListener('DOMContentLoaded', function() {
+    const fileModal = document.getElementById('fileModal');
+    const createFolderModal = document.getElementById('createFolderModal');
+    const uploadModal = document.getElementById('uploadModal');
+
+    if (fileModal) {
+        fileModal.addEventListener('click', function(e) {
+            if (e.target === this) closeFileModal();
+        });
+    }
+
+    if (createFolderModal) {
+        createFolderModal.addEventListener('click', function(e) {
+            if (e.target === this) closeCreateFolderModal();
+        });
+    }
+
+    if (uploadModal) {
+        uploadModal.addEventListener('click', function(e) {
+            if (e.target === this) closeUploadModal();
+        });
+    }
 });
 </script>
-@endpush
+@endsection

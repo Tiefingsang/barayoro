@@ -78,7 +78,7 @@
         </li>
 
         <li>
-          <a href="{{ route('files') }}" class="menu-link vertical-menu">
+         <a href="{{ route('files.index') }}" class="menu-link vertical-menu">
             <i class="las la-file text-xl text-primary-300"></i>
             <span>Fichiers</span>
           </a>
@@ -132,7 +132,7 @@
             <ul class="submenu-v" data-submenu="store">
 
               <li>
-                <a href="{{ route('products.list') }}" class="dropdown-link submenu-link-v">Liste produits</a>
+                <a href="{{ route('products.index') }}" class="dropdown-link submenu-link-v">Liste produits</a>
               </li>
 
               <li>
@@ -196,7 +196,7 @@
           <div x-show="opened=='order'" x-collapse>
             <ul class="submenu-v" data-submenu="order">
               <li>
-                <a href="{{ route('orders.list') }}" class="dropdown-link submenu-link-v">Liste des commandes</a>
+                <a href="{{ route('orders.index') }}" class="dropdown-link submenu-link-v">Liste des commandes</a>
               </li>
               <li>
                 <a href="" class="dropdown-link submenu-link-v">Détails commande</a>

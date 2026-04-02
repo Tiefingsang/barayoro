@@ -41,6 +41,13 @@ class RolePermissionSeeder extends Seeder
             'edit_clients',
             'delete_clients',
 
+            // Dans le tableau $permissions, ajoutez :
+'view_orders',
+'create_orders',
+'edit_orders',
+'delete_orders',
+'manage_orders_status',
+
             // Factures
             'view_invoices',
             'create_invoices',

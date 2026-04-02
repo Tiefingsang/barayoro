@@ -598,6 +598,8 @@
         }))
       })
     </script>
+
+    @yield('scripts')
   </body>
 
 

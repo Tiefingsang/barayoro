@@ -82,41 +82,49 @@ class ProjectController extends Controller
     /**
      * Enregistrer un nouveau projet
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'client_id' => 'nullable|exists:clients,id',
-            'department_id' => 'nullable|exists:departments,id',
-            'project_manager_id' => 'nullable|exists:users,id',
-            'status' => 'required|in:draft,planned,in_progress,on_hold,completed,cancelled',
-            'priority' => 'required|in:low,medium,high,critical',
-            'start_date' => 'nullable|date',
-            'due_date' => 'nullable|date|after_or_equal:start_date',
-            'budget' => 'nullable|numeric|min:0',
-            'tags' => 'nullable|array',
-        ]);
+  public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'client_id' => 'nullable|exists:clients,id',
+        'department_id' => 'nullable|exists:departments,id',
+        'project_manager_id' => 'nullable|exists:users,id',
+        'status' => 'required|in:draft,planned,in_progress,on_hold,completed,cancelled',
+        'priority' => 'required|in:low,medium,high,critical',
+        'start_date' => 'nullable|date',
+        'due_date' => 'nullable|date|after_or_equal:start_date',
+        'budget' => 'nullable|numeric|min:0',
+        'tags' => 'nullable|string', // Changer de 'array' à 'string'
+    ]);
 
-        $project = Project::create([
-            'uuid' => Str::uuid(),
-            'company_id' => Auth::user()->company_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'client_id' => $request->client_id,
-            'department_id' => $request->department_id,
-            'project_manager_id' => $request->project_manager_id,
-            'status' => $request->status,
-            'priority' => $request->priority,
-            'start_date' => $request->start_date,
-            'due_date' => $request->due_date,
-            'budget' => $request->budget,
-            'tags' => $request->tags,
-        ]);
-
-        return redirect()->route('projects.show', $project)
-            ->with('success', 'Projet créé avec succès.');
+    // Traiter les tags : convertir la chaîne séparée par des virgules en tableau
+    $tags = [];
+    if ($request->tags) {
+        $tags = array_map('trim', explode(',', $request->tags));
+        // Filtrer les tags vides
+        $tags = array_filter($tags);
     }
+
+    $project = Project::create([
+        'uuid' => Str::uuid(),
+        'company_id' => Auth::user()->company_id,
+        'name' => $request->name,
+        'description' => $request->description,
+        'client_id' => $request->client_id,
+        'department_id' => $request->department_id,
+        'project_manager_id' => $request->project_manager_id,
+        'status' => $request->status,
+        'priority' => $request->priority,
+        'start_date' => $request->start_date,
+        'due_date' => $request->due_date,
+        'budget' => $request->budget,
+        'tags' => $tags, // Utiliser le tableau
+    ]);
+
+    return redirect()->route('projects.show', $project)
+        ->with('success', 'Projet créé avec succès.');
+}
 
     /**
      * Afficher les détails d'un projet
@@ -178,51 +186,57 @@ public function show(Project $project)
     /**
      * Mettre à jour un projet
      */
-    public function update(Request $request, Project $project)
-    {
-        $this->checkCompanyAccess($project);
+  public function update(Request $request, Project $project)
+{
+    $this->checkCompanyAccess($project);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'client_id' => 'nullable|exists:clients,id',
-            'department_id' => 'nullable|exists:departments,id',
-            'project_manager_id' => 'nullable|exists:users,id',
-            'status' => 'required|in:draft,planned,in_progress,on_hold,completed,cancelled',
-            'priority' => 'required|in:low,medium,high,critical',
-            'start_date' => 'nullable|date',
-            'due_date' => 'nullable|date|after_or_equal:start_date',
-            'budget' => 'nullable|numeric|min:0',
-            'actual_cost' => 'nullable|numeric|min:0',
-            'progress' => 'nullable|integer|min:0|max:100',
-            'tags' => 'nullable|array',
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'client_id' => 'nullable|exists:clients,id',
+        'department_id' => 'nullable|exists:departments,id',
+        'project_manager_id' => 'nullable|exists:users,id',
+        'status' => 'required|in:draft,planned,in_progress,on_hold,completed,cancelled',
+        'priority' => 'required|in:low,medium,high,critical',
+        'start_date' => 'nullable|date',
+        'due_date' => 'nullable|date|after_or_equal:start_date',
+        'budget' => 'nullable|numeric|min:0',
+        'actual_cost' => 'nullable|numeric|min:0',
+        'progress' => 'nullable|integer|min:0|max:100',
+        'tags' => 'nullable|string', // Changer de 'array' à 'string'
+    ]);
 
-        $project->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'client_id' => $request->client_id,
-            'department_id' => $request->department_id,
-            'project_manager_id' => $request->project_manager_id,
-            'status' => $request->status,
-            'priority' => $request->priority,
-            'start_date' => $request->start_date,
-            'due_date' => $request->due_date,
-            'budget' => $request->budget,
-            'actual_cost' => $request->actual_cost,
-            'progress' => $request->progress,
-            'tags' => $request->tags,
-        ]);
-
-        // Si le projet est marqué comme complété
-        if ($request->status === 'completed' && !$project->completed_at) {
-            $project->update(['completed_at' => now()]);
-        }
-
-        return redirect()->route('projects.show', $project)
-            ->with('success', 'Projet mis à jour avec succès.');
+    // Traiter les tags
+    $tags = [];
+    if ($request->tags) {
+        $tags = array_map('trim', explode(',', $request->tags));
+        $tags = array_filter($tags);
     }
 
+    $project->update([
+        'name' => $request->name,
+        'description' => $request->description,
+        'client_id' => $request->client_id,
+        'department_id' => $request->department_id,
+        'project_manager_id' => $request->project_manager_id,
+        'status' => $request->status,
+        'priority' => $request->priority,
+        'start_date' => $request->start_date,
+        'due_date' => $request->due_date,
+        'budget' => $request->budget,
+        'actual_cost' => $request->actual_cost,
+        'progress' => $request->progress,
+        'tags' => $tags, // Utiliser le tableau
+    ]);
+
+    // Si le projet est marqué comme complété
+    if ($request->status === 'completed' && !$project->completed_at) {
+        $project->update(['completed_at' => now()]);
+    }
+
+    return redirect()->route('projects.show', $project)
+        ->with('success', 'Projet mis à jour avec succès.');
+}
     /**
      * Supprimer un projet (soft delete)
      */

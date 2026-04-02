@@ -2,23 +2,26 @@
 
 @section('content')
     <div :class="[$store.app.menu=='horizontal' ? 'max-w-[1704px] mx-auto xxl:px-0 xxl:pt-8':'',$store.app.stretch?'xxxl:max-w-[92%] mx-auto':'']" class="p-3 md:p-4 xxl:p-6">
-        <div x-data="chart" class="grid grid-cols-12 gap-4 xxl:gap-6">
+        <div class="grid grid-cols-12 gap-4 xxl:gap-6">
 
-          <!-- Statistiques -->
+          <!-- Cartes de statistiques -->
           <div class="col-span-12 md:col-span-6 xxxl:col-span-3">
             <div class="p-3 md:p-4 lg:p-6 xxl:p-8 rounded-xl bg-primary-100">
               <div class="flex justify-between items-start">
                 <span class="bg-neutral-0 dark:bg-neutral-904 rounded-lg size-14 shrink-0 xxl:size-16 f-center">
-                  <img src="assets/images/ada.png" width="48" alt="" />
+                  <i class="las la-chart-line text-3xl text-primary-300"></i>
                 </span>
                 <div class="analytics-stat-chart-1"></div>
               </div>
               <div class="flex justify-between items-end">
                 <div>
-                  <h3 class="mb-4">714.52k</h3>
-                  <p class="text-xs shrink-0 xxl:m-text font-medium">Cardano ADA</p>
+                  <h3 class="mb-4">{{ number_format($stats['total_sales'] ?? 0, 0, ',', ' ') }} FCFA</h3>
+                  <p class="text-xs shrink-0 xxl:m-text font-medium">Chiffre d'affaires</p>
                 </div>
-                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-primary-300 inline-flex py-2 px-4 items-center gap-1"> <i class="las la-arrow-up text-lg"></i> 75.8%</span>
+                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-primary-300 inline-flex py-2 px-4 items-center gap-1">
+                  <i class="las la-arrow-up text-lg"></i>
+                  {{ $stats['sales_growth'] ?? 0 }}%
+                </span>
               </div>
             </div>
           </div>
@@ -27,16 +30,19 @@
             <div class="p-3 md:p-4 lg:p-6 xxl:p-8 rounded-xl bg-secondary-300/40">
               <div class="flex justify-between items-start">
                 <span class="bg-neutral-0 dark:bg-neutral-904 rounded-lg size-14 shrink-0 xxl:size-16 f-center">
-                  <img src="assets/images/usdt.png" width="48" alt="" />
+                  <i class="las la-file-invoice-dollar text-3xl text-secondary-300"></i>
                 </span>
                 <div class="analytics-stat-chart-2"></div>
               </div>
               <div class="flex justify-between items-end">
                 <div>
-                  <h3 class="mb-4">$324.63</h3>
-                  <p class="text-xs shrink-0 xxl:m-text font-medium">Tether USDT</p>
+                  <h3 class="mb-4">{{ number_format($stats['pending_invoices'] ?? 0, 0, ',', ' ') }} FCFA</h3>
+                  <p class="text-xs shrink-0 xxl:m-text font-medium">Factures impayées</p>
                 </div>
-                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-secondary-300 inline-flex py-2 px-4 items-center gap-1"> <i class="las la-arrow-up text-lg"></i> 44.8%</span>
+                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-secondary-300 inline-flex py-2 px-4 items-center gap-1">
+                  <i class="las la-exclamation-triangle text-lg"></i>
+                  {{ $stats['pending_count'] ?? 0 }} factures
+                </span>
               </div>
             </div>
           </div>
@@ -45,16 +51,19 @@
             <div class="p-3 md:p-4 lg:p-6 xxl:p-8 rounded-xl bg-warning-300/40">
               <div class="flex justify-between items-start">
                 <span class="bg-neutral-0 dark:bg-neutral-904 rounded-lg size-14 shrink-0 xxl:size-16 f-center">
-                  <img src="assets/images/btc.png" width="48" alt="" />
+                  <i class="las la-tasks text-3xl text-warning-300"></i>
                 </span>
                 <div class="analytics-stat-chart-3"></div>
               </div>
               <div class="flex justify-between items-end">
                 <div>
-                  <h3 class="mb-4">$458.45</h3>
-                  <p class="text-xs shrink-0 xxl:m-text font-medium">Bitcoin BTC</p>
+                  <h3 class="mb-4">{{ $stats['active_projects'] ?? 0 }}</h3>
+                  <p class="text-xs shrink-0 xxl:m-text font-medium">Projets en cours</p>
                 </div>
-                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-warning-300 inline-flex py-2 px-4 items-center gap-1"> <i class="las la-arrow-up text-lg"></i> 75.8%</span>
+                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-warning-300 inline-flex py-2 px-4 items-center gap-1">
+                  <i class="las la-calendar-check text-lg"></i>
+                  {{ $stats['total_projects'] ?? 0 }} total
+                </span>
               </div>
             </div>
           </div>
@@ -63,357 +72,287 @@
             <div class="p-3 md:p-4 lg:p-6 xxl:p-8 rounded-xl bg-error-300/40">
               <div class="flex justify-between items-start">
                 <span class="bg-neutral-0 dark:bg-neutral-904 rounded-lg size-14 shrink-0 xxl:size-16 f-center">
-                  <img src="assets/images/eth.png" width="48" alt="" />
+                  <i class="las la-boxes text-3xl text-error-300"></i>
                 </span>
                 <div class="analytics-stat-chart-4"></div>
               </div>
               <div class="flex justify-between items-end">
                 <div>
-                  <h3 class="mb-4">$657.12</h3>
-                  <p class="text-xs shrink-0 xxl:m-text font-medium">Ethereum ETC</p>
+                  <h3 class="mb-4">{{ $stats['low_stock_count'] ?? 0 }}</h3>
+                  <p class="text-xs shrink-0 xxl:m-text font-medium">Produits stock faible</p>
                 </div>
-                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-error-300 inline-flex py-2 px-4 items-center gap-1"> <i class="las la-arrow-up text-lg"></i> 75.8%</span>
+                <span class="m-text rounded-full bg-neutral-0/50 dark:bg-neutral-904/50 text-error-300 inline-flex py-2 px-4 items-center gap-1">
+                  <i class="las la-exclamation-circle text-lg"></i>
+                  Alerte
+                </span>
               </div>
             </div>
           </div>
 
-          <!-- Graphique du marché -->
+          <!-- Graphique des ventes -->
           <div class="col-span-12 xxl:col-span-8 space-y-4 xxl:space-y-6">
             <div class="white-box overflow-hidden">
               <div class="bb-dashed-n30 flex flex-col sm:flex-row justify-center sm:justify-between gap-4 items-center">
                 <div>
-                  <h4>Graphique du marché</h4>
-                  <p class="m-text mt-2">(+43%) par rapport à l'année dernière</p>
+                  <h4>Évolution des ventes {{ date('Y') }}</h4>
+                  <p class="m-text mt-2">({{ $stats['sales_growth'] ?? 0 }}%) par rapport au mois dernier</p>
                 </div>
                 <div class="flex items-center gap-3">
-                  <span>Trier par : </span>
-                  <select name="sort" class="nc-select n20">
-                    <option value="day">15 derniers jours</option>
-                    <option value="week">1 dernier mois</option>
-                    <option value="year">6 derniers mois</option>
+                  <span>Période : </span>
+                  <select name="year" id="yearSelect" class="nc-select n20" onchange="window.location.href='?year='+this.value">
+                    <option value="{{ date('Y') }}" selected>{{ date('Y') }}</option>
+                    <option value="{{ date('Y')-1 }}">{{ date('Y')-1 }}</option>
+                    <option value="{{ date('Y')-2 }}">{{ date('Y')-2 }}</option>
                   </select>
                 </div>
               </div>
-              <div x-ref="marketGraph"></div>
+              <div id="salesChart" style="height: 380px;"></div>
             </div>
 
-            <!-- Cartes de statistiques -->
+            <!-- Cartes de statistiques détaillées -->
             <div class="gap-4 lg:gap-6 grid grid-cols-2">
               <div class="col-span-2 md:col-span-1 white-box flex justify-between items-end gap-4 xxxl:gap-6">
                 <div class="flex items-start gap-4">
                   <div class="f-center rounded-lg size-12 xxl:size-14 bg-primary-5 border border-neutral-30 dark:border-neutral-500 text-primary-300">
-                    <i class="las la-wallet text-3xl"></i>
+                    <i class="las la-users text-3xl"></i>
                   </div>
                   <div>
-                    <p class="m-text mb-4">Solde total</p>
-                    <h3 class="mb-4">45 717,25 €</h3>
+                    <p class="m-text mb-4">Utilisateurs actifs</p>
+                    <h3 class="mb-4">{{ $stats['total_users'] ?? 0 }}</h3>
                   </div>
                 </div>
                 <span class="rounded-full py-2 px-4 bg-primary-5 text-primary-300 flex items-center gap-1">
-                  <i class="las la-arrow-up"></i>
-                  75.8%
+                  <i class="las la-user-plus"></i>
+                  +{{ $stats['new_users'] ?? 0 }}
                 </span>
               </div>
 
               <div class="col-span-2 md:col-span-1 white-box flex justify-between items-end gap-4 xxxl:gap-6">
                 <div class="flex items-start gap-4">
                   <div class="f-center rounded-lg size-12 xxl:size-14 bg-primary-5 border border-neutral-30 dark:border-neutral-500 text-primary-300">
-                    <i class="las la-coins text-3xl"></i>
+                    <i class="las la-hand-holding-usd text-3xl"></i>
                   </div>
                   <div>
-                    <p class="m-text mb-4">Investissement total</p>
-                    <h3 class="mb-4">921,12 €</h3>
+                    <p class="m-text mb-4">Dépenses mensuelles</p>
+                    <h3 class="mb-4">{{ number_format($stats['monthly_expenses'] ?? 0, 0, ',', ' ') }} FCFA</h3>
                   </div>
                 </div>
                 <span class="rounded-full py-2 px-4 bg-primary-5 text-primary-300 flex items-center gap-1">
-                  <i class="las la-arrow-up"></i>
-                  75.8%
+                  <i class="las la-chart-line"></i>
+                  {{ $stats['expenses_vs_prev'] ?? 0 }}%
                 </span>
               </div>
 
               <div class="col-span-2 md:col-span-1 white-box flex justify-between items-end gap-4 xxxl:gap-6">
                 <div class="flex items-start gap-4">
                   <div class="f-center rounded-lg size-12 xxl:size-14 bg-primary-5 border border-neutral-30 dark:border-neutral-500 text-primary-300">
-                    <i class="las la-exchange-alt text-3xl"></i>
+                    <i class="las la-check-circle text-3xl"></i>
                   </div>
                   <div>
-                    <p class="m-text mb-4">Variation totale</p>
-                    <h3 class="mb-4">3 645,12 €</h3>
+                    <p class="m-text mb-4">Tâches terminées</p>
+                    <h3 class="mb-4">{{ $stats['completed_tasks'] ?? 0 }}/{{ $stats['total_tasks'] ?? 0 }}</h3>
                   </div>
                 </div>
                 <span class="rounded-full py-2 px-4 bg-primary-5 text-primary-300 flex items-center gap-1">
-                  <i class="las la-arrow-up"></i>
-                  75.8%
+                  <i class="las la-percent"></i>
+                  {{ $stats['tasks_completion_rate'] ?? 0 }}%
                 </span>
               </div>
 
               <div class="col-span-2 md:col-span-1 white-box flex justify-between items-end gap-4 xxxl:gap-6">
                 <div class="flex items-start gap-4">
                   <div class="f-center rounded-lg size-12 xxl:size-14 bg-primary-5 border border-neutral-30 dark:border-neutral-500 text-primary-300">
-                    <i class="las la-money-bill-alt text-3xl"></i>
+                    <i class="las la-clock text-3xl"></i>
                   </div>
                   <div>
-                    <p class="m-text mb-4">Variation du jour</p>
-                    <h3 class="mb-4">12,25 €</h3>
+                    <p class="m-text mb-4">Factures en retard</p>
+                    <h3 class="mb-4">{{ number_format($stats['overdue_invoices'] ?? 0, 0, ',', ' ') }} FCFA</h3>
                   </div>
                 </div>
                 <span class="rounded-full py-2 px-4 bg-primary-5 text-primary-300 flex items-center gap-1">
-                  <i class="las la-arrow-up"></i>
-                  75.8%
+                  <i class="las la-exclamation-triangle"></i>
+                  {{ $stats['overdue_count'] ?? 0 }} factures
                 </span>
               </div>
             </div>
           </div>
 
-          <!-- Mon portefeuille -->
+          <!-- Projets récents -->
           <div class="col-span-12 xxl:col-span-4 white-box overflow-hidden">
-            <h4 class="bb-dashed-n30">Mon portefeuille</h4>
-            <div x-ref="portfolio"></div>
+            <h4 class="bb-dashed-n30">Projets en cours</h4>
             <div class="space-y-5 xxl:space-y-8 mt-4 xxl:mt-6">
-              <!-- Liste des cryptomonnaies -->
+              @forelse($activeProjects ?? [] as $project)
               <div class="flex justify-between items-center gap-4">
                 <div class="flex items-center gap-4 xxxl:gap-6">
                   <div class="size-14 rounded-lg border border-primary-100 bg-primary-50/5 f-center">
-                    <img src="assets/images/btc.png" width="40" alt="Bitcoin" />
+                    <i class="las la-project-diagram text-2xl text-primary-300"></i>
                   </div>
                   <div>
-                    <p class="font-medium l-text mb-2">Bitcoin</p>
+                    <p class="font-medium l-text mb-2">{{ $project->name }}</p>
                     <div class="flex items-center gap-2">
                       <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">BTC</span>
+                      <span class="s-text">{{ $project->client->name ?? 'Sans client' }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="text-end">
-                  <p class="mb-2 s-text">BTC 0.00584875</p>
-                  <p class="text-primary-300 text-sm">19 405,12 €</p>
+                  <p class="mb-2 s-text">Progression</p>
+                  <p class="text-primary-300 text-sm">{{ $project->progress ?? 0 }}%</p>
                 </div>
               </div>
-
-              <div class="flex justify-between items-center gap-4">
-                <div class="flex items-center gap-4 xxxl:gap-6">
-                  <div class="size-14 rounded-lg border border-primary-100 bg-primary-50/5 f-center">
-                    <img src="assets/images/eth.png" width="40" alt="Ethereum" />
-                  </div>
-                  <div>
-                    <p class="font-medium l-text mb-2">Ethereum</p>
-                    <div class="flex items-center gap-2">
-                      <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">ETH</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-end">
-                  <p class="mb-2 s-text">BTC 0.00584875</p>
-                  <p class="text-primary-300 text-sm">19 405,12 €</p>
-                </div>
+              @empty
+              <div class="text-center py-8">
+                <i class="las la-folder-open text-4xl text-gray-400"></i>
+                <p class="text-gray-500 mt-2">Aucun projet en cours</p>
               </div>
-
-              <div class="flex justify-between items-center gap-4">
-                <div class="flex items-center gap-4 xxxl:gap-6">
-                  <div class="size-14 rounded-lg border border-primary-100 bg-primary-50/5 f-center">
-                    <img src="assets/images/ltc.png" width="40" alt="Litcoin" />
-                  </div>
-                  <div>
-                    <p class="font-medium l-text mb-2">Litcoin</p>
-                    <div class="flex items-center gap-2">
-                      <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">LTC</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-end">
-                  <p class="mb-2 s-text">BTC 0.00584875</p>
-                  <p class="text-primary-300 text-sm">19 405,12 €</p>
-                </div>
-              </div>
-
-              <div class="flex justify-between items-center gap-4">
-                <div class="flex items-center gap-4 xxxl:gap-6">
-                  <div class="size-14 rounded-lg border border-primary-100 bg-primary-50/5 f-center">
-                    <img src="assets/images/ada.png" width="40" alt="Cardano" />
-                  </div>
-                  <div>
-                    <p class="font-medium l-text mb-2">Cardano</p>
-                    <div class="flex items-center gap-2">
-                      <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">ADA</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-end">
-                  <p class="mb-2 s-text">BTC 0.00584875</p>
-                  <p class="text-primary-300 text-sm">19 405,12 €</p>
-                </div>
-              </div>
-
-              <div class="flex justify-between items-center gap-4">
-                <div class="flex items-center gap-4 xxxl:gap-6">
-                  <div class="size-14 rounded-lg border border-primary-100 bg-primary-50/5 f-center">
-                    <img src="assets/images/usdt.png" width="40" alt="Tether" />
-                  </div>
-                  <div>
-                    <p class="font-medium l-text mb-2">Tether</p>
-                    <div class="flex items-center gap-2">
-                      <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">USDT</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="text-end">
-                  <p class="mb-2 s-text">BTC 0.00584875</p>
-                  <p class="text-primary-300 text-sm">19 405,12 €</p>
-                </div>
-              </div>
+              @endforelse
             </div>
           </div>
 
-          <!-- Mes cryptomonnaies -->
+          <!-- Liste des produits -->
           <div class="col-span-12 lg:col-span-7 xxl:col-span-8 white-box">
             <div class="flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 bb-dashed-n30">
-              <h4>Mes cryptomonnaies</h4>
+              <h4>Produits les plus vendus</h4>
               <div class="flex items-center gap-3">
-                <span>Trier par : </span>
-                <select name="sort" class="nc-select n20">
-                  <option value="day">15 derniers jours</option>
-                  <option value="week">1 dernier mois</option>
-                  <option value="year">6 derniers mois</option>
+                <span>Filtrer : </span>
+                <select class="nc-select n20" id="productFilter">
+                  <option value="all">Tous</option>
+                  <option value="low_stock">Stock faible</option>
+                  <option value="out_stock">Rupture</option>
                 </select>
               </div>
             </div>
-            <div x-data="{dense: false}" class="checkboxes-container overflow-x-auto">
+            <div class="overflow-x-auto">
               <table class="w-full whitespace-nowrap">
                 <thead class="text-left">
                   <tr class="bg-neutral-20 dark:bg-neutral-903">
-                    <th class="px-6 py-3 lg:py-5">Nom</th>
+                    <th class="px-6 py-3 lg:py-5">Produit</th>
+                    <th class="px-6 py-3 lg:py-5">Catégorie</th>
                     <th class="px-6 py-3 lg:py-5">Prix</th>
-                    <th class="px-6 py-3 lg:py-5">Variation 24h</th>
-                    <th class="px-6 py-3 lg:py-5">Solde total</th>
-                    <th class="px-6 py-3 lg:py-5">Quantité totale</th>
+                    <th class="px-6 py-3 lg:py-5">Stock</th>
+                    <th class="px-6 py-3 lg:py-5">Statut</th>
                     <th class="px-6 py-3 lg:py-5">Actions</th>
-                  </tr>
+                   </tr>
                 </thead>
                 <tbody>
+                  @forelse($topProducts ?? [] as $product)
                   <tr class="border-b border-neutral-30 bg-neutral-0 duration-300 hover:bg-neutral-20 dark:border-neutral-500 dark:bg-neutral-904 dark:hover:bg-neutral-903">
                     <td class="px-6 py-3 lg:py-5">
                       <div class="flex items-center gap-2">
-                        <img src="assets/images/btc.png" width="24" class="rounded-full" alt="Bitcoin" />
-                        <span class="m-text font-medium">Bitcoin</span>
+                        <i class="las la-box text-xl text-primary-300"></i>
+                        <span class="m-text font-medium">{{ $product->name }}</span>
                       </div>
                     </td>
-                    <td class="px-6 py-3 lg:py-5">854,08 €</td>
-                    <td class="px-6 py-3 lg:py-5 flex items-center gap-2">
-                      <i class="las la-level-down-alt text-error-300 text-xl"></i>
-                      79.54
-                    </td>
-                    <td class="px-6 py-3 lg:py-5">91,83 €</td>
-                    <td class="px-6 py-3 lg:py-5">11.93</td>
+                    <td class="px-6 py-3 lg:py-5">{{ $product->category ?? 'Non catégorisé' }}</td>
+                    <td class="px-6 py-3 lg:py-5">{{ number_format($product->selling_price, 0, ',', ' ') }} FCFA</td>
+                    <td class="px-6 py-3 lg:py-5">{{ $product->stock_quantity }} {{ $product->unit ?? 'pièces' }}</td>
                     <td class="px-6 py-3 lg:py-5">
-                      <a href="#" class="py-2 px-5 rounded-3xl s-text font-semibold text-primary-300 border border-primary-300">Échanger</a>
+                      @if($product->stock_quantity <= 0)
+                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">Rupture</span>
+                      @elseif($product->stock_quantity <= $product->min_stock_quantity)
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs">Stock faible</span>
+                      @else
+                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">En stock</span>
+                      @endif
+                    </td>
+                    <td class="px-6 py-3 lg:py-5">
+                      <a href="{{ route('products.edit', $product) }}" class="py-2 px-5 rounded-3xl s-text font-semibold text-primary-300 border border-primary-300">Modifier</a>
                     </td>
                   </tr>
-                  <!-- Ajoutez les autres lignes avec les mêmes traductions -->
+                  @empty
+                  <tr>
+                    <td colspan="6" class="text-center py-8 text-gray-500">Aucun produit trouvé</td>
+                  </tr>
+                  @endforelse
                 </tbody>
               </table>
-              <div class="mt-6 flex items-center gap-5 justify-center flex-col md:flex-row md:justify-end whitespace-nowrap">
-                <div class="flex flex-col sm:flex-row justify-center sm:justify-between gap-5">
-                  <div class="flex gap-4 items-center">
-                    <p>Lignes par page :</p>
-                    <select name="rows" id="rows" class="bg-transparent dark:bg-neutral-904">
-                      <option value="10">10</option>
-                      <option value="25">25</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
-                    </select>
-                  </div>
-                  <div class="f-center gap-4">
-                    <p>1-10 sur 100</p>
-                    <button><i class="las la-angle-left text-xl rtl:rotate-180"></i></button>
-                    <button><i class="las la-angle-right text-xl rtl:rotate-180"></i></button>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
-          <!-- Transfert rapide -->
+          <!-- Transfert rapide / Création rapide -->
           <div class="col-span-12 lg:col-span-5 xxl:col-span-4 white-box">
             <div class="bb-dashed-n30 mb-4 flex items-center justify-between pb-4 lg:mb-6 lg:pb-6">
-              <div x-data="{type:'buy'}" class="flex rounded-lg border border-neutral-30 dark:border-neutral-500 bg-primary-5">
-                <button class="px-4 py-2 rounded-lg" :class="type === 'buy' ? 'bg-primary-300 text-neutral-0' : 'bg-transparent'" @click="type = 'buy'">Acheter</button>
-                <button class="px-4 py-2 rounded-lg" :class="type === 'sell' ? 'bg-primary-300 text-neutral-0' : 'bg-transparent'" @click="type = 'sell'">Vendre</button>
+              <div class="flex rounded-lg border border-neutral-30 dark:border-neutral-500 bg-primary-5 w-full">
+                <a href="{{ route('invoices.create') }}" class="flex-1 px-4 py-2 rounded-lg text-center bg-primary-300 text-neutral-0">Nouvelle facture</a>
+                <a href="{{ route('projects.create') }}" class="flex-1 px-4 py-2 rounded-lg text-center bg-transparent hover:bg-primary-50">Nouveau projet</a>
               </div>
             </div>
 
-            <div class="bb-dashed-n30 mb-4 flex flex-col pb-4 lg:mb-6 lg:pb-6">
-              <div class="primary5-box spend order-1 border border-n30 bg-primary/5 dark:border-n500 dark:bg-bg3 xl:p-3 xxl:p-4">
-                <div class="bb-dashed-n30 mb-4 flex items-center justify-between gap-3 pb-4 text-sm">
-                  <p>Dépenser</p>
-                  <p>Solde : 10 000 USD</p>
-                </div>
-                <div class="flex items-center justify-between gap-4 text-xl font-medium">
-                  <input type="number" class="w-20 border-none bg-transparent p-0" placeholder="0.00" />
-                  <div class="shrink-0 flex gap-2 items-center">
-                    <img src="assets/images/btc.png" width="28" alt="BTC" />
-                    <p class="font-medium xl-text">BTC</p>
+            <div class="bb-dashed-n30 mb-4 pb-4 lg:mb-6 lg:pb-6">
+              <p class="mb-4 text-lg font-medium">Création rapide de facture</p>
+              <form action="{{ route('invoices.store') }}" method="POST">
+                @csrf
+                <div class="space-y-4">
+                  <div class="form-input">
+                    <select name="client_id" class="w-full p-3 border rounded-lg" required>
+                      <option value="">Sélectionner un client</option>
+                      @foreach($recentClients ?? [] as $client)
+                      <option value="{{ $client->id }}">{{ $client->name }}</option>
+                      @endforeach
+                    </select>
                   </div>
-                </div>
-              </div>
-              <button class="relative z-[2] order-2 -my-4 text-xl text-primary-300 self-center rounded-lg border border-n30 bg-neutral-0 size-12 f-center text-primary dark:border-neutral-500 dark:bg-neutral-904">
-                <i class="las la-exchange-alt rotate-90"></i>
-              </button>
-              <div class="primary5-box receive order-3 border border-n30 bg-primary/5 dark:border-n500 dark:bg-bg3 xl:p-3 xxl:p-4">
-                <div class="bb-dashed-n30 mb-4 flex items-center justify-between gap-3 pb-4 text-sm">
-                  <p>Recevoir</p>
-                  <p>Solde : 10 000 USD</p>
-                </div>
-                <div class="flex items-center justify-between gap-4 text-xl font-medium">
-                  <input type="number" class="w-20 border-none bg-transparent p-0" placeholder="0.00" />
-                  <div class="shrink-0 flex gap-2 items-center">
-                    <img src="assets/images/ada.png" width="28" alt="ADA" />
-                    <p class="font-medium xl-text">ADA</p>
+                  <div class="form-input">
+                    <input type="number" name="amount" class="w-full p-3 border rounded-lg" placeholder="Montant" required>
                   </div>
+                  <button type="submit" class="btn-primary w-full py-3">Créer la facture</button>
                 </div>
-              </div>
+              </form>
             </div>
 
             <div>
-              <p class="mb-6 text-lg font-medium">Méthode de paiement</p>
-              <div class="mb-6 flex items-center gap-4 rounded-lg border border-dashed border-primary bg-primary-50 dark:border-neutral-500 p-3 lg:mb-8">
-                <img src="assets/images/card.png" width="60" height="40" alt="carte" />
-                <div>
-                  <p class="mb-1 font-medium">John Snow - Metal</p>
-                  <span class="text-xs">**4291 - Exp: 12/26</span>
+              <p class="mb-6 text-lg font-medium">Méthodes de paiement acceptées</p>
+              <div class="grid grid-cols-3 gap-3">
+                <div class="flex items-center justify-center p-3 rounded-lg border border-neutral-30">
+                  <i class="fab fa-cc-visa text-2xl text-blue-600"></i>
+                </div>
+                <div class="flex items-center justify-center p-3 rounded-lg border border-neutral-30">
+                  <i class="fab fa-cc-mastercard text-2xl text-red-600"></i>
+                </div>
+                <div class="flex items-center justify-center p-3 rounded-lg border border-neutral-30">
+                  <i class="fab fa-cc-amex text-2xl text-blue-400"></i>
+                </div>
+                <div class="flex items-center justify-center p-3 rounded-lg border border-neutral-30">
+                  <i class="fas fa-money-bill-wave text-2xl text-green-600"></i>
+                </div>
+                <div class="flex items-center justify-center p-3 rounded-lg border border-neutral-30">
+                  <i class="fab fa-paypal text-2xl text-blue-500"></i>
+                </div>
+                <div class="flex items-center justify-center p-3 rounded-lg border border-neutral-30">
+                  <i class="fas fa-mobile-alt text-2xl text-orange-500"></i>
                 </div>
               </div>
-              <a href="#" class="btn-primary flex w-full justify-center"> Acheter </a>
             </div>
           </div>
 
-          <!-- Meilleurs performeurs -->
+          <!-- Tâches récentes -->
           <div class="col-span-12 lg:col-span-6 xxxl:col-span-4 white-box">
-            <h4 class="bb-dashed-n30">Meilleurs performeurs</h4>
+            <h4 class="bb-dashed-n30">Tâches récentes</h4>
             <div class="space-y-5 xxl:space-y-8 mt-4 xxl:mt-6">
-              <!-- Liste des meilleurs performeurs -->
+              @forelse($recentTasks ?? [] as $task)
               <div class="flex justify-between items-center gap-4">
-                <div class="flex items-center gap-4 xxxl:gap-6">
-                  <div class="size-14 rounded-lg border border-primary-100 bg-primary-50/5 f-center">
-                    <img src="assets/images/btc.png" width="40" alt="Bitcoin" />
+                <div class="flex items-center gap-4">
+                  <div class="size-10 rounded-full border border-neutral-30 bg-neutral-20 f-center text-xl text-primary-300">
+                    <i class="las la-tasks"></i>
                   </div>
                   <div>
-                    <p class="font-medium l-text mb-2">Bitcoin</p>
+                    <p class="font-medium l-text mb-2">{{ $task->title }}</p>
                     <div class="flex items-center gap-2">
                       <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">BTC</span>
+                      <span class="s-text">Assigné à: {{ $task->assignee->name ?? 'Non assigné' }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="text-end">
-                  <p class="mb-2 s-text">BTC 0.00584875</p>
-                  <p class="text-primary-300 text-sm">19 405,12 €</p>
+                  <p class="mb-2 m-text">{{ $task->status }}</p>
+                  <p class="text-primary-300 text-sm">{{ $task->due_date ? $task->due_date->format('d/m/Y') : 'Sans échéance' }}</p>
                 </div>
               </div>
-              <!-- Ajoutez les autres lignes -->
+              @empty
+              <div class="text-center py-8">
+                <i class="las la-check-circle text-4xl text-gray-400"></i>
+                <p class="text-gray-500 mt-2">Aucune tâche récente</p>
+              </div>
+              @endforelse
             </div>
           </div>
 
@@ -421,75 +360,146 @@
           <div class="col-span-12 lg:col-span-6 xxxl:col-span-4 white-box">
             <h4 class="bb-dashed-n30">Activité récente</h4>
             <div class="space-y-5 xxl:space-y-8 mt-4 xxl:mt-6">
+              @forelse($recentActivities ?? [] as $activity)
               <div class="flex justify-between items-center gap-4">
                 <div class="flex items-center gap-4">
-                  <div class="size-10 rounded-full border border-neutral-30 bg-neutral-20 f-center text-xl text-primary-300">
-                    <i class="las la-arrow-circle-down"></i>
+                  <div class="size-10 rounded-full border border-neutral-30 bg-neutral-20 f-center text-xl {{ $activity->icon_color ?? 'text-primary-300' }}">
+                    <i class="{{ $activity->icon ?? 'las la-bell' }}"></i>
                   </div>
                   <div>
-                    <p class="font-medium l-text mb-2">Achat de Bitcoin</p>
+                    <p class="font-medium l-text mb-2">{{ $activity->title }}</p>
                     <div class="flex items-center gap-2">
                       <span class="block size-2 rounded-full bg-primary-300"></span>
-                      <span class="s-text">Carte Visa Débit ***6</span>
+                      <span class="s-text">{{ $activity->description }}</span>
                     </div>
                   </div>
                 </div>
                 <div class="text-end">
-                  <p class="mb-2 m-text">+0.04025745 BTC</p>
-                  <p class="text-primary-300 text-sm">+878.52 USD</p>
+                  <p class="mb-2 m-text">{{ $activity->created_at->diffForHumans() }}</p>
+                  @if(isset($activity->amount))
+                  <p class="text-primary-300 text-sm">{{ number_format($activity->amount, 0, ',', ' ') }} FCFA</p>
+                  @endif
                 </div>
               </div>
-              <!-- Ajoutez les autres activités -->
+              @empty
+              <div class="text-center py-8">
+                <i class="las la-history text-4xl text-gray-400"></i>
+                <p class="text-gray-500 mt-2">Aucune activité récente</p>
+              </div>
+              @endforelse
             </div>
           </div>
 
-          <!-- Transfert rapide -->
+          <!-- Factures en attente -->
           <div class="col-span-12 lg:col-span-6 xxxl:col-span-4 white-box">
-            <h4 class="bb-dashed-n30">Transfert rapide</h4>
+            <h4 class="bb-dashed-n30">Factures en attente</h4>
             <div class="flex justify-between items-center mb-6">
-              <p class="l-text font-medium">Récent</p>
-              <a href="#" class="h6 text-primary-300 font-semibold">Voir tout <i class="las la-arrow-right text-lg"></i></a>
+              <p class="l-text font-medium">À régler</p>
+              <a href="{{ route('invoices.index') }}" class="h6 text-primary-300 font-semibold">Voir tout <i class="las la-arrow-right text-lg"></i></a>
             </div>
 
-            <!-- Sélection de la banque -->
-            <div x-data="{isOpen:false,selected:'Banque X', items:['Banque X','Banque Y','Banque Z']}" class="relative mb-6">
-              <div @click="isOpen=!isOpen" class="relative flex cursor-pointer items-center justify-between rounded-xl border border-neutral-30 px-6 py-3 dark:border-neutral-500">
-                <span x-text="selected"></span>
-                <i class="las la-angle-down text-lg duration-300" :class="isOpen?'rotate-180':'rotate-0'"></i>
-                <span class="absolute -top-2 left-5 bg-neutral-0 px-2 text-xs dark:bg-neutral-904">Nom de la banque</span>
-              </div>
-              <div x-show="isOpen" @click.away="isOpen=false" class="absolute left-0 top-full z-10 flex max-h-[200px] w-full flex-col gap-1 overflow-y-auto rounded-lg bg-neutral-0 p-1 shadow-xl dark:bg-neutral-904">
-                <template x-for="item in items">
-                  <div @click="selected=item, isOpen=false" :class="selected===item?'bg-primary-300 text-neutral-0':'hover:bg-primary-50 dark:hover:bg-neutral-903'" class="cursor-pointer rounded-md px-4 py-2 duration-300" x-text="item"></div>
-                </template>
-              </div>
-            </div>
-
-            <div class="flex gap-6">
-              <div x-data="{isOpen:false,selected:'€', items:['€','$','£','¥']}" class="relative w-28">
-                <div @click="isOpen=!isOpen" class="relative flex cursor-pointer items-center justify-between rounded-xl border border-neutral-30 px-5 py-3.5 dark:border-neutral-500">
-                  <span x-text="selected"></span>
-                  <i class="las la-angle-down duration-300" :class="isOpen?'rotate-180':'rotate-0'"></i>
-                  <span class="absolute -top-2 left-5 bg-neutral-0 px-2 text-xs dark:bg-neutral-904">Devise</span>
+            <div class="space-y-4">
+              @forelse($pendingInvoicesList ?? [] as $invoice)
+              <div class="flex justify-between items-center p-3 rounded-lg border border-neutral-30">
+                <div>
+                  <p class="font-medium">{{ $invoice->invoice_number }}</p>
+                  <p class="text-sm text-gray-500">{{ $invoice->client->name ?? 'Client' }}</p>
                 </div>
-                <div x-show="isOpen" @click.away="isOpen=false" class="absolute left-0 top-full z-10 flex max-h-[200px] w-full flex-col gap-1 overflow-y-auto rounded-lg bg-neutral-0 p-1 shadow-xl dark:bg-neutral-904">
-                  <template x-for="item in items">
-                    <div @click="selected=item, isOpen=false" :class="selected===item?'bg-primary-300 text-neutral-0':'hover:bg-primary-50 dark:hover:bg-neutral-903'" class="cursor-pointer rounded-md px-4 py-2 duration-300" x-text="item"></div>
-                  </template>
+                <div class="text-end">
+                  <p class="font-medium text-primary-300">{{ number_format($invoice->balance, 0, ',', ' ') }} FCFA</p>
+                  <p class="text-xs text-gray-500">Échéance: {{ $invoice->due_date->format('d/m/Y') }}</p>
                 </div>
               </div>
-              <div class="form-input">
-                <input type="number" class="!py-3" id="amount" placeholder="Saisir le montant" />
-                <label for="amount">Montant</label>
+              @empty
+              <div class="text-center py-8">
+                <i class="las la-check-circle text-4xl text-green-500"></i>
+                <p class="text-gray-500 mt-2">Aucune facture en attente</p>
               </div>
+              @endforelse
             </div>
 
-            <div class="flex justify-between items-center my-5 xl:my-8">
-              <p class="font-medium l-text">Votre solde</p>
-              <p class="l-text">99,24 €</p>
+            @if(($pendingInvoicesList ?? [])->count() > 0)
+            <div class="mt-6 pt-4 border-t border-neutral-30">
+              <a href="{{ route('invoices.index') }}" class="btn-primary w-full text-center block py-2">Gérer les factures</a>
             </div>
-            <button class="w-full btn-primary">Transférer maintenant</button>
+            @endif
           </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique des ventes
+    var salesData = {!! json_encode($monthlySalesData ?? []) !!};
+    var months = {!! json_encode($months ?? ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']) !!};
+
+    var options = {
+        series: [{
+            name: 'Ventes',
+            data: salesData
+        }],
+        chart: {
+            type: 'line',
+            height: 380,
+            toolbar: {
+                show: false
+            }
+        },
+        colors: ['#2C7BE5'],
+        stroke: {
+            curve: 'smooth',
+            width: 3
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.7,
+                opacityTo: 0.3,
+                stops: [0, 90, 100]
+            }
+        },
+        xaxis: {
+            categories: months,
+            labels: {
+                style: {
+                    colors: '#6B7280'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Montant (FCFA)'
+            },
+            labels: {
+                formatter: function(value) {
+                    return value.toLocaleString('fr-FR');
+                }
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function(value) {
+                    return value.toLocaleString('fr-FR') + ' FCFA';
+                }
+            }
+        },
+        grid: {
+            borderColor: '#E5E7EB',
+            strokeDashArray: 5
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#salesChart"), options);
+    chart.render();
+
+    // Filtre des produits
+    document.getElementById('productFilter')?.addEventListener('change', function(e) {
+        console.log('Filtre:', e.target.value);
+    });
+});
+</script>
+@endpush

@@ -57,6 +57,47 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories'));
     }
 
+
+
+    // Dans app/Http/Controllers/ProductController.php
+
+/**
+ * Afficher la liste des produits (alias de index)
+ */
+public function list(Request $request)
+{
+    return $this->index($request);
+}
+
+/**
+ * Afficher la vue en grille
+ */
+public function grid(Request $request)
+{
+    $query = Product::where('company_id', Auth::user()->company_id);
+
+    // Ajoutez les mêmes filtres que dans index()
+    if ($request->has('search') && $request->search) {
+        $query->where(function($q) use ($request) {
+            $q->where('name', 'like', '%' . $request->search . '%')
+              ->orWhere('code', 'like', '%' . $request->search . '%')
+              ->orWhere('sku', 'like', '%' . $request->search . '%');
+        });
+    }
+
+    $products = $query->paginate($request->get('per_page', 15));
+    $categories = Product::where('company_id', Auth::user()->company_id)
+        ->whereNotNull('category')
+        ->distinct()
+        ->pluck('category');
+
+    return view('products.grid', compact('products', 'categories'));
+}
+
+
+
+
+
     /**
      * Afficher le formulaire de création
      */

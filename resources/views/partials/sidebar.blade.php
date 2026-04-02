@@ -270,12 +270,51 @@
             <span>Calendrier</span>
           </a>
         </li>
-        <li>
+                <li>
           <a href="{{ route('kanban') }}" class="menu-link vertical-menu">
             <i class="las la-table text-xl text-primary-300"></i>
             <span>Kanban</span>
           </a>
         </li>
+
+        <!-- Rapports - AJOUTER ICI -->
+        <li class="relative">
+            <button :class="opened=='reports' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('reports')" class="submenu-btn-v">
+                <span class="flex items-center gap-2">
+                    <i class="las la-chart-pie text-xl text-primary-300"></i>
+                    <span>Rapports</span>
+                </span>
+                <i :class="opened=='reports' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+            </button>
+            <div x-show="opened=='reports'" x-collapse>
+                <ul class="submenu-v" data-submenu="reports">
+                    <li>
+                        <a href="{{ route('reports.daily') }}" class="dropdown-link submenu-link-v">Journalier</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.weekly') }}" class="dropdown-link submenu-link-v">Hebdomadaire</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.monthly') }}" class="dropdown-link submenu-link-v">Mensuel</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.quarterly') }}" class="dropdown-link submenu-link-v">Trimestriel</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.annual') }}" class="dropdown-link submenu-link-v">Annuel</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.custom') }}" class="dropdown-link submenu-link-v">Personnalisé</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('reports.index') }}" class="dropdown-link submenu-link-v">Mes rapports</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+      </ul>
+
+      <p class="text-xs font-semibold mb-3 mt-5">COMPOSANTS</p>
       </ul>
 
 

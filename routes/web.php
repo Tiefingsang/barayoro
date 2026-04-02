@@ -37,6 +37,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,6 +182,20 @@ Route::get('/kanban/tasks', [KanbanController::class, 'getTasks'])->name('kanban
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 
 
+
+
+    // Rapports
+Route::prefix('reports')->name('reports.')->group(function () {
+    Route::get('/', [ReportController::class, 'index'])->name('index');
+    Route::get('/daily', [ReportController::class, 'daily'])->name('daily');
+    Route::get('/weekly', [ReportController::class, 'weekly'])->name('weekly');
+    Route::get('/monthly', [ReportController::class, 'monthly'])->name('monthly');
+    Route::get('/quarterly', [ReportController::class, 'quarterly'])->name('quarterly');
+    Route::get('/annual', [ReportController::class, 'annual'])->name('annual');
+    Route::get('/custom', [ReportController::class, 'custom'])->name('custom');
+    Route::get('/download/{report}', [ReportController::class, 'download'])->name('download');
+    Route::delete('/{report}', [ReportController::class, 'destroy'])->name('destroy');
+});
 
     // ----- Gestionnaire de fichiers -----
 // ----- Gestionnaire de fichiers -----

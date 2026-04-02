@@ -9,7 +9,7 @@ use App\Traits\HasComments;
 
 class Task extends Model
 {
-    use SoftDeletes, HasComments;
+    use SoftDeletes, HasComments; 
 
     protected $fillable = [
         'uuid', 'company_id', 'project_id', 'department_id',

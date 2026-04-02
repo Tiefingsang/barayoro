@@ -197,7 +197,7 @@ function openFileModal(fileId, type) {
     if (type === 'folder') {
         title.textContent = 'Actions du dossier';
         content.innerHTML = `
-            <a href="{{ route('files.index') }}?folder=${fileId}" class="block w-full text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <a href="/files?folder=${fileId}" class="block w-full text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 <i class="fas fa-folder-open"></i> Ouvrir
             </a>
             <button onclick="renameFile(${fileId})" class="block w-full text-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
@@ -210,10 +210,10 @@ function openFileModal(fileId, type) {
     } else {
         title.textContent = 'Actions du fichier';
         content.innerHTML = `
-            <a href="{{ route('files.download', '') }}/${fileId}" class="block w-full text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+            <a href="/files/download/${fileId}" class="block w-full text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                 <i class="fas fa-download"></i> Télécharger
             </a>
-            <a href="{{ route('files.show', '') }}/${fileId}" class="block w-full text-center px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
+            <a href="/files/show/${fileId}" class="block w-full text-center px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">
                 <i class="fas fa-eye"></i> Prévisualiser
             </a>
             <button onclick="renameFile(${fileId})" class="block w-full text-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
@@ -237,12 +237,13 @@ function closeFileModal() {
 function renameFile(fileId, currentName) {
     const newName = prompt('Nouveau nom:', currentName);
     if (newName && newName !== currentName) {
+        // Créer un formulaire avec l'URL correcte
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `{{ route('files.rename', '') }}/${fileId}`;
+        form.action = '/files/rename/' + fileId;
         form.innerHTML = `
-            @csrf
-            @method('PUT')
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="_method" value="PUT">
             <input type="text" name="name" value="${newName}">
         `;
         document.body.appendChild(form);
@@ -254,10 +255,10 @@ function deleteFile(fileId, fileName) {
     if (confirm(`Supprimer "${fileName}" ?`)) {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `{{ route('files.destroy', '') }}/${fileId}`;
+        form.action = '/files/delete/' + fileId;
         form.innerHTML = `
-            @csrf
-            @method('DELETE')
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="_method" value="DELETE">
         `;
         document.body.appendChild(form);
         form.submit();
@@ -265,13 +266,13 @@ function deleteFile(fileId, fileName) {
 }
 
 // Fermer le modal en cliquant en dehors
-document.getElementById('fileModal').addEventListener('click', function(e) {
+document.getElementById('fileModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeFileModal();
 });
-document.getElementById('createFolderModal').addEventListener('click', function(e) {
+document.getElementById('createFolderModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeCreateFolderModal();
 });
-document.getElementById('uploadModal').addEventListener('click', function(e) {
+document.getElementById('uploadModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeUploadModal();
 });
 </script>

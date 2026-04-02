@@ -183,11 +183,12 @@ Route::get('/kanban/tasks', [KanbanController::class, 'getTasks'])->name('kanban
 
 
     // ----- Gestionnaire de fichiers -----
+// ----- Gestionnaire de fichiers -----
 Route::prefix('files')->name('files.')->group(function () {
     // Routes principales
     Route::get('/', [FileManagerController::class, 'index'])->name('index');
     Route::get('/search', [FileManagerController::class, 'search'])->name('search');
-    Route::get('/view/{view}', [FileManagerController::class, 'setView'])->name('set-view');
+    Route::get('/set-view', [FileManagerController::class, 'setView'])->name('set-view'); // Changé ici
 
     // Opérations sur les dossiers
     Route::post('/create-folder', [FileManagerController::class, 'createFolder'])->name('create-folder');

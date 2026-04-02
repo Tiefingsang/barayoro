@@ -78,7 +78,7 @@
         </li>
 
         <li>
-          <a href="{{ route('files') }}" class="menu-link vertical-menu">
+         <a href="{{ route('files.index') }}" class="menu-link vertical-menu">
             <i class="las la-file text-xl text-primary-300"></i>
             <span>Fichiers</span>
           </a>

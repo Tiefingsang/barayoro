@@ -1,5 +1,5 @@
 <!doctype html>
-<html dir="ltr" lang="en">
+<html dir="ltr" lang="fr">
 
 <!-- Mirrored from softivuslab.com/html/softify/dist/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 28 Mar 2026 13:23:42 GMT -->
 <head>

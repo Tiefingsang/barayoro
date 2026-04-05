@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/animate.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/swiper.min.css') }}" />
     <title>Barayoro -  Admin Dashboard</title>
-  <script defer src="{{ asset('assets/js/app.js') }}"></script><link href="{{ asset('assets/css/style.css') }}" rel="stylesheet"></head>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="{{ asset('assets/js/app.js') }}"></script><link href="{{ asset('assets/css/style.css') }}" rel="stylesheet"></head>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
   <style>

@@ -14,7 +14,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->foreignId('client_id')->constrained()->onDelete('restrict');
-            $table->string('order_numb       er')->unique();
+            $table->string('order_number')->unique();
             $table->enum('type', ['estimate', 'order'])->default('order');
             $table->enum('status', [
                 'draft', 'pending', 'confirmed', 'processing',

@@ -102,7 +102,7 @@
             </div>
             <ul class="flex w-[300px] flex-col p-4">
 
-              
+
               <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
                 <img src="assets/images/users/user-s-2.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
                 <div class="text-sm">

@@ -16,8 +16,11 @@ class Project extends Model
         'uuid', 'company_id', 'department_id', 'client_id', 'project_manager_id',
         'code', 'name', 'description', 'status', 'priority',
         'start_date', 'due_date', 'completed_at',
-        'budget', 'actual_cost', 'progress', 'tags', 'metadata'
-    ];
+        'budget', 'actual_cost', 'progress', 'tags', 'metadata',
+        'sync_status',
+        'synced_at',
+        'local_updated_at',
+        ];
 
     protected $casts = [
         'start_date' => 'date',
@@ -29,9 +32,12 @@ class Project extends Model
         'tags' => 'array',
         'metadata' => 'array',
         'deleted_at' => 'datetime',
+        'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+
     ];
 
-    protected static function boot()
+   protected static function boot()
     {
         parent::boot();
 
@@ -41,6 +47,16 @@ class Project extends Model
             }
             if (empty($model->code)) {
                 $model->code = 'PROJ-' . strtoupper(Str::random(8));
+            }
+            if (empty($model->sync_status)) {
+                $model->sync_status = 'synced';
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty() && $model->sync_status !== 'pending') {
+                $model->sync_status = 'pending';
+                $model->local_updated_at = now();
             }
         });
     }

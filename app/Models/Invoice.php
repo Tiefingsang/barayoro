@@ -16,8 +16,11 @@ class Invoice extends Model
         'status', 'type',
         'subtotal', 'tax', 'discount', 'total', 'paid', 'balance',
         'currency', 'exchange_rate',
-        'notes', 'terms', 'items', 'tax_details', 'metadata'
-    ];
+        'notes', 'terms', 'items', 'tax_details', 'metadata','sync_status',
+        'synced_at',
+        'local_updated_at',
+        'pending_changes',
+        ];
 
     protected $casts = [
         'issue_date' => 'date',
@@ -34,6 +37,10 @@ class Invoice extends Model
         'tax_details' => 'array',
         'metadata' => 'array',
         'deleted_at' => 'datetime',
+        'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+        'pending_changes' => 'array',
+
     ];
 
     protected static function boot()
@@ -47,11 +54,20 @@ class Invoice extends Model
             if (empty($model->invoice_number)) {
                 $model->invoice_number = 'INV-' . date('Ymd') . '-' . strtoupper(Str::random(6));
             }
+            if (empty($model->sync_status)) {
+                $model->sync_status = 'synced';
+            }
             $model->balance = $model->total - $model->paid;
         });
 
         static::updating(function ($model) {
             $model->balance = $model->total - $model->paid;
+
+            // Marquer comme en attente de synchronisation si des champs ont changé
+            if ($model->isDirty() && $model->sync_status !== 'pending') {
+                $model->sync_status = 'pending';
+                $model->local_updated_at = now();
+            }
         });
     }
 

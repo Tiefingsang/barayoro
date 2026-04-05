@@ -23,11 +23,13 @@ class User extends Authenticatable
         'is_active', 'last_login_at', 'last_activity_at', 'last_sync_at',
         'last_ip', 'last_user_agent',
         'password_changed_at', 'two_factor_enabled', 'two_factor_secret',
-        'two_factor_recovery_codes'
-    ];
+        'two_factor_recovery_codes', 'sync_status',
+        'synced_at',
+        'local_updated_at',
+        ];
 
     protected $hidden = [
-        'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes'
+        'password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes',
     ];
 
     protected $casts = [
@@ -42,7 +44,9 @@ class User extends Authenticatable
         'password_changed_at' => 'datetime',
         'is_active' => 'boolean',
         'two_factor_enabled' => 'boolean',
-        'deleted_at' => 'datetime',
+        'deleted_at' => 'datetime', 'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+
     ];
 
     protected static function boot()

@@ -38,6 +38,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,7 +78,7 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::get('/forgot-password/confirmation', [AuthController::class, 'showConfirmation'])->name('password.confirmation');
 
 // ==================== ROUTES PROTÉGÉES ====================
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'subscription'])->group(function () {
 
     // ----- Tableau de bord -----
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -304,6 +305,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/backups', [BackupController::class, 'index'])->name('backups');
     Route::post('/backups', [BackupController::class, 'store'])->name('backups.store');
     Route::delete('/backups/{backup}', [BackupController::class, 'destroy'])->name('backups.destroy');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans');
+    Route::get('/subscription/checkout', [SubscriptionController::class, 'checkout'])->name('subscription.checkout');
+    Route::post('/subscription/process', [SubscriptionController::class, 'process'])->name('subscription.process');
+    Route::get('/subscription/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+    Route::get('/subscription/expired', [SubscriptionController::class, 'expired'])->name('subscription.expired');
+    Route::get('/subscription/required', [SubscriptionController::class, 'required'])->name('subscription.required');
 });
 
 // ==================== ROUTE 404 ====================

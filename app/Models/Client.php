@@ -15,14 +15,19 @@ class Client extends Model
         'uuid', 'company_id', 'code', 'name', 'email', 'phone', 'mobile',
         'website', 'contact_person', 'contact_email', 'contact_phone',
         'address', 'city', 'country', 'postal_code',
-        'tax_number', 'vat_number', 'status', 'notes', 'settings', 'metadata'
-    ];
+        'tax_number', 'vat_number', 'status', 'notes', 'settings', 'metadata', 'sync_status',
+        'synced_at',
+        'local_updated_at',
+        ];
 
     protected $casts = [
         'status' => 'string',
         'settings' => 'array',
         'metadata' => 'array',
         'deleted_at' => 'datetime',
+        'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+
     ];
 
     protected static function boot()
@@ -35,6 +40,16 @@ class Client extends Model
             }
             if (empty($model->code)) {
                 $model->code = 'CLI-' . strtoupper(Str::random(8));
+            }
+            if (empty($model->sync_status)) {
+                $model->sync_status = 'synced';
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty() && $model->sync_status !== 'pending') {
+                $model->sync_status = 'pending';
+                $model->local_updated_at = now();
             }
         });
     }

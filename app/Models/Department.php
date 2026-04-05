@@ -12,16 +12,21 @@ class Department extends Model
 
     protected $fillable = [
         'uuid', 'company_id', 'name', 'code', 'description', 'manager_id',
-        'is_active', 'settings'
-    ];
+        'is_active', 'settings', 'sync_status',
+        'synced_at',
+        'local_updated_at',
+        ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'settings' => 'array',
         'deleted_at' => 'datetime',
+        'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+
     ];
 
-    protected static function boot()
+   protected static function boot()
     {
         parent::boot();
 
@@ -29,9 +34,18 @@ class Department extends Model
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
             }
+            if (empty($model->sync_status)) {
+                $model->sync_status = 'synced';
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty() && $model->sync_status !== 'pending') {
+                $model->sync_status = 'pending';
+                $model->local_updated_at = now();
+            }
         });
     }
-
     public function company()
     {
         return $this->belongsTo(Company::class);

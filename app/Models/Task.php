@@ -9,7 +9,7 @@ use App\Traits\HasComments;
 
 class Task extends Model
 {
-    use SoftDeletes, HasComments; 
+    use SoftDeletes, HasComments;
 
     protected $fillable = [
         'uuid', 'company_id', 'project_id', 'department_id',
@@ -18,8 +18,11 @@ class Task extends Model
         'start_date', 'due_date', 'completed_at',
         'estimated_hours', 'actual_hours', 'progress',
         'sync_status', 'pending_changes', 'synced_at', 'local_updated_at',
-        'attachments', 'metadata'
-    ];
+        'attachments', 'metadata',
+
+
+
+        ];
 
     protected $casts = [
         'start_date' => 'date',
@@ -35,6 +38,9 @@ class Task extends Model
         'attachments' => 'array',
         'metadata' => 'array',
         'deleted_at' => 'datetime',
+        
+
+
     ];
 
     protected static function boot()

@@ -63,7 +63,7 @@ class AuthController extends Controller
     /**
      * Traiter l'inscription
      */
-    public function register(Request $request)
+    /* public function register(Request $request)
     {
         // Validation
         $request->validate([
@@ -82,9 +82,11 @@ class AuthController extends Controller
             'slug' => Str::slug($request->company_name . '-' . Str::random(6)),
             'email' => $request->email,
             'is_active' => true,
-            'subscription_status' => $request->subscription_plan === 'trial' ? 'active' : 'pending',
+            'subscription_status' => $request->subscription_plan === 'trial' ? 'trial' : 'pending',
             'subscription_expires_at' => $request->subscription_plan === 'trial' ? now()->addDays(30) : null,
             'max_users' => $request->subscription_plan === 'trial' ? 5 : 999,
+            'trial_ends_at' => now()->addDays(30),
+            'subscription_started_at' => now(),
         ]);
 
         // Création de l'utilisateur admin
@@ -101,7 +103,54 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect()->route('dashboard')->with('success', 'Compte créé avec succès !');
-    }
+    } */
+
+        public function register(Request $request)
+{
+    // Validation
+    $request->validate([
+        'company_name' => 'required|string|max:255',
+        'admin_name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:8|confirmed',
+        'subscription_plan' => 'required|in:trial,premium',
+        'terms' => 'accepted',
+    ]);
+
+    // Création de l'entreprise
+    $company = Company::create([
+        'uuid' => Str::uuid(),
+        'name' => $request->company_name,
+        'slug' => Str::slug($request->company_name . '-' . Str::random(6)),
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'country' => $request->country,
+        'siret' => $request->siret,
+        'is_active' => true,
+        'subscription_status' => 'trial',  // Maintenant 'trial' est accepté
+        'subscription_expires_at' => null,
+        'max_users' => 5,
+        'trial_ends_at' => now()->addDays(30),
+        'subscription_started_at' => now(),
+        'subscription_price' => 0,
+    ]);
+
+    // Création de l'utilisateur admin
+    $user = User::create([
+        'uuid' => Str::uuid(),
+        'company_id' => $company->id,
+        'name' => $request->admin_name,
+        'email' => $request->email,
+        'position' => $request->admin_position ?? 'Administrateur',
+        'password' => Hash::make($request->password),
+        'is_active' => true,
+    ]);
+
+    $user->assignRole('admin');
+    Auth::login($user);
+
+    return redirect()->route('dashboard')->with('success', 'Compte créé avec succès ! Vous bénéficiez de 30 jours d\'essai gratuit.');
+}
 
 
     /**

@@ -191,9 +191,12 @@
   @include('partials.navbar')
    <!-- Messages flash -->
     @include('components.flash-messages')
+    
+    @include('components.sync-status')
 
   <!-- Vertical Sidebar -->
   @include('partials.sidebar')
+
 
   <!-- Horizontal sidebar -->
   @include('partials.horisontal_sidebar')
@@ -213,6 +216,8 @@
 
     <!-- Footer -->
     @include('partials.footer')
+
+     @include('components.subscription-alert')
 
 
     <!-- js libraries and custom scripts -->

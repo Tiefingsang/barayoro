@@ -17,7 +17,9 @@ class Company extends Model
         'subscription_renewal_at', 'subscription_price', 'subscription_invoice_id',
         'max_users', 'max_storage_mb', 'unlimited_users',
         'is_active', 'is_trial', 'trial_ends_at',
-        'settings', 'offline_settings'
+        'settings', 'offline_settings','subscription_ends_at','last_payment_date','next_payment_date', 'sync_status',
+        'synced_at',
+        'local_updated_at',
     ];
 
     protected $casts = [
@@ -31,6 +33,13 @@ class Company extends Model
         'settings' => 'array',
         'offline_settings' => 'array',
         'deleted_at' => 'datetime',
+        'subscription_ends_at' => 'datetime',
+
+        'last_payment_date' => 'date',
+        'next_payment_date' => 'date',
+        'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+
     ];
 
     protected static function boot()
@@ -43,6 +52,16 @@ class Company extends Model
             }
             if (empty($model->slug)) {
                 $model->slug = Str::slug($model->name);
+            }
+            if (empty($model->sync_status)) {
+                $model->sync_status = 'synced';
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty() && $model->sync_status !== 'pending') {
+                $model->sync_status = 'pending';
+                $model->local_updated_at = now();
             }
         });
     }
@@ -203,4 +222,130 @@ class Company extends Model
     {
         return ($this->getStorageUsage() + $fileSizeMB) <= $this->max_storage_mb;
     }
+
+
+    /**
+     * Vérifier si l'entreprise est en période d'essai
+     */
+    public function isOnTrial(): bool
+    {
+        return $this->subscription_status === 'trial' &&
+            $this->trial_ends_at &&
+            $this->trial_ends_at->isFuture();
+    }
+
+    /**
+     * Vérifier si l'abonnement est actif
+     */
+    public function isSubscribed(): bool
+    {
+        return $this->subscription_status === 'active' &&
+            $this->subscription_ends_at &&
+            $this->subscription_ends_at->isFuture();
+    }
+
+    /**
+     * Vérifier si l'abonnement est expiré
+     */
+    public function isExpired(): bool
+    {
+        return $this->subscription_status === 'expired' ||
+            ($this->subscription_ends_at && $this->subscription_ends_at->isPast());
+    }
+
+    /**
+     * Vérifier si l'entreprise peut accéder à la plateforme
+     */
+    public function canAccess(): bool
+    {
+        return $this->isOnTrial() || $this->isSubscribed();
+    }
+
+    /**
+     * Obtenir les jours restants d'essai
+     */
+    public function getTrialDaysRemaining(): int
+    {
+        if (!$this->trial_ends_at) {
+            return 0;
+        }
+        return max(0, now()->diffInDays($this->trial_ends_at, false));
+    }
+
+    /**
+     * Obtenir les jours restants d'abonnement
+     */
+    public function getSubscriptionDaysRemaining(): int
+    {
+        if (!$this->subscription_ends_at) {
+            return 0;
+        }
+        return max(0, now()->diffInDays($this->subscription_ends_at, false));
+    }
+
+    /**
+     * Démarrer la période d'essai
+     */
+    public function startTrial(int $days = 30): void
+    {
+        $this->update([
+            'subscription_status' => 'trial',
+            'trial_ends_at' => now()->addDays($days),
+            'subscription_ends_at' => null,
+            'subscription_started_at' => now(),
+        ]);
+    }
+
+    /**
+     * Activer l'abonnement annuel
+     */
+    public function activateSubscription(float $amount = 49000): void
+    {
+        $this->update([
+            'subscription_status' => 'active',
+            'subscription_started_at' => now(),
+            'subscription_ends_at' => now()->addYear(),
+            'subscription_price' => $amount,
+            'last_payment_date' => now(),
+            'next_payment_date' => now()->addYear(),
+            'trial_ends_at' => null,
+        ]);
+    }
+
+    /**
+     * Renouveler l'abonnement
+     */
+    public function renewSubscription(): void
+    {
+        $this->update([
+            'subscription_status' => 'active',
+            'subscription_ends_at' => $this->subscription_ends_at ? $this->subscription_ends_at->addYear() : now()->addYear(),
+            'last_payment_date' => now(),
+            'next_payment_date' => $this->next_payment_date ? $this->next_payment_date->addYear() : now()->addYear(),
+        ]);
+    }
+
+    /**
+     * Expirer l'abonnement
+     */
+    public function expireSubscription(): void
+    {
+        $this->update([
+            'subscription_status' => 'expired',
+        ]);
+    }
+
+    /**
+     * Annuler l'abonnement
+     */
+    public function cancelSubscription(): void
+    {
+        $this->update([
+            'subscription_status' => 'cancelled',
+        ]);
+    }
+
+
+
+
 }

@@ -16,8 +16,10 @@ class Product extends Model
         'purchase_price', 'selling_price', 'tax_rate',
         'stock_quantity', 'min_stock_quantity', 'max_stock_quantity',
         'sku', 'barcode', 'images', 'attributes', 'metadata',
-        'is_active', 'is_taxable'
-    ];
+        'is_active', 'is_taxable', 'sync_status',
+        'synced_at',
+        'local_updated_at',
+        ];
 
     protected $casts = [
         'purchase_price' => 'decimal:2',
@@ -32,6 +34,9 @@ class Product extends Model
         'is_active' => 'boolean',
         'is_taxable' => 'boolean',
         'deleted_at' => 'datetime',
+        'synced_at' => 'datetime',
+    'local_updated_at' => 'datetime',
+
     ];
 
     protected static function boot()
@@ -44,6 +49,16 @@ class Product extends Model
             }
             if (empty($model->code)) {
                 $model->code = 'PROD-' . strtoupper(Str::random(8));
+            }
+            if (empty($model->sync_status)) {
+                $model->sync_status = 'synced';
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->isDirty() && $model->sync_status !== 'pending') {
+                $model->sync_status = 'pending';
+                $model->local_updated_at = now();
             }
         });
     }

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Helpers\NotificationHelper;
 
 class ProjectController extends Controller
 {
@@ -121,6 +122,10 @@ class ProjectController extends Controller
         'budget' => $request->budget,
         'tags' => $tags, // Utiliser le tableau
     ]);
+
+     // 🔔 NOTIFICATION : Nouveau projet créé
+    NotificationHelper::newProject($project);
+
 
     return redirect()->route('projects.show', $project)
         ->with('success', 'Projet créé avec succès.');

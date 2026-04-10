@@ -206,6 +206,62 @@
         </li>
 
 
+        {{-- Modifier le fichier de sidebar (resources/views/layouts/sidebar.blade.php) --}}
+<!-- Ajouter le sous-menu Ventes -->
+<li class="relative">
+    <button :class="opened=='sales' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('sales')" class="submenu-btn-v">
+        <span class="flex items-center gap-2">
+            <i class="las la-chart-line text-xl text-primary-300"></i>
+            <span>Ventes</span>
+        </span>
+        <i :class="opened=='sales' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+    </button>
+    <div x-show="opened=='sales'" x-collapse>
+        <ul class="submenu-v" data-submenu="sales">
+            <li>
+                <a href="{{ route('orders.index', ['type' => 'order', 'status' => 'delivered']) }}" class="dropdown-link submenu-link-v">
+                    Commandes livrées
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('orders.index', ['type' => 'order', 'status' => 'confirmed,processing,shipped']) }}" class="dropdown-link submenu-link-v">
+                    Commandes en cours
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('invoices.index', ['status' => 'paid']) }}" class="dropdown-link submenu-link-v">
+                    Factures payées
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+</li>
+
+<!-- Mettre à jour la section Boutique pour les produits -->
+<li class="relative">
+    <button :class="opened=='store' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('store')" class="submenu-btn-v">
+        <span class="flex items-center gap-2">
+            <i class="las la-store text-xl text-primary-300"></i>
+            <span>Produits</span>
+        </span>
+        <i :class="opened=='store' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+    </button>
+    <div x-show="opened=='store'" x-collapse>
+        <ul class="submenu-v" data-submenu="store">
+            <li>
+                <a href="{{ route('products.index') }}" class="dropdown-link submenu-link-v">Liste produits</a>
+            </li>
+            <li>
+                <a href="{{ route('products.create') }}" class="dropdown-link submenu-link-v">Créer produit</a>
+            </li>
+            <li>
+                <a href="{{ route('products.index', ['low_stock' => true]) }}" class="dropdown-link submenu-link-v">Stock faible</a>
+            </li>
+        </ul>
+    </div>
+</li>
+
         <!-- Départements -->
     <li class="relative">
         <button :class="opened=='departments' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('departments')" class="submenu-btn-v">

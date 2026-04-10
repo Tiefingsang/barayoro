@@ -191,7 +191,7 @@
   @include('partials.navbar')
    <!-- Messages flash -->
     @include('components.flash-messages')
-    
+
     @include('components.sync-status')
 
   <!-- Vertical Sidebar -->

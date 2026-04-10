@@ -150,18 +150,29 @@
                     <th class="text-right">Total</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($invoice->items as $item)
-                <tr>
-                    <td>{{ $item['description'] }}</td>
-                    <td class="text-right">{{ $item['quantity'] }}</td>
-                    <td class="text-right">{{ number_format($item['unit_price'], 0, ',', ' ') }} FCFA</td>
-                    <td class="text-right">{{ $item['discount'] }}%</td>
-                    <td class="text-right">{{ $item['tax_rate'] }}%</td>
-                    <td class="text-right">{{ number_format($item['total'], 0, ',', ' ') }} FCFA</td>
-                </tr>
-                @endforeach
-            </tbody>
+         <tbody>
+    @if($invoice->items && count($invoice->items) > 0)
+        @foreach($invoice->items as $item)
+        <tr>
+            <td>{{ $item['description'] ?? $item->description ?? '-' }}</td>
+            <td class="text-right">{{ $item['quantity'] ?? $item->quantity ?? 0 }}</td>
+            <td class="text-right">{{ number_format($item['unit_price'] ?? $item->unit_price ?? 0, 0, ',', ' ') }} FCFA</td>
+            <td class="text-right">{{ $item['discount'] ?? $item->discount ?? 0 }}%</td>
+            <td class="text-right">{{ $item['tax_rate'] ?? $item->tax_rate ?? 0 }}%</td>
+            <td class="text-right">{{ number_format($item['total'] ?? $item->total ?? 0, 0, ',', ' ') }} FCFA</td>
+        </tr>
+        @endforeach
+    @else
+        <tr>
+            <td colspan="6" class="text-center" style="text-align: center; padding: 20px;">
+                Aucun article trouvé pour cette facture.
+                @if($invoice->order_id)
+                <br>Cette facture est liée à la commande #{{ $invoice->order_id }}
+                @endif
+            </td>
+        </tr>
+    @endif
+</tbody>
             <tfoot>
                 <tr>
                     <td colspan="5" class="text-right"><strong>Sous-total</strong></td>

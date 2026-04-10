@@ -1,5 +1,5 @@
 <?php
-
+// app/Models/Notification.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 
 class Notification extends Model
 {
+    protected $table = 'notifications';
+
     protected $fillable = [
         'uuid', 'company_id', 'user_id', 'created_by',
         'type', 'title', 'message', 'data',
@@ -60,6 +62,11 @@ class Notification extends Model
         return $query->where('user_id', $userId);
     }
 
+    public function scopeOfType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
     public function markAsRead()
     {
         $this->update([
@@ -68,7 +75,20 @@ class Notification extends Model
         ]);
     }
 
-    public static function send($user, $title, $message, $type = 'info', $actionUrl = null)
+    public function markAsUnread()
+    {
+        $this->update([
+            'is_read' => false,
+            'read_at' => null
+        ]);
+    }
+
+    public function archive()
+    {
+        $this->update(['is_archived' => true]);
+    }
+
+    public static function send($user, $title, $message, $type = 'info', $actionUrl = null, $data = [])
     {
         return self::create([
             'company_id' => $user->company_id,
@@ -77,7 +97,37 @@ class Notification extends Model
             'title' => $title,
             'message' => $message,
             'action_url' => $actionUrl,
+            'data' => $data,
             'sent_at' => now(),
         ]);
+    }
+
+    public function getTypeIconAttribute()
+    {
+        return match($this->type) {
+            'order', 'order_status' => 'las la-shopping-cart',
+            'invoice' => 'las la-file-invoice',
+            'payment' => 'las la-credit-card',
+            'warning' => 'las la-exclamation-triangle',
+            'project' => 'las la-project-diagram',
+            'task' => 'las la-tasks',
+            'customer' => 'las la-user',
+            default => 'las la-bell',
+        };
+    }
+
+    public function getTypeColorAttribute()
+    {
+        return match($this->type) {
+            'order' => 'blue',
+            'order_status' => 'purple',
+            'invoice' => 'green',
+            'payment' => 'teal',
+            'warning' => 'red',
+            'project' => 'indigo',
+            'task' => 'orange',
+            'customer' => 'pink',
+            default => 'gray',
+        };
     }
 }

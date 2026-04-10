@@ -59,15 +59,30 @@
                         </div>
                     </div>
 
+                  
                     <!-- Type de commande -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium mb-2">Type de commande *</label>
-                        <select name="type" required class="w-full border rounded-lg px-4 py-2">
-                            <option value="order" {{ old('type') == 'order' ? 'selected' : '' }}>Commande (génère une facture)</option>
-                            <option value="estimate" {{ old('type') == 'estimate' ? 'selected' : '' }}>Devis (sans facture)</option>
-                        </select>
-                        <p class="text-xs text-gray-500 mt-1">Les commandes génèrent automatiquement une facture.</p>
-                    </div>
+<div class="mb-6">
+    <label class="block text-sm font-medium mb-2">Type de commande *</label>
+    <select name="type" required class="w-full border rounded-lg px-4 py-2">
+        <option value="order" {{ old('type') == 'order' ? 'selected' : '' }}>Commande (génère une facture)</option>
+        <option value="estimate" {{ old('type') == 'estimate' ? 'selected' : '' }}>Devis (sans facture)</option>
+    </select>
+    <p class="text-xs text-gray-500 mt-1">Les commandes génèrent automatiquement une facture.</p>
+</div>
+
+<!-- Statut de la commande - NOUVEAU -->
+<div class="mb-6">
+    <label class="block text-sm font-medium mb-2">Statut initial *</label>
+    <select name="status" required class="w-full border rounded-lg px-4 py-2">
+        <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>📝 Brouillon</option>
+        <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>⏳ En attente</option>
+        <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>✅ Confirmée</option>
+        <option value="processing" {{ old('status') == 'processing' ? 'selected' : '' }}>⚙️ En traitement</option>
+        <option value="shipped" {{ old('status') == 'shipped' ? 'selected' : '' }}>🚚 Expédiée</option>
+        <option value="delivered" {{ old('status') == 'delivered' ? 'selected' : '' }}>📦 Livrée</option>
+    </select>
+    <p class="text-xs text-gray-500 mt-1">Définissez le statut initial de la commande.</p>
+</div>
 
                     <!-- Articles -->
                     <div class="mb-6">

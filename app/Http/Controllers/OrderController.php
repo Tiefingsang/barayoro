@@ -95,6 +95,7 @@ public function store(Request $request)
         'new_client_phone' => 'nullable|string|max:20',
         'new_client_address' => 'nullable|string',
         'type' => 'required|in:estimate,order',
+                'status' => 'required|in:draft,pending,confirmed,processing,shipped,delivered', // ← NOUVEAU
         'order_date' => 'required|date',
         'estimated_delivery_date' => 'nullable|date|after_or_equal:order_date',
         'shipping_cost' => 'nullable|numeric|min:0',
@@ -169,7 +170,8 @@ public function store(Request $request)
             'client_id' => $clientId,
             'order_number' => $orderNumber,
             'type' => $request->type,
-            'status' => $request->type === 'estimate' ? 'draft' : 'confirmed',
+                        'status' => $request->status, // ← UTILISER LE STATUT CHOISI
+
             'order_date' => $request->order_date,
             'estimated_delivery_date' => $request->estimated_delivery_date,
             'shipping_cost' => $request->shipping_cost ?? 0,
@@ -377,43 +379,100 @@ private function generateInvoiceFromOrder(Order $order)
     }
 
     public function update(Request $request, Order $order)
-    {
-        $this->checkCompanyAccess($order);
+{
+    $this->checkCompanyAccess($order);
 
-        if (!$order->canBeModified()) {
-            return redirect()->route('orders.show', $order)
-                ->with('error', 'Cette commande ne peut plus être modifiée.');
-        }
+    if (!$order->canBeModified()) {
+        return redirect()->route('orders.show', $order)
+            ->with('error', 'Cette commande ne peut plus être modifiée.');
+    }
 
-        $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'order_date' => 'required|date',
-            'estimated_delivery_date' => 'nullable|date|after_or_equal:order_date',
-            'shipping_cost' => 'nullable|numeric|min:0',
-            'notes' => 'nullable|string',
+    $request->validate([
+        'client_id' => 'required|exists:clients,id',
+        'type' => 'required|in:estimate,order',
+        'status' => 'required|in:draft,pending,confirmed,processing,shipped,delivered,cancelled',
+        'order_date' => 'required|date',
+        'estimated_delivery_date' => 'nullable|date|after_or_equal:order_date',
+        'shipping_cost' => 'nullable|numeric|min:0',
+        'notes' => 'nullable|string',
+        'shipping_address' => 'nullable|string',
+        'items' => 'required|array|min:1',
+        'items.*.product_id' => 'required|exists:products,id',
+        'items.*.quantity' => 'required|integer|min:1',
+        'items.*.unit_price' => 'required|numeric|min:0',
+        'items.*.tax_rate' => 'nullable|numeric|min:0|max:100',
+        'items.*.discount_amount' => 'nullable|numeric|min:0',
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        // Mettre à jour la commande
+        $order->update([
+            'client_id' => $request->client_id,
+            'type' => $request->type,
+            'status' => $request->status,
+            'order_date' => $request->order_date,
+            'estimated_delivery_date' => $request->estimated_delivery_date,
+            'shipping_cost' => $request->shipping_cost ?? 0,
+            'notes' => $request->notes,
+            'shipping_address' => $request->shipping_address,
         ]);
 
-        try {
-            DB::beginTransaction();
+        // Supprimer les anciens articles
+        OrderItem::where('order_id', $order->id)->delete();
 
-            $order->update([
-                'client_id' => $request->client_id,
-                'order_date' => $request->order_date,
-                'estimated_delivery_date' => $request->estimated_delivery_date,
-                'shipping_cost' => $request->shipping_cost ?? 0,
-                'notes' => $request->notes,
+        // Ajouter les nouveaux articles
+        foreach ($request->items as $item) {
+            $product = Product::find($item['product_id']);
+            $taxRate = $item['tax_rate'] ?? $product->tax_rate ?? 0;
+            $discount = $item['discount_amount'] ?? 0;
+            $subtotal = $item['quantity'] * $item['unit_price'];
+            $taxAmount = ($subtotal - $discount) * ($taxRate / 100);
+            $total = $subtotal - $discount + $taxAmount;
+
+            OrderItem::create([
+                'uuid' => Str::uuid(),
+                'order_id' => $order->id,
+                'product_id' => $item['product_id'],
+                'product_name' => $product->name,
+                'product_sku' => $product->sku ?? null,
+                'product_description' => $product->description ?? null,
+                'quantity' => $item['quantity'],
+                'unit_price' => $item['unit_price'],
+                'tax_rate' => $taxRate,
+                'tax_amount' => $taxAmount,
+                'discount_amount' => $discount,
+                'subtotal' => $subtotal,
+                'total' => $total,
+                'notes' => $item['notes'] ?? null,
             ]);
-
-            DB::commit();
-
-            return redirect()->route('orders.show', $order)
-                ->with('success', 'Commande mise à jour avec succès.');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
         }
+
+        // Recalculer les totaux
+        $order->load('items');
+        $subtotal = $order->items->sum('subtotal');
+        $taxAmount = $order->items->sum('tax_amount');
+        $discountAmount = $order->items->sum('discount_amount');
+        $total = $order->items->sum('total') + ($request->shipping_cost ?? 0);
+
+        $order->update([
+            'subtotal' => $subtotal,
+            'tax_amount' => $taxAmount,
+            'discount_amount' => $discountAmount,
+            'total' => $total,
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('orders.show', $order)
+            ->with('success', 'Commande mise à jour avec succès.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
     }
+}
 
     public function destroy(Order $order)
     {

@@ -78,7 +78,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'client_id' => 'required|exists:clients,id',
+            //'client_id' => 'required|exists:clients,id',
             'type' => 'required|in:estimate,order',
             'order_date' => 'required|date',
             'estimated_delivery_date' => 'nullable|date|after_or_equal:order_date',

@@ -1,0 +1,22 @@
+<?php
+// database/migrations/xxxx_xx_xx_add_is_guest_to_clients.php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::table('clients', function (Blueprint $table) {
+            $table->boolean('is_guest')->default(false)->after('status');
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('clients', function (Blueprint $table) {
+            $table->dropColumn('is_guest');
+        });
+    }
+};

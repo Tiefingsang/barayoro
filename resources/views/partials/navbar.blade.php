@@ -86,36 +86,8 @@
         </div> --}}
 
         <!-- Notifications -->
-        <div class="relative" x-data="{open:false}">
-          <span class="size-4 text-xs absolute -top-1 -right-1 f-center text-neutral-0 bg-primary-300 rounded-full"> 2 </span>
-          <button title="Notifications" @click="open = !open" :class="$store.app.menu=='horizontal'?'bg-neutral-0 dark:bg-neutral-903':'bg-neutral-20 dark:bg-neutral-903'" class="flex size-9 items-center justify-center rounded-full border border-neutral-30 text-xl dark:border-neutral-500">
-            <i class="las la-bell"></i>
-          </button>
-          <div
-            @click.away="open = false"
-            x-show="open"
-            class="absolute top-full z-10 origin-[60%_0] rounded-md bg-neutral-0 shadow-[0px_6px_30px_0px_rgba(0,0,0,0.08)] duration-300 dark:bg-neutral-904 ltr:-right-[110px] sm:ltr:right-0 sm:ltr:origin-top-right rtl:-left-[120px] sm:rtl:left-0 sm:rtl:origin-top-left"
-          >
-            <div class="flex items-center justify-between border-b p-3 dark:border-n500 lg:px-4">
-              <h5 class="h5">Notifications</h5>
-              <a href="#" class="text-xs text-primary-300"> Voir tout </a>
-            </div>
-            <ul class="flex w-[300px] flex-col p-4">
-
-
-              <div class="flex cursor-pointer gap-2 rounded-md p-2 duration-300 hover:bg-primary-300/10">
-                <img src="assets/images/users/user-s-2.png" width="44" height="40" class="shrink-0 rounded-full" alt="img" />
-                <div class="text-sm">
-                  <div class="flex gap-1">
-                    <span class="font-medium">David</span>
-                    <span>a laissé un commentaire</span>
-                  </div>
-                  <span class="text-xs text-n100 dark:text-n50">Hier</span>
-                </div>
-              </div>
-            </ul>
-          </div>
-        </div>
+       <!-- Notifications - Utilisation du composant -->
+    <x-notification-bell />
 
         <!-- Profil utilisateur -->
         <div x-data="dropdown" class="relative shrink-0">

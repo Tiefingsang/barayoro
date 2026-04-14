@@ -12,6 +12,11 @@ class CheckSubscription
     {
         $user = Auth::user();
 
+        // 🔥 NOUVEAU : Si l'utilisateur est ADMIN, on ignore la vérification d'abonnement
+        if ($user && $user->hasRole('admin')) {
+            return $next($request);
+        }
+
         if (!$user || !$user->company) {
             return redirect()->route('subscription.required');
         }
@@ -20,10 +25,12 @@ class CheckSubscription
 
         // Log pour déboguer
         \Log::info('Subscription check', [
+            'user_id' => $user->id,
+            'user_role' => $user->getRoleNames()->first(),
             'company_id' => $company->id,
-            'status' => $company->subscription_status,
-            'trial_ends_at' => $company->trial_ends_at,
-            'subscription_expires_at' => $company->subscription_expires_at,
+            'status' => $company->subscription_status ?? 'null',
+            'trial_ends_at' => $company->trial_ends_at ?? 'null',
+            'subscription_expires_at' => $company->subscription_expires_at ?? 'null',
         ]);
 
         // Cas 1: Période d'essai

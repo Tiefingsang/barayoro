@@ -80,57 +80,73 @@
           </div>
 
           <!-- Détails des articles -->
-          <div class="mb-6">
-            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Détails de la facture</h4>
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-gray-800">
-                  <tr>
+        <!-- Détails des articles -->
+<div class="mb-6">
+    <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Détails de la facture</h4>
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gray-50 dark:bg-gray-800">
+                <tr>
                     <th class="px-4 py-3 text-left text-sm font-medium text-gray-500">Description</th>
                     <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Quantité</th>
                     <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Prix unit.</th>
                     <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Remise</th>
                     <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Taxe</th>
                     <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">Total</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                  @foreach($invoice->items as $item)
-                  <tr>
-                    <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">{{ $item['description'] }}</td>
-                    <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ $item['quantity'] }}</td>
-                    <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ number_format($item['unit_price'], 0, ',', ' ') }} FCFA</td>
-                    <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ $item['discount'] }}%</td>
-                    <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ $item['tax_rate'] }}%</td>
-                    <td class="px-4 py-3 text-sm text-right font-medium text-gray-900 dark:text-white">{{ number_format($item['total'], 0, ',', ' ') }} FCFA</td>
-                  </tr>
-                  @endforeach
-                </tbody>
-                <tfoot class="bg-gray-50 dark:bg-gray-800">
-                  <tr>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                @if($invoice->items && count($invoice->items) > 0)
+                    @foreach($invoice->items as $item)
+                    <tr>
+                        <td class="px-4 py-3 text-sm text-gray-900 dark:text-white">{{ $item['description'] ?? $item->description ?? '-' }}</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ $item['quantity'] ?? $item->quantity ?? 0 }}</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ number_format($item['unit_price'] ?? $item->unit_price ?? 0, 0, ',', ' ') }} FCFA</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ $item['discount'] ?? $item->discount ?? 0 }}%</td>
+                        <td class="px-4 py-3 text-sm text-right text-gray-600 dark:text-gray-400">{{ $item['tax_rate'] ?? $item->tax_rate ?? 0 }}%</td>
+                        <td class="px-4 py-3 text-sm text-right font-medium text-gray-900 dark:text-white">{{ number_format($item['total'] ?? $item->total ?? 0, 0, ',', ' ') }} FCFA</td>
+                    </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                            <i class="las la-receipt text-4xl mb-2 block"></i>
+                            Aucun article trouvé pour cette facture.
+                            @if($invoice->order_id)
+                            <br>
+                            <a href="{{ route('orders.show', $invoice->order_id) }}" class="text-primary-300 hover:underline text-sm mt-2 inline-block">
+                                Voir la commande associée
+                            </a>
+                            @endif
+                        </td>
+                    </tr>
+                @endif
+            </tbody>
+            <tfoot class="bg-gray-50 dark:bg-gray-800">
+                <tr>
                     <td colspan="5" class="px-4 py-3 text-right font-medium text-gray-700 dark:text-gray-300">Sous-total</td>
                     <td class="px-4 py-3 text-right font-medium text-gray-900 dark:text-white">{{ number_format($invoice->subtotal, 0, ',', ' ') }} FCFA</td>
-                  </tr>
-                  @if($invoice->discount > 0)
-                  <tr>
+                </tr>
+                @if($invoice->discount > 0)
+                <tr>
                     <td colspan="5" class="px-4 py-3 text-right font-medium text-gray-700 dark:text-gray-300">Remise</td>
                     <td class="px-4 py-3 text-right text-red-600">- {{ number_format($invoice->discount, 0, ',', ' ') }} FCFA</td>
-                  </tr>
-                  @endif
-                  @if($invoice->tax > 0)
-                  <tr>
+                </tr>
+                @endif
+                @if($invoice->tax > 0)
+                <tr>
                     <td colspan="5" class="px-4 py-3 text-right font-medium text-gray-700 dark:text-gray-300">Taxes</td>
                     <td class="px-4 py-3 text-right text-green-600">{{ number_format($invoice->tax, 0, ',', ' ') }} FCFA</td>
-                  </tr>
-                  @endif
-                  <tr class="border-t-2 border-gray-300 dark:border-gray-600">
+                </tr>
+                @endif
+                <tr class="border-t-2 border-gray-300 dark:border-gray-600">
                     <td colspan="5" class="px-4 py-3 text-right font-bold text-gray-900 dark:text-white">Total</td>
                     <td class="px-4 py-3 text-right font-bold text-xl text-gray-900 dark:text-white">{{ number_format($invoice->total, 0, ',', ' ') }} FCFA</td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-          </div>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
 
           <!-- Notes et conditions -->
           @if($invoice->notes || $invoice->terms)
@@ -211,7 +227,7 @@
             <a href="{{ route('invoices.index') }}" class="btn-primary-outlined px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
               <i class="las la-arrow-left mr-2"></i> Retour à la liste
             </a>
-            
+
           </div>
         </div>
       </div>

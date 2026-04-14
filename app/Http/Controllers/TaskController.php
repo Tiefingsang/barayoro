@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Helpers\NotificationHelper;
+
 
 class TaskController extends Controller
 {
@@ -122,6 +124,11 @@ public function create(Request $request)
             'estimated_hours' => $request->estimated_hours,
         ]);
 
+        // 🔔 NOTIFICATION : Si une tâche est assignée à quelqu'un
+    if ($task->assigned_to) {
+        NotificationHelper::taskAssigned($task);
+    }
+
         return redirect()->route('tasks.show', $task)
             ->with('success', 'Tâche créée avec succès.');
     }
@@ -195,6 +202,10 @@ public function create(Request $request)
             'progress' => $request->progress,
         ]);
 
+         // 🔔 NOTIFICATION : Si l'assignation change
+    if ($task->assigned_to && $task->assigned_to != $oldAssignee) {
+        NotificationHelper::taskAssigned($task);
+    }
         // Si la tâche est marquée comme terminée
         if ($request->status === 'completed' && !$task->completed_at) {
             $task->update(['completed_at' => now()]);

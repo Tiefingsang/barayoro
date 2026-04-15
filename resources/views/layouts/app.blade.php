@@ -237,7 +237,8 @@
           .then(() => console.log('PWA prête 🚀'))
           .catch(err => console.log(err));
   }
-  </script>
+  
+  </script> 
 
     <script>
       document.addEventListener('alpine:init', () => {

@@ -17,6 +17,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css">
+    <link rel="manifest" href="/manifest.json">
+      <meta name="theme-color" content="#1A3E5C">
   <style>
         [x-cloak] { display: none !important; }
         body {
@@ -228,6 +230,14 @@
     <script defer src="{{ asset('assets/js/libs/alpine.min.js') }}"></script>
     <script src="{{ asset('assets/js/libs/nice-select2.js') }}"></script>
     <script src="{{ asset('assets/js/charts.js') }}"></script>
+
+  <script>
+  if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+          .then(() => console.log('PWA prête 🚀'))
+          .catch(err => console.log(err));
+  }
+  </script>
 
     <script>
       document.addEventListener('alpine:init', () => {

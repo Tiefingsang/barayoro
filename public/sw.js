@@ -4,7 +4,6 @@ const OFFLINE_URL = '/offline.html';
 
 // Fichiers à mettre en cache lors de l'installation
 const STATIC_CACHE_URLS = [
-    '/',
     '/offline.html',
     '/manifest.json',
     '/css/app.css',
@@ -20,14 +19,26 @@ const STRATEGIES = {
     NETWORK_ONLY: 'network-only'
 };
 
-// Configuration des routes
+// Configuration des routes - MODIFIÉ POUR TOUJOURS ALLER SUR LE RÉSEAU POUR LES PAGES
 const ROUTES = [
     {
+        // Pour les assets statiques - cache first
         pattern: /\.(css|js|json|svg|png|jpg|jpeg|gif|ico)$/,
         strategy: STRATEGIES.CACHE_FIRST,
         maxEntries: 100
     },
     {
+        // Pour les pages HTML - TOUJOURS réseau d'abord
+        pattern: /\/$/,
+        strategy: STRATEGIES.NETWORK_ONLY
+    },
+    {
+        // Pour les routes spécifiques - NETWORK FIRST (pas de cache)
+        pattern: /^\/(dashboard|profile|chat|clients|products|invoices|projects|tasks|calendar|kanban|mail|help-center|blog|jobs|tours|reviews|referrals|about|faq|pricing)/,
+        strategy: STRATEGIES.NETWORK_ONLY  // Changé de STALE_WHILE_REVALIDATE à NETWORK_ONLY
+    },
+    {
+        // Pour l'API - network first avec timeout
         pattern: /^\/api\/(?!auth).*/,
         strategy: STRATEGIES.NETWORK_FIRST,
         timeout: 3000,
@@ -35,13 +46,8 @@ const ROUTES = [
         maxEntries: 50
     },
     {
-        pattern: /^\/(dashboard|clients|products|invoices|projects|tasks)/,
-        strategy: STRATEGIES.STALE_WHILE_REVALIDATE,
-        maxAge: 7 * 24 * 60 * 60,
-        maxEntries: 50
-    },
-    {
-        pattern: /^\/(login|register|forgot-password)/,
+        // Pages d'auth - toujours réseau
+        pattern: /^\/(login|register|forgot-password|reset-password)/,
         strategy: STRATEGIES.NETWORK_ONLY
     }
 ];
@@ -121,7 +127,13 @@ async function networkFirst(request, options = {}) {
         const response = await Promise.race([fetchPromise, timeoutPromise]);
         
         if (response && response.status === 200) {
-            cache.put(request, response.clone());
+            // Ne pas mettre en cache les pages HTML
+            const url = new URL(request.url);
+            const isHtmlPage = !request.url.match(/\.(css|js|json|svg|png|jpg|jpeg|gif|ico)$/);
+            
+            if (!isHtmlPage) {
+                cache.put(request, response.clone());
+            }
             return response;
         }
         
@@ -143,7 +155,12 @@ async function networkFirst(request, options = {}) {
             });
         }
         
-        return caches.match(OFFLINE_URL);
+        // Rediriger vers la page offline seulement si ce n'est pas une requête API
+        if (!request.url.includes('/api/')) {
+            return caches.match(OFFLINE_URL);
+        }
+        
+        return new Response('Offline', { status: 503 });
     }
 }
 
@@ -154,7 +171,11 @@ async function staleWhileRevalidate(request, options = {}) {
     
     const fetchPromise = fetch(request).then(networkResponse => {
         if (networkResponse && networkResponse.status === 200) {
-            cache.put(request, networkResponse.clone());
+            // Ne pas mettre en cache les pages HTML
+            const isHtmlPage = !request.url.match(/\.(css|js|json|svg|png|jpg|jpeg|gif|ico)$/);
+            if (!isHtmlPage) {
+                cache.put(request, networkResponse.clone());
+            }
         }
         return networkResponse;
     }).catch(error => {
@@ -169,14 +190,39 @@ async function staleWhileRevalidate(request, options = {}) {
     return fetchPromise;
 }
 
+// Stratégie: Network Only (PAS DE CACHE)
+async function networkOnly(request, options = {}) {
+    try {
+        const response = await fetch(request);
+        return response;
+    } catch (error) {
+        console.log(`[SW] Network only failed: ${request.url}`);
+        
+        // Pour les pages, rediriger vers offline
+        if (!request.url.includes('/api/')) {
+            return caches.match(OFFLINE_URL);
+        }
+        
+        return new Response(JSON.stringify({
+            error: 'offline',
+            message: 'Vous êtes hors ligne'
+        }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+}
+
 // Interception des requêtes
 self.addEventListener('fetch', event => {
     const request = event.request;
     
+    // Ignorer les requêtes non-GET
     if (request.method !== 'GET') {
         return;
     }
     
+    // Ignorer les analytics
     if (request.url.includes('google-analytics') || request.url.includes('facebook')) {
         return;
     }
@@ -193,6 +239,9 @@ self.addEventListener('fetch', event => {
             break;
         case STRATEGIES.STALE_WHILE_REVALIDATE:
             handler = staleWhileRevalidate(request, options);
+            break;
+        case STRATEGIES.NETWORK_ONLY:
+            handler = networkOnly(request, options);
             break;
         default:
             handler = networkFirst(request, options);

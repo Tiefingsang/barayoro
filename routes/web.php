@@ -89,6 +89,9 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
+
+  
+
     // ----- Gestion des utilisateurs (avec permissions) -----
     Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('permission:view_users');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create')->middleware('permission:create_users');
@@ -331,4 +334,18 @@ Route::middleware(['auth'])->group(function () {
 // ==================== ROUTE 404 ====================
 Route::fallback(function () {
     return view('errors.404');
+});
+
+Route::get('/chat', function() {
+    return view('chat.index');
+})->name('chat');
+
+
+// Routes supplémentaires pour le profil
+Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function () {
+    Route::post('/avatar', [ProfileController::class, 'updateAvatar'])->name('avatar.update');
+    Route::delete('/avatar', [ProfileController::class, 'deleteAvatar'])->name('avatar.delete');
+    Route::put('/preferences', [ProfileController::class, 'updatePreferences'])->name('preferences');
+    Route::post('/sync', [ProfileController::class, 'syncOffline'])->name('sync');
+    Route::post('/two-factor/toggle', [ProfileController::class, 'toggleTwoFactor'])->name('two-factor.toggle');
 });

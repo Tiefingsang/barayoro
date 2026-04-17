@@ -4,13 +4,24 @@
     class="fixed top-0 z-[12] h-full w-[280px] bg-neutral-0 duration-300 dark:bg-neutral-904 ltr:left-0 rtl:right-0"
   >
     <div class="px-3 xxl:px-4 pt-3 sm:pt-4">
-      <a href="{{ route('dashboard') }}" class="text-primary-300 flex gap-3 items-center bb-dashed-n30 xl:pb-3.5 !mb-0">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Logo SVG -->
-        </svg>
+    <a href="{{ route('dashboard') }}" class="text-primary-300 flex gap-3 items-center bb-dashed-n30 xl:pb-3.5 !mb-0">
+        <!-- Logo pour thème clair -->
+        <img src="{{ asset('assets/images/Barayoro_logo.png') }}" 
+             alt="Barayoro Logo" 
+             width="36" 
+             height="36"
+             class="object-contain dark:hidden">
+        
+        <!-- Logo pour thème sombre (si vous avez une version) -->
+        <img src="{{ asset('assets/images/Barayoro_logo_white.png') }}" 
+             alt="Barayoro Logo" 
+             width="36" 
+             height="36"
+             class="object-contain hidden dark:block">
+        
         <span class="h4 shrink-0 text-neutral-700 dark:text-neutral-0">Barayoro</span>
-      </a>
-    </div>
+    </a>
+</div>
     <div
       x-data="{
           opened:null,

@@ -47,6 +47,9 @@ use App\Http\Controllers\SubscriptionController;
 */
 
 // ==================== PAGES PUBLIQUES ====================
+
+
+
 Route::get('/conditions-utilisation', function () {
     return view('pages.terms');
 })->name('terms');
@@ -63,6 +66,13 @@ Route::get('/help-center', function () {
     return view('pages.help-center');
 })->name('help.center');
 
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('welcome');
+})->name('home');
+
 // ==================== AUTHENTIFICATION ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -76,12 +86,14 @@ Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name(
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::get('/forgot-password/confirmation', [AuthController::class, 'showConfirmation'])->name('password.confirmation');
+// Page d'accueil publique
+
 
 // ==================== ROUTES PROTÉGÉES ====================
 Route::middleware(['auth', 'subscription'])->group(function () {
 
     // ----- Tableau de bord -----
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
+    //Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // ----- Profil utilisateur -----

@@ -77,7 +77,7 @@
           </div>
           <div class="col-span-12 lg:col-span-6 xxl:col-start-7 flex justify-center">
             <div class="size-72 sm:size-[450px] xxl:size-[636px] rounded-full bg-neutral-30 dark:bg-neutral-700 f-center">
-              <img src="{{ asset('assets/images/login-1.png') }}" alt="" />
+              <img src="{{ asset('assets/images/Barayoro_logo.png') }}" alt="" />
             </div>
           </div>
         </div>

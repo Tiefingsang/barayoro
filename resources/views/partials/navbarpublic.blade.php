@@ -1,0 +1,61 @@
+<!-- resources/views/partials/navbar.blade.php -->
+<nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-50">
+    <div class="container mx-auto px-4 md:px-6 py-4">
+        <div class="flex flex-wrap justify-between items-center">
+            <!-- Logo -->
+            <a href="{{ route('home') }}" class="flex items-center space-x-2">
+                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold text-xl">B</span>
+                </div>
+                <span class="text-2xl font-bold text-gray-800">Barayoro</span>
+            </a>
+
+            <!-- Menu Desktop -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#accueil" class="text-gray-600 hover:text-orange-custom transition duration-300">Accueil</a>
+                <a href="#fonctionnalites" class="text-gray-600 hover:text-orange-custom transition duration-300">Fonctionnalités</a>
+                <a href="#offres" class="text-gray-600 hover:text-orange-custom transition duration-300">Offres d'emploi</a>
+                <a href="#tarifs" class="text-gray-600 hover:text-orange-custom transition duration-300">Tarifs</a>
+                <a href="#contact" class="text-gray-600 hover:text-orange-custom transition duration-300">Contact</a>
+            </div>
+
+            <!-- Boutons connexion/inscription -->
+            <div class="hidden md:flex items-center space-x-4">
+                @auth
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2 bg-orange-custom text-white rounded-lg hover:bg-orange-700 transition">
+                        <i class="fas fa-tachometer-alt mr-2"></i>Tableau de bord
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="px-5 py-2 text-orange-custom border border-orange-custom rounded-lg hover:bg-orange-custom hover:text-white transition">
+                        Connexion
+                    </a>
+                    <a href="{{ route('register') }}" class="px-5 py-2 gradient-bg text-white rounded-lg btn-primary">
+                        Essai gratuit
+                    </a>
+                @endauth
+            </div>
+
+            <!-- Menu Mobile -->
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="text-gray-600 focus:outline-none" aria-label="Menu">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 space-y-3">
+            <a href="#accueil" class="block text-gray-600 hover:text-orange-custom transition">Accueil</a>
+            <a href="#fonctionnalites" class="block text-gray-600 hover:text-orange-custom transition">Fonctionnalités</a>
+            <a href="#offres" class="block text-gray-600 hover:text-orange-custom transition">Offres d'emploi</a>
+            <a href="#tarifs" class="block text-gray-600 hover:text-orange-custom transition">Tarifs</a>
+            <a href="#contact" class="block text-gray-600 hover:text-orange-custom transition">Contact</a>
+            @auth
+                <a href="{{ route('dashboard') }}" class="block px-4 py-2 bg-orange-custom text-white rounded-lg text-center">Tableau de bord</a>
+            @else
+                <a href="{{ route('login') }}" class="block px-4 py-2 text-orange-custom border border-orange-custom rounded-lg text-center">Connexion</a>
+                <a href="{{ route('register') }}" class="block px-4 py-2 gradient-bg text-white rounded-lg text-center">Essai gratuit</a>
+            @endauth
+        </div>
+    </div>
+</nav>

@@ -10,10 +10,7 @@ use Illuminate\Support\Str;
 
 class ReferralController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    
 
     /**
      * Afficher le programme de parrainage

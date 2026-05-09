@@ -238,4 +238,21 @@ class User extends Authenticatable
     {
         return $this->company_id === $user->company_id && ($this->isAdmin() || $this->id === $user->manager_id);
     }
+
+    // app/Models/User.php - Ajoutez ces méthodes
+
+public function referrals()
+{
+    return $this->hasMany(Referral::class, 'referrer_id');
+}
+
+public function referredBy()
+{
+    return $this->hasMany(Referral::class, 'referred_id');
+}
+
+public function referralRewards()
+{
+    return $this->hasMany(ReferralReward::class);
+}
 }

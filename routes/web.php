@@ -157,6 +157,42 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     // Gestion des paiements
     Route::resource('payments', PaymentController::class);
 
+    // Routes Orange Money
+    Route::middleware(['auth'])->prefix('payments')->name('payments.')->group(function () {
+        Route::get('/orange-money/subscription', [PaymentController::class, 'showOrangeMoneySubscription'])->name('orange-money.subscription');
+        Route::get('/orange-money/invoice/{invoice}', [PaymentController::class, 'showOrangeMoneyInvoice'])->name('orange-money.invoice');
+        Route::post('/orange-money/initiate', [PaymentController::class, 'initiateOrangeMoneyPayment'])->name('orange-money.initiate');
+        Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans');
+        Route::post('/process', [SubscriptionController::class, 'process'])->name('subscription.process');
+        Route::get('/success', [SubscriptionController::class, 'success'])->name('subscription.success');
+        
+        // Callbacks Orange Money (sans middleware auth)
+        Route::get('/callback', [SubscriptionController::class, 'callback'])->name('subscription.callback');
+        Route::post('/webhook', [SubscriptionController::class, 'webhook'])->name('subscription.webhook');
+    });
+    Route::get('/payments/orange-money/subscription', [PaymentController::class, 'showOrangeMoneySubscription'])->name('payments.orange-money.subscription');
+
+    // Webhook Orange Money
+    
+    
+    ////
+    Route::prefix('payments/orange-money')->name('payments.orange-money.')->middleware(['auth'])->group(function () {
+    
+    Route::get('/waiting/{payment}', [PaymentController::class, 'waitingOrangeMoneyPayment'])->name('waiting');
+    Route::get('/callback', [PaymentController::class, 'orangeMoneyCallback'])->name('callback');
+    Route::get('/cancel/{payment}', [PaymentController::class, 'orangeMoneyCancel'])->name('cancel');
+    });
+
+    // Webhook (public)
+    Route::post('/webhooks/orange-money', [PaymentController::class, 'orangeMoneyWebhook'])->name('payments.orange-money.webhook');
+
+    // Simulation (dev only)
+    if (app()->environment('local')) {
+        Route::get('/payments/orange-money/simulate/{payment}', [PaymentController::class, 'orangeMoneySimulate'])
+            ->name('payments.orange-money.simulate');
+    }
+    ///
+
     // Gestion des dépenses
     Route::resource('expenses', ExpenseController::class);
     Route::resource('expense-categories', ExpenseCategoryController::class);

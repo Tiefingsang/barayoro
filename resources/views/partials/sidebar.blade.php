@@ -359,6 +359,7 @@
                     <span>Chat</span>
                 </a>
             </li>
+            
         </ul>
 
         <!-- RAPPORTS -->

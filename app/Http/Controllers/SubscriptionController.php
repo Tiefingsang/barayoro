@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
@@ -34,25 +35,48 @@ class SubscriptionController extends Controller
      */
     public function process(Request $request)
     {
-        $request->validate([
-            'payment_method' => 'required|string',
-            'card_number' => 'required_if:payment_method,card|string',
-            'card_expiry' => 'required_if:payment_method,card|string',
-            'card_cvv' => 'required_if:payment_method,card|string',
-            'mobile_number' => 'required_if:payment_method,orange_money,wave|string',
-        ]);
+        // Validation de base
+        //dd('Processus de paiement en cours...', $request->all());
+        $rules = [
+            'payment_method' => 'required|in:card,orange_money,wave',
+            'amount' => 'required|numeric',
+        ];
+
+        // Ajout des règles conditionnelles selon le mode de paiement
+        if ($request->payment_method === 'card') {
+            $rules['card_number'] = 'required|string|min:15|max:19';
+            $rules['card_expiry'] = 'required|string|regex:/^(0[1-9]|1[0-2])\/([0-9]{2})$/';
+            $rules['card_cvv'] = 'required|string|min:3|max:4';
+        } elseif (in_array($request->payment_method, ['orange_money', 'wave'])) {
+            $rules['mobile_number'] = 'required|string|min:9|max:13';
+        }
+
+        $validated = $request->validate($rules);
 
         $company = Auth::user()->company;
+        $amount = $request->amount;
 
-        // Logique de paiement à implémenter selon le moyen de paiement
-        // Orange Money, Wave, Carte bancaire, etc.
+        // Log pour debug
+        Log::info('Paiement initié', [
+            'company_id' => $company->id,
+            'payment_method' => $request->payment_method,
+            'amount' => $amount
+        ]);
 
-        // Simuler un paiement réussi
+        // Simulation de paiement réussi (à remplacer par l'intégration réelle)
         $paymentSuccess = true;
 
         if ($paymentSuccess) {
             // Activer l'abonnement
-            $company->activateSubscription();
+            $company->update([
+                'subscription_status' => 'active',
+                'subscription_started_at' => now(),
+                'subscription_expires_at' => now()->addYear(),
+                'subscription_price' => $amount,
+                'last_payment_date' => now(),
+                'next_payment_date' => now()->addYear(),
+                'trial_ends_at' => null,
+            ]);
 
             return redirect()->route('subscription.success')
                 ->with('success', 'Paiement effectué avec succès ! Votre abonnement est actif.');

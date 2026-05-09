@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'orange_money' => [
+        'client_id' => env('ORANGE_MONEY_CLIENT_ID'),
+        'client_secret' => env('ORANGE_MONEY_CLIENT_SECRET'),
+        'merchant_key' => env('ORANGE_MONEY_MERCHANT_KEY'),
+        'api_url' => env('ORANGE_MONEY_API_URL', 'https://api.orange.com'),
+        'return_url' => env('ORANGE_MONEY_RETURN_URL'),
+        'cancel_url' => env('ORANGE_MONEY_CANCEL_URL'),
+    ],
+
 ];

@@ -255,11 +255,13 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     });
 
     // Blog (administration seulement)
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/blog/create', [BlogController::class, 'create'])->name('blog.create');
-        Route::post('/blog', [BlogController::class, 'store'])->name('blog.store');
-        Route::get('/blog/{id}/edit', [BlogController::class, 'edit'])->name('blog.edit');
-        Route::put('/blog/{id}', [BlogController::class, 'update'])->name('blog.update');
+    // Blog (administration)
+    Route::prefix('blog')->name('blog.')->group(function () {
+        Route::get('/create', [BlogController::class, 'create'])->name('create');
+        Route::post('/', [BlogController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [BlogController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [BlogController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BlogController::class, 'destroy'])->name('destroy');
     });
 
     // Offres d'emploi (administration)
@@ -274,14 +276,7 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     });
 
     // Tours (réservations seulement)
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/tours/{id}/book', [TourController::class, 'book'])->name('tours.book');
-        Route::post('/tours/{id}/book', [TourController::class, 'storeBooking'])->name('tours.booking.store');
-        Route::get('/tours/create', [TourController::class, 'create'])->name('tours.create');
-        Route::post('/tours', [TourController::class, 'store'])->name('tours.store');
-        Route::get('/tours/{id}/edit', [TourController::class, 'edit'])->name('tours.edit');
-        Route::put('/tours/{id}', [TourController::class, 'update'])->name('tours.update');
-    });
+   
 
     // Avis
     Route::middleware(['auth'])->group(function () {
@@ -340,3 +335,14 @@ Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function
     Route::post('/sync', [ProfileController::class, 'syncOffline'])->name('sync');
     Route::post('/two-factor/toggle', [ProfileController::class, 'toggleTwoFactor'])->name('two-factor.toggle');
 });
+
+
+
+ Route::middleware(['auth'])->group(function () {
+        Route::get('/tours/{id}/book', [TourController::class, 'book'])->name('tours.book');
+        Route::post('/tours/{id}/book', [TourController::class, 'storeBooking'])->name('tours.booking.store');
+        Route::get('/tours/create', [TourController::class, 'create'])->name('tours.create');
+        Route::post('/tours', [TourController::class, 'store'])->name('tours.store');
+        Route::get('/tours/{id}/edit', [TourController::class, 'edit'])->name('tours.edit');
+        Route::put('/tours/{id}', [TourController::class, 'update'])->name('tours.update');
+    });

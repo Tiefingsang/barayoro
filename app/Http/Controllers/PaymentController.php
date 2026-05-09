@@ -244,7 +244,7 @@ class PaymentController extends Controller
             $payment->update($validated);
 
             // Appliquer le nouveau paiement
-            if ($payment->invoice_id) {
+            if ($payment->invoice_id) { 
                 $invoice = Invoice::find($payment->invoice_id);
                 $invoice->paid += $payment->amount;
                 $invoice->balance = $invoice->total - $invoice->paid;

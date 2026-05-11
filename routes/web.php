@@ -191,6 +191,8 @@ Route::middleware(['auth', 'subscription'])->group(function () {
         Route::get('/payments/orange-money/simulate/{payment}', [PaymentController::class, 'orangeMoneySimulate'])
             ->name('payments.orange-money.simulate');
     }
+
+    
     ///
 
     // Gestion des dépenses

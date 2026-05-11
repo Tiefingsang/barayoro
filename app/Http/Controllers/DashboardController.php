@@ -106,7 +106,8 @@ class DashboardController extends Controller
                 return (object)[
                     'type' => 'payment',
                     'title' => 'Paiement reçu',
-                    'description' => "Paiement de {$payment->client->name}",
+                    //'description' => "Paiement de {$payment->client->name}",
+                    'description' => "Paiement de " . ($payment->client?->name ?? 'Client inconnu'), 
                     'amount' => $payment->amount,
                     'created_at' => $payment->created_at,
                     'icon' => 'las la-credit-card',

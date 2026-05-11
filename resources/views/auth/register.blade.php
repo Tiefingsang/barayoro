@@ -171,9 +171,10 @@
     <div class="register-container p-6 sm:p-8 md:p-10">
         <!-- Logo / En-tête Barayoro -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-4 shadow-lg" style="background: linear-gradient(135deg, #ff6c00 0%, #e05a00 100%);">
+            {{-- <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-4 shadow-lg" style="background: linear-gradient(135deg, #ff6c00 0%, #e05a00 100%);">
                 <i class="fas fa-building text-3xl text-white"></i>
-            </div>
+                <img src="{{ asset('assets/images/') }}" alt="">
+            </div> --}}
             <h1 class="text-4xl font-bold logo-barayoro mb-2">Barayoro</h1>
             <p class="text-gray-500">Créez votre espace entreprise et simplifiez votre gestion</p>
         </div>
@@ -219,17 +220,17 @@
                     <div class="form-input">
                         <select id="business_type" name="business_type" class="w-full">
                             <option value="">Sélectionner un domaine</option>
-                            <option value="commerce" {{ old('business_type') == 'commerce' ? 'selected' : '' }}>🛒 Commerce / Distribution</option>
-                            <option value="services" {{ old('business_type') == 'services' ? 'selected' : '' }}>💼 Services professionnels</option>
-                            <option value="agroalimentaire" {{ old('business_type') == 'agroalimentaire' ? 'selected' : '' }}>🌾 Agroalimentaire</option>
-                            <option value="tech" {{ old('business_type') == 'tech' ? 'selected' : '' }}>💻 Technologies / IT</option>
-                            <option value="sante" {{ old('business_type') == 'sante' ? 'selected' : '' }}>🏥 Santé / Médical</option>
-                            <option value="education" {{ old('business_type') == 'education' ? 'selected' : '' }}>📚 Éducation / Formation</option>
-                            <option value="immobilier" {{ old('business_type') == 'immobilier' ? 'selected' : '' }}>🏠 Immobilier / Construction</option>
-                            <option value="transport" {{ old('business_type') == 'transport' ? 'selected' : '' }}>🚚 Transport / Logistique</option>
-                            <option value="hotellerie" {{ old('business_type') == 'hotellerie' ? 'selected' : '' }}>🏨 Hôtellerie / Restauration</option>
-                            <option value="artisanat" {{ old('business_type') == 'artisanat' ? 'selected' : '' }}>🎨 Artisanat / Création</option>
-                            <option value="autre" {{ old('business_type') == 'autre' ? 'selected' : '' }}>📌 Autre secteur</option>
+                            <option value="commerce" {{ old('business_type') == 'commerce' ? 'selected' : '' }}> Commerce / Distribution</option>
+                            <option value="services" {{ old('business_type') == 'services' ? 'selected' : '' }}> Services professionnels</option>
+                            <option value="agroalimentaire" {{ old('business_type') == 'agroalimentaire' ? 'selected' : '' }}> Agroalimentaire</option>
+                            <option value="tech" {{ old('business_type') == 'tech' ? 'selected' : '' }}> Technologies / IT</option>
+                            <option value="sante" {{ old('business_type') == 'sante' ? 'selected' : '' }}> Santé / Médical</option>
+                            <option value="education" {{ old('business_type') == 'education' ? 'selected' : '' }}> Éducation / Formation</option>
+                            <option value="immobilier" {{ old('business_type') == 'immobilier' ? 'selected' : '' }}> Immobilier / Construction</option>
+                            <option value="transport" {{ old('business_type') == 'transport' ? 'selected' : '' }}> Transport / Logistique</option>
+                            <option value="hotellerie" {{ old('business_type') == 'hotellerie' ? 'selected' : '' }}> Hôtellerie / Restauration</option>
+                            <option value="artisanat" {{ old('business_type') == 'artisanat' ? 'selected' : '' }}> Artisanat / Création</option>
+                            <option value="autre" {{ old('business_type') == 'autre' ? 'selected' : '' }}>Autre secteur</option>
                         </select>
                         <label for="business_type">Domaine d'activité</label>
                     </div>
@@ -274,7 +275,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div x-data="{ selected: false }" @click="selected = true; $refs.plan.value = 'trial'"
                          :class="selected ? 'selected' : ''" class="plan-card">
-                        <div class="plan-name">🚀 ESSAI GRATUIT</div>
+                        <div class="plan-name"> ESSAI GRATUIT</div>
                         <div class="plan-price">0 FCFA</div>
                         <div class="plan-period">30 jours d'essai</div>
                         <div class="plan-feature">✓ 5 utilisateurs max</div>
@@ -283,7 +284,7 @@
                     </div>
                     <div x-data="{ selected: false }" @click="selected = true; $refs.plan.value = 'premium'"
                          :class="selected ? 'selected' : ''" class="plan-card">
-                        <div class="plan-name">⭐ PREMIUM ANNUEL</div>
+                        <div class="plan-name"> PREMIUM ANNUEL</div>
                         <div class="plan-price">49 000 FCFA</div>
                         <div class="plan-period">/ an</div>
                         <div class="plan-feature">✓ Utilisateurs illimités</div>

@@ -116,15 +116,15 @@
                 <ul class="space-y-3 mb-6">
                     <li class="flex items-start gap-3 text-gray-400">
                         <i class="fas fa-map-marker-alt mt-1 text-orange-custom"></i>
-                        <span class="text-sm">Dakar, Sénégal</span>
+                        <span class="text-sm">Bamako, Mali</span>
                     </li>
                     <li class="flex items-center gap-3 text-gray-400">
                         <i class="fas fa-envelope text-orange-custom"></i>
-                        <a href="mailto:contact@barayoro.com" class="text-sm hover:text-orange-custom transition">contact@barayoro.com</a>
+                        <a href="mailto:contact@barayoro.com" class="text-sm hover:text-orange-custom transition">masadigitale@gmail.com</a>
                     </li>
                     <li class="flex items-center gap-3 text-gray-400">
                         <i class="fas fa-phone-alt text-orange-custom"></i>
-                        <a href="tel:+221781234567" class="text-sm hover:text-orange-custom transition">+221 78 123 45 67</a>
+                        <a href="tel:+221781234567" class="text-sm hover:text-orange-custom transition">+223 92 51 64 05</a>
                     </li>
                 </ul>
 

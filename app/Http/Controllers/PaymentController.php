@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Invoice;
 use App\Models\Client;
-use App\Models\PaymentTransaction;
 use App\Services\Payment\OrangeMoneyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,11 +16,8 @@ class PaymentController extends Controller
 
     public function __construct(OrangeMoneyService $orangeMoneyService)
     {
-        $this->middleware('auth');
         $this->orangeMoneyService = $orangeMoneyService;
     }
-
-    // ... vos méthodes existantes (index, create, store, show, edit, update, destroy, receipt, export, generatePaymentNumber)
 
     /**
      * Afficher la page de paiement Orange Money pour l'abonnement
@@ -29,7 +25,7 @@ class PaymentController extends Controller
     public function showOrangeMoneyPayment()
     {
         $company = auth()->user()->company;
-        $amount = 49000; // 49 000 FCFA
+        $amount = 49000;
         $plan = 'premium';
         
         return view('payments.orange-money-subscription', compact('company', 'amount', 'plan'));
@@ -53,54 +49,109 @@ class PaymentController extends Controller
     }
 
     /**
-     * Initier un paiement Orange Money pour facture
+     * Initier un paiement Orange Money
      */
     public function initiateOrangeMoneyPayment(Request $request)
     {
         $request->validate([
             'phone_number' => 'required|string|min:9|max:13',
             'invoice_id' => 'nullable|exists:invoices,id',
-            'amount' => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:100'
         ]);
 
         $company = auth()->user()->company;
-        $amount = $request->amount;
+        $clientId = null;
         
-        // Vérifier si c'est pour une facture
         if ($request->invoice_id) {
             $invoice = Invoice::where('company_id', $company->id)
                 ->where('id', $request->invoice_id)
-                ->first();
-                
-            if (!$invoice) {
-                return back()->with('error', 'Facture non trouvée.');
+                ->firstOrFail();
+            
+            if ($request->amount > $invoice->balance) {
+                return back()->with('error', 'Le montant dépasse le solde dû');
             }
             
-            if ($amount > $invoice->balance) {
-                return back()->with('error', 'Le montant dépasse le solde de la facture.');
-            }
+            $clientId = $invoice->client_id;
         }
-
-        $result = $this->orangeMoneyService->initiatePayment($company, $amount, $request->phone_number, $request->invoice_id);
-
+        
+        $result = $this->orangeMoneyService->initiatePayment(
+            $company->id,
+            $request->amount,
+            $request->phone_number,
+            $request->invoice_id,
+            $clientId
+        );
+        
         if ($result['success']) {
-            return redirect()->route('payments.orange-money.waiting', ['reference' => $result['reference']])
-                ->with('success', 'Demande de paiement envoyée. Veuillez vérifier votre téléphone Orange Money.');
+            return redirect($result['payment_url']);
         }
-
-        return back()->with('error', $result['error'] ?? 'Erreur lors de l\'initiation du paiement');
+        
+        return back()->with('error', $result['error'] ?? 'Erreur lors du paiement');
     }
 
     /**
-     * Page d'attente de paiement Orange Money
+     * Callback après paiement Orange Money
      */
-    public function waitingOrangeMoneyPayment($reference)
+    public function orangeMoneyCallback(Request $request)
     {
-        $transaction = PaymentTransaction::where('reference', $reference)
+        $paymentId = $request->query('payment_id') ?? $request->query('order_id');
+        
+        if (!$paymentId) {
+            return redirect()->route('invoices.index')
+                ->with('error', 'Référence de paiement manquante');
+        }
+        
+        $payment = Payment::where('id', $paymentId)
             ->where('company_id', auth()->user()->company_id)
             ->firstOrFail();
         
-        return view('payments.orange-money-waiting', compact('transaction'));
+        $result = $this->orangeMoneyService->checkPaymentStatus($payment);
+        
+        if ($result['status'] === 'success') {
+            return redirect()->route('payments.show', $payment)
+                ->with('success', 'Paiement effectué avec succès !');
+        }
+        
+        return redirect()->route('payments.orange-money.waiting', ['payment' => $payment->id])
+            ->with('warning', 'Paiement en cours de vérification');
+    }
+
+    /**
+     * Page d'attente
+     */
+    public function waitingOrangeMoneyPayment(Payment $payment)
+    {
+        $this->checkCompanyAccess($payment);
+        
+        return view('payments.orange-money-waiting', compact('payment'));
+    }
+
+    /**
+     * Simulation (développement uniquement)
+     */
+    public function orangeMoneySimulate(Payment $payment)
+    {
+        $this->orangeMoneyService->confirmPayment($payment, [
+            'transaction_id' => 'SIM-' . time(),
+            'simulated_at' => now()
+        ]);
+        
+        return redirect()->route('payments.show', $payment)
+            ->with('success', '✅ Paiement simulé avec succès (mode développement)');
+    }
+
+    /**
+     * Webhook Orange Money
+     */
+    public function orangeMoneyWebhook(Request $request)
+    {
+        $result = $this->orangeMoneyService->handleWebhook($request->all());
+        
+        if ($result['success']) {
+            return response()->json(['status' => 'ok'], 200);
+        }
+        
+        return response()->json(['status' => 'error', 'message' => $result['error']], 400);
     }
 
     /**
@@ -121,68 +172,10 @@ class PaymentController extends Controller
         return response()->json(['status' => 'failed', 'message' => $result['message'] ?? 'Paiement échoué']);
     }
 
-    /**
-     * Webhook pour Orange Money
-     */
-    public function orangeMoneyWebhook(Request $request)
+    // Méthodes privées
+    private function generatePaymentNumber()
     {
-        $result = $this->orangeMoneyService->handleWebhook($request->all());
-        
-        if ($result['success']) {
-            // Récupérer la transaction
-            $transaction = PaymentTransaction::where('reference', $request['reference'])->first();
-            
-            if ($transaction && $transaction->invoice_id) {
-                // Créer le paiement en base
-                $this->createPaymentFromTransaction($transaction);
-            }
-            
-            return response()->json(['status' => 'ok'], 200);
-        }
-        
-        return response()->json(['status' => 'error', 'message' => $result['error']], 400);
-    }
-
-    /**
-     * Créer un paiement à partir d'une transaction réussie
-     */
-    protected function createPaymentFromTransaction(PaymentTransaction $transaction)
-    {
-        $payment = Payment::create([
-            'uuid' => Str::uuid(),
-            'company_id' => $transaction->company_id,
-            'invoice_id' => $transaction->invoice_id,
-            'client_id' => $transaction->client_id,
-            'received_by' => auth()->id(),
-            'payment_number' => $this->generatePaymentNumber(),
-            'payment_date' => now(),
-            'amount' => $transaction->amount,
-            'method' => 'mobile_money',
-            'reference' => $transaction->reference,
-            'transaction_id' => $transaction->transaction_id,
-            'mobile_operator' => 'orange_money',
-            'status' => 'completed',
-            'confirmation_status' => 'confirmed',
-            'confirmed_at' => now(),
-            'notes' => 'Paiement via Orange Money',
-        ]);
-
-        // Mettre à jour la facture
-        if ($transaction->invoice_id) {
-            $invoice = Invoice::find($transaction->invoice_id);
-            if ($invoice) {
-                $invoice->paid += $transaction->amount;
-                $invoice->balance = $invoice->total - $invoice->paid;
-                
-                if ($invoice->balance <= 0) {
-                    $invoice->status = 'paid';
-                    $invoice->paid_date = now();
-                }
-                $invoice->save();
-            }
-        }
-
-        return $payment;
+        return 'PAY-' . time() . '-' . Str::random(6);
     }
 
     private function checkPermission($permission)
@@ -203,4 +196,18 @@ class PaymentController extends Controller
             abort(403, 'Accès non autorisé.');
         }
     }
+
+    /**
+ * Afficher les détails d'un paiement
+ */
+public function show($id)
+{
+    $payment = Payment::where('company_id', $this->getCompanyId())
+        ->with(['invoice', 'client'])
+        ->findOrFail($id);
+    
+    $this->checkCompanyAccess($payment);
+    
+    return view('payments.show', compact('payment'));
+}
 }

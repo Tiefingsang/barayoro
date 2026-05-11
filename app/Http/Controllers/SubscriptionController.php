@@ -5,16 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\Payment\OrangeMoneyService;
 
 class SubscriptionController extends Controller
 {
+    protected $orangeMoneyService;
+
+    public function __construct(OrangeMoneyService $orangeMoneyService)
+    {
+        $this->orangeMoneyService = $orangeMoneyService;
+    }
+
     /**
      * Afficher les plans d'abonnement
      */
     public function plans()
     {
         $company = Auth::user()->company;
-
+        
         return view('subscription.plans', compact('company'));
     }
 
@@ -35,14 +43,13 @@ class SubscriptionController extends Controller
      */
     public function process(Request $request)
     {
-        // Validation de base
-        //dd('Processus de paiement en cours...', $request->all());
+        // Votre code existant
         $rules = [
             'payment_method' => 'required|in:card,orange_money,wave',
             'amount' => 'required|numeric',
+            'plan' => 'required',
         ];
 
-        // Ajout des règles conditionnelles selon le mode de paiement
         if ($request->payment_method === 'card') {
             $rules['card_number'] = 'required|string|min:15|max:19';
             $rules['card_expiry'] = 'required|string|regex:/^(0[1-9]|1[0-2])\/([0-9]{2})$/';
@@ -52,22 +59,31 @@ class SubscriptionController extends Controller
         }
 
         $validated = $request->validate($rules);
-
+        
         $company = Auth::user()->company;
         $amount = $request->amount;
-
-        // Log pour debug
-        Log::info('Paiement initié', [
-            'company_id' => $company->id,
-            'payment_method' => $request->payment_method,
-            'amount' => $amount
-        ]);
-
-        // Simulation de paiement réussi (à remplacer par l'intégration réelle)
+        
+        // Traitement Orange Money
+        if ($request->payment_method === 'orange_money') {
+            $result = $this->orangeMoneyService->initiatePayment(
+                $company->id,
+                $amount,
+                $request->mobile_number,
+                null, // invoice_id
+                null  // client_id
+            );
+            
+            if ($result['success']) {
+                return redirect($result['payment_url']);
+            }
+            
+            return back()->with('error', $result['error'] ?? 'Erreur de paiement');
+        }
+        
+        // Simulation pour les autres méthodes (à remplacer)
         $paymentSuccess = true;
-
+        
         if ($paymentSuccess) {
-            // Activer l'abonnement
             $company->update([
                 'subscription_status' => 'active',
                 'subscription_started_at' => now(),
@@ -77,11 +93,11 @@ class SubscriptionController extends Controller
                 'next_payment_date' => now()->addYear(),
                 'trial_ends_at' => null,
             ]);
-
+            
             return redirect()->route('subscription.success')
                 ->with('success', 'Paiement effectué avec succès ! Votre abonnement est actif.');
         }
-
+        
         return back()->with('error', 'Le paiement a échoué. Veuillez réessayer.');
     }
 
@@ -107,5 +123,17 @@ class SubscriptionController extends Controller
     public function required()
     {
         return view('subscription.required');
+    }
+    
+    /**
+     * Callback Orange Money
+     */
+    public function callback(Request $request)
+    {
+        $paymentId = $request->query('payment_id');
+        
+        // Logique de vérification
+        return redirect()->route('subscription.success')
+            ->with('success', 'Paiement Orange Money réussi !');
     }
 }

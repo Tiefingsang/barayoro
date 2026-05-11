@@ -118,7 +118,7 @@ class OrangeMoneyService
                     'status' => 'failed',
                     'failure_reason' => 'Impossible d\'obtenir le token Orange Money'
                 ]);
-                return ['success' => false, 'error' => 'Service Orange Money indisponible'];
+                return ['success' => false, 'error' => 'Service Orange Money indisponible veuillez contacter le +223 92 51 64 05'];
             }
             
             // Construction de l'URL de retour

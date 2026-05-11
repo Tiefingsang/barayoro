@@ -54,7 +54,7 @@ class PaymentController extends Controller
     public function initiateOrangeMoneyPayment(Request $request)
     {
         $request->validate([
-            'phone_number' => 'required|string|min:9|max:13',
+            'phone_number' => 'required|string|min:8|max:13',
             'invoice_id' => 'nullable|exists:invoices,id',
             'amount' => 'required|numeric|min:100'
         ]);

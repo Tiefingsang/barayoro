@@ -77,15 +77,68 @@
 
                     <!-- Options de paiement -->
                     <div x-data="{ 
-                        paymentMethod: 'card',
+                        paymentMethod: 'orange_money',
                         mobileNumber: ''
                     }" class="space-y-3">
                         
+                        <!-- ⭐ ORANGE MONEY (PAR DÉFAUT) ⭐ -->
+                        <div class="border rounded-xl p-4 transition-all duration-200 hover:border-orange-300 hover:shadow-sm cursor-pointer"
+                             :class="paymentMethod === 'orange_money' ? 'border-orange-500 bg-orange-50/30' : 'border-gray-200'">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="payment_method" value="orange_money" x-model="paymentMethod" class="mr-3 text-orange-500 focus:ring-orange-500" checked>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center">
+                                                <img src="{{ asset('assets/images/payement/orange.webp') }}" alt="Orange Money" class="w-8 h-8 object-contain">
+                                            </div>
+                                            <div>
+                                                <span class="font-semibold text-gray-800">Orange Money</span>
+                                                <p class="text-xs text-gray-500">Paiement mobile Orange Money</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <img src="{{ asset('assets/images/payement/orange.webp') }}" alt="Orange Money" class="w-6 h-6 object-contain">
+                                            <span class="text-xs text-gray-500">Orange Money</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
+                            
+                            <!-- Formulaire Orange Money -->
+                            <div x-show="paymentMethod === 'orange_money'" x-cloak class="mt-4 pt-4 border-t border-gray-100">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Numéro Orange Money</label>
+                                    <div class="relative">
+                                        <div class="absolute left-0 top-0 bottom-0 flex items-center pl-3">
+                                            <select id="country_code" class="bg-transparent text-gray-600 text-sm border-0 focus:ring-0 pr-2" style="width: auto;">
+                                                <option value="223">🇲🇱 +223 (Mali)</option>
+                                                <option value="221">🇸🇳 +221 (Sénégal)</option>
+                                                <option value="225">🇨🇮 +225 (Côte d'Ivoire)</option>
+                                                <option value="226">🇧🇫 +226 (Burkina Faso)</option>
+                                                <option value="224">🇬🇳 +224 (Guinée)</option>
+                                                <option value="227">🇳🇪 +227 (Niger)</option>
+                                                <option value="229">🇧🇯 +229 (Bénin)</option>
+                                            </select>
+                                        </div>
+                                        <input type="tel" name="mobile_number" x-model="mobileNumber" 
+                                               id="mobile_number"
+                                               placeholder="77 123 45 67"
+                                               class="w-full pl-32 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
+                                    </div>
+                                    <div class="flex items-center gap-2 mt-2">
+                                        <i class="fas fa-info-circle text-gray-400 text-sm"></i>
+                                        <p class="text-xs text-gray-500">Saisissez votre numéro Orange Money sans l'indicatif (ex: 771234567)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Carte bancaire -->
                         <div class="border rounded-xl p-4 transition-all duration-200 hover:border-orange-300 hover:shadow-sm cursor-pointer" 
                              :class="paymentMethod === 'card' ? 'border-orange-500 bg-orange-50/30' : 'border-gray-200'">
                             <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="payment_method" value="card" x-model="paymentMethod" class="mr-3 text-orange-500 focus:ring-orange-500" checked>
+                                <input type="radio" name="payment_method" value="card" x-model="paymentMethod" class="mr-3 text-orange-500 focus:ring-orange-500">
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-3">
@@ -126,48 +179,6 @@
                                         <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
                                         <input type="text" name="card_cvv" placeholder="123"
                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Orange Money -->
-                        <div class="border rounded-xl p-4 transition-all duration-200 hover:border-orange-300 hover:shadow-sm cursor-pointer"
-                             :class="paymentMethod === 'orange_money' ? 'border-orange-500 bg-orange-50/30' : 'border-gray-200'">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" name="payment_method" value="orange_money" x-model="paymentMethod" class="mr-3 text-orange-500 focus:ring-orange-500">
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center">
-                                                <img src="{{ asset('assets/images/payement/orange.webp') }}" alt="Orange Money" class="w-8 h-8 object-contain">
-                                            </div>
-                                            <div>
-                                                <span class="font-semibold text-gray-800">Orange Money</span>
-                                                <p class="text-xs text-gray-500">Paiement mobile Orange Money</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-1">
-                                            <img src="{{ asset('assets/images/payement/orange.webp') }}" alt="Orange Money" class="w-6 h-6 object-contain">
-                                            <span class="text-xs text-gray-500">Orange Money</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </label>
-                            
-                            <!-- Formulaire Orange Money -->
-                            <div x-show="paymentMethod === 'orange_money'" x-cloak class="mt-4 pt-4 border-t border-gray-100">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Numéro Orange Money</label>
-                                    <div class="relative">
-                                        <i class="fas fa-phone-alt absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                        <input type="tel" name="mobile_number" x-model="mobileNumber" 
-                                               placeholder="77 123 45 67"
-                                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition">
-                                    </div>
-                                    <div class="flex items-center gap-2 mt-2">
-                                        <i class="fas fa-info-circle text-gray-400 text-sm"></i>
-                                        <p class="text-xs text-gray-500">Vous recevrez une demande de paiement sur votre téléphone Orange Money</p>
                                     </div>
                                 </div>
                             </div>
@@ -261,18 +272,99 @@
     [x-cloak] { display: none !important; }
 </style>
 
-<!-- Script de validation -->
+<!-- Script de validation complet -->
 <script>
-document.getElementById('paymentForm')?.addEventListener('submit', function(e) {
-    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-    const mobileNumber = document.querySelector('input[name="mobile_number"]');
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentForm = document.getElementById('paymentForm');
+    const mobileNumberInput = document.getElementById('mobile_number');
+    const countryCodeSelect = document.getElementById('country_code');
     
-    if ((paymentMethod === 'orange_money' || paymentMethod === 'wave') && mobileNumber) {
-        if (!mobileNumber.value.trim()) {
-            e.preventDefault();
-            alert('Veuillez saisir votre numéro de téléphone');
-            mobileNumber.focus();
-        }
+    // Auto-combiner l'indicatif avec le numéro
+    if (mobileNumberInput) {
+        mobileNumberInput.addEventListener('input', function(e) {
+            const countryCode = countryCodeSelect ? countryCodeSelect.value : '223';
+            let number = this.value.replace(/[\s\-]/g, '');
+            
+            // Supprimer l'indicatif si l'utilisateur l'a saisi
+            if (number.startsWith(countryCode)) {
+                number = number.substring(countryCode.length);
+            }
+            if (number.startsWith('0') && number.length > 1) {
+                number = number.substring(1);
+            }
+            
+            // Limiter à 8 chiffres
+            if (number.length > 8) {
+                number = number.substring(0, 8);
+            }
+            
+            this.value = number;
+        });
+    }
+    
+    // Validation du formulaire
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', function(e) {
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+            
+            if (!paymentMethod) {
+                e.preventDefault();
+                alert('Veuillez sélectionner un moyen de paiement');
+                return false;
+            }
+            
+            const selectedMethod = paymentMethod.value;
+            
+            if (selectedMethod === 'orange_money') {
+                const numberInput = document.getElementById('mobile_number');
+                
+                if (!numberInput || !numberInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Veuillez saisir votre numéro Orange Money');
+                    numberInput?.focus();
+                    return false;
+                }
+                
+                const countryCode = countryCodeSelect ? countryCodeSelect.value : '223';
+                let number = numberInput.value.replace(/[\s\-]/g, '');
+                
+                // Ne garder que les chiffres
+                number = number.replace(/\D/g, '');
+                
+                // Vérifier la longueur (8 chiffres pour Orange)
+                if (number.length !== 8) {
+                    e.preventDefault();
+                    alert('Veuillez entrer un numéro Orange Money valide à 8 chiffres (ex: 77123456)');
+                    numberInput.focus();
+                    return false;
+                }
+                
+                // Vérifier les préfixes Orange (77, 70, 71, 79)
+                const prefix = number.substring(0, 2);
+                if (!['77', '70', '71', '79', '78'].includes(prefix)) {
+                    e.preventDefault();
+                    alert('Ce numéro ne semble pas être un numéro Orange Money. Les numéros Orange commencent par 77, 70, 71 ou 79.');
+                    numberInput.focus();
+                    return false;
+                }
+                
+                // Combiner avec l'indicatif
+                numberInput.value = '+' + countryCode + number;
+            }
+            
+            if (selectedMethod === 'wave') {
+                const numberInput = document.querySelector('input[name="mobile_number"]');
+                
+                if (!numberInput || !numberInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Veuillez saisir votre numéro Wave');
+                    numberInput?.focus();
+                    return false;
+                }
+            }
+            
+            return true;
+        });
     }
 });
 </script>

@@ -139,9 +139,9 @@
                         <i class="fas fa-envelope"></i>
                         Formulaire de contact
                     </a>
-                    <a href="mailto:support@barayoro.com" class="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:border-orange-custom hover:text-orange-custom transition">
+                    <a href="mailto:masadigitale@gmail.com" class="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:border-orange-custom hover:text-orange-custom transition">
                         <i class="fas fa-envelope"></i>
-                        support@barayoro.com
+                        masadigitale@gmail.com
                     </a>
                 </div>
             </div>

@@ -326,6 +326,8 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 
     Route::get('/files', [FileManagerController::class, 'index'])->name('files.index');
+    Route::post('/files/create', [FileManagerController::class, 'createFolder'])->name('ffiles.create-folder');
+
 
     /*
     |--------------------------------------------------------------------------

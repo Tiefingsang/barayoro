@@ -101,7 +101,7 @@
             <div class="bg-white rounded-2xl p-6 shadow-sm">
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">Centre d'aide</h1>
                 <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <a href="#" class="hover:text-barayoro transition">Accueil</a>
+                    <a href="{{ route('home') }}" class="hover:text-barayoro transition">Accueil</a>
                     <i class="fas fa-chevron-right text-xs"></i>
                     <span class="text-barayoro font-medium">Centre d'aide</span>
                 </div>
@@ -460,7 +460,7 @@
                 </a>
             </div>
             <p class="text-orange-100 text-sm mt-6">
-                <i class="las la-clock mr-1"></i> Support disponible du lundi au vendredi, 8h - 18h
+                <i class="las la-clock mr-1"></i> Support disponible 24/24 | Réponse en moins de 24h
             </p>
         </div>
 

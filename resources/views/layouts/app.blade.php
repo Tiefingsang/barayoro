@@ -171,7 +171,7 @@
 
   <button @click="toggleCustomizer" class="fixed bottom-5 ltr:right-5 rtl:left-5 z-[24] bg-primary-300 rounded-xl flex px-4 py-2 items-center gap-2 justify-center text-neutral-0 shadow-xl">
     <i class="las la-cog animate-spin-slow"></i>
-    <span class="text-sm"> Customize </span>
+    <span class="text-sm"> Personnaliser </span>
   </button>
 
   <div x-show="customizerIsOpen" @click="closeCustomizer" class="fixed z-[21] bg-neutral-900 bg-opacity-10 inset-0 duration-300"></div>

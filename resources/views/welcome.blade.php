@@ -68,7 +68,7 @@
                 
                 <div class="relative hidden lg:block">
                     <div class="relative rounded-2xl overflow-hidden shadow-2xl">
-                        <img src="{{ asset('assets/images/dashboard-preview.png') }}" alt="Dashboard Barayoro" class="w-full">
+                        <img src="{{ asset('assets/images/carousel/1.png') }}" alt="Dashboard Barayoro" class="w-full">
                     </div>
                     <div class="absolute -bottom-6 -left-6 w-32 h-32 gradient-bg rounded-full opacity-20 blur-2xl"></div>
                     <div class="absolute -top-6 -right-6 w-32 h-32 bg-orange-200 rounded-full opacity-50 blur-2xl"></div>

@@ -71,7 +71,7 @@
                 <div class="mt-4 p-3 bg-green-50 rounded-lg">
                     <p class="text-sm text-green-700">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Pour chaque ami qui s'inscrit avec votre code, vous gagnez <strong>{{ number_format($rewardAmount ?? 5000, 0, ',', ' ') }} €</strong> de crédit !
+                        Pour chaque ami qui s'inscrit avec votre code, vous gagnez <strong>{{ number_format($rewardAmount ?? 5000, 0, ',', ' ') }} Fcfa</strong> de crédit !
                     </p>
                 </div>
             </div>

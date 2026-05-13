@@ -122,19 +122,20 @@
             <!-- Profil utilisateur -->
             <div x-data="dropdown" class="relative shrink-0">
                 <div title="Profil utilisateur" @click="toggle" class="size-9 cursor-pointer">
-                    <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('assets/images/users/user-s-4.png') }}" 
-                         class="rounded-full" 
-                         alt="photo de profil" />
+                    <!-- Nouveau code avec avatar -->
+<img src="{{ Auth::user()->avatar_url }}" 
+     class="rounded-full w-9 h-9 object-cover" 
+     alt="photo de profil" />
                 </div>
                 <div @click.away="close" x-show="isOpen"
                     class="absolute top-full z-20 rounded-md bg-neutral-0 shadow-[0px_6px_30px_0px_rgba(0,0,0,0.08)] duration-300 dark:bg-neutral-904 ltr:right-0 ltr:origin-top-right rtl:left-0 rtl:origin-top-left">
                     <div
                         class="flex flex-col items-center border-b border-neutral-30 p-3 text-center dark:border-neutral-500 lg:p-4">
-                        <img src="{{ Auth::user()->profile_photo ? asset('storage/' . Auth::user()->profile_photo) : asset('assets/images/users/user-s-4.png') }}" 
-                             width="60" 
-                             height="60" 
-                             class="rounded-full"
-                             alt="photo de profil" />
+                       <img src="{{ Auth::user()->avatar_url }}" 
+     width="60" 
+     height="60" 
+     class="rounded-full w-14 h-14 object-cover"
+     alt="photo de profil" />
                         <h6 class="h6 mt-2">{{ Auth::user()->name ?? 'Utilisateur' }}</h6>
                         <span class="text-sm">{{ Auth::user()->email ?? 'email@exemple.com' }}</span>
                     </div>

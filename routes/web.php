@@ -367,6 +367,20 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     });
 });
 
+// Ajoutez ces routes dans votre fichier web.php
+
+/*
+|--------------------------------------------------------------------------
+| PAGES STATIQUES
+|--------------------------------------------------------------------------
+*/
+// Routes pour les pages statiques
+Route::get('/fonctionnalites', [PageController::class, 'features'])->name('features');
+Route::get('/offres-emploi', [PageController::class, 'jobs'])->name('jobs.list');
+Route::get('/tarifs', [PageController::class, 'pricing'])->name('pricing');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+Route::get('/offre-emploi/{id}', [PageController::class, 'jobDetail'])->name('jobs.details');
+
 /*
 |--------------------------------------------------------------------------
 | ROUTES PUBLIQUES DYNAMIQUES

@@ -1,4 +1,4 @@
-<!-- resources/views/partials/navbar.blade.php -->
+<!-- resources/views/partials/navbarpublic.blade.php -->
 <nav class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-50">
     <div class="container mx-auto px-4 md:px-6 py-4">
         <div class="flex flex-wrap justify-between items-center">
@@ -12,11 +12,12 @@
 
             <!-- Menu Desktop -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#accueil" class="text-gray-600 hover:text-orange-custom transition duration-300">Accueil</a>
-                <a href="#fonctionnalites" class="text-gray-600 hover:text-orange-custom transition duration-300">Fonctionnalités</a>
-                <a href="#offres" class="text-gray-600 hover:text-orange-custom transition duration-300">Offres d'emploi</a>
-                <a href="#tarifs" class="text-gray-600 hover:text-orange-custom transition duration-300">Tarifs</a>
-                <a href="#contact" class="text-gray-600 hover:text-orange-custom transition duration-300">Contact</a>
+                <a href="{{ route('home') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Accueil</a>
+                <a href="{{ route('features') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Fonctionnalités</a>
+                <a href="{{ route('jobs.list') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Offres d'emploi</a>
+                <a href="{{ route('pricing') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Tarifs</a>
+                <a href="{{ route('contact') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Contact</a>
+                <a href="{{ route('blog.list') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Blog</a>
             </div>
 
             <!-- Boutons connexion/inscription -->
@@ -45,11 +46,12 @@
 
         <!-- Menu Mobile Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 space-y-3">
-            <a href="#accueil" class="block text-gray-600 hover:text-orange-custom transition">Accueil</a>
-            <a href="#fonctionnalites" class="block text-gray-600 hover:text-orange-custom transition">Fonctionnalités</a>
-            <a href="#offres" class="block text-gray-600 hover:text-orange-custom transition">Offres d'emploi</a>
-            <a href="#tarifs" class="block text-gray-600 hover:text-orange-custom transition">Tarifs</a>
-            <a href="#contact" class="block text-gray-600 hover:text-orange-custom transition">Contact</a>
+            <a href="{{ route('home') }}" class="block text-gray-600 hover:text-orange-custom transition">Accueil</a>
+            <a href="{{ route('features') }}" class="block text-gray-600 hover:text-orange-custom transition">Fonctionnalités</a>
+            <a href="{{ route('jobs.list') }}" class="block text-gray-600 hover:text-orange-custom transition">Offres d'emploi</a>
+            <a href="{{ route('pricing') }}" class="block text-gray-600 hover:text-orange-custom transition">Tarifs</a>
+            <a href="{{ route('contact') }}" class="block text-gray-600 hover:text-orange-custom transition">Contact</a>
+            <a href="{{ route('blog.list') }}" class="block text-gray-600 hover:text-orange-custom transition">Blog</a>
             @auth
                 <a href="{{ route('dashboard') }}" class="block px-4 py-2 bg-orange-custom text-white rounded-lg text-center">Tableau de bord</a>
             @else

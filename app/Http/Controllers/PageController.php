@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -23,73 +24,73 @@ class PageController extends Controller
     /**
      * Page d'accueil dynamique
      */
-    public function home()
-    {
-        if (auth()->check()) {
-            return redirect()->route('dashboard');
-        }
+   /**
+ * Page d'accueil dynamique
+ */
+public function home()
+{
+  
 
-        // Récupérer les offres d'emploi actives
-        $jobOffers = JobOffer::where('is_active', true)
-            ->where(function($q) {
-                $q->whereNull('expires_at')
-                  ->orWhere('expires_at', '>', now());
-            })
-            ->with('company')
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
+    // Récupérer les offres d'emploi actives
+    $jobOffers = JobOffer::where('is_active', true)
+        ->where(function($q) {
+            $q->whereNull('expires_at')
+              ->orWhere('expires_at', '>', now());
+        })
+        ->with('company')
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
 
-        // Types d'entreprises pour le filtre
-        $companyTypes = Company::whereNotNull('type')
-            ->distinct()
-            ->select('type as name', DB::raw("LOWER(REPLACE(REPLACE(type, ' ', '-'), 'é', 'e')) as slug"))
-            ->get();
+    // Types d'entreprises pour le filtre
+    $companyTypes = Company::whereNotNull('type')
+        ->distinct()
+        ->select('type as name', DB::raw("LOWER(REPLACE(REPLACE(type, ' ', '-'), 'é', 'e')) as slug"))
+        ->get();
 
-        // Fonctionnalités
-        $features = Feature::where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
+    // Fonctionnalités
+    $features = Feature::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
 
-        // Plans tarifaires
-        $pricingPlans = PricingPlan::where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
+    // Plans tarifaires
+    $pricingPlans = PricingPlan::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
 
-        // Statistiques
-        $totalCompaniesCount = Company::count();
-        
-        // Entreprises de confiance (avec logo)
-        $trustedCompanies = Company::whereNotNull('logo')
-            ->take(3)
-            ->get();
-        
-        // Logos partenaires
-        $partnerLogos = PartnerLogo::where('is_active', true)->get();
+    // Statistiques
+    $totalCompaniesCount = Company::count();
+    
+    // Entreprises de confiance - Récupère les entreprises avec ou sans logo
+    $trustedCompanies = Company::where('is_active', true)
+        ->take(6)
+        ->get();
+    
+    // Logos partenaires
+    $partnerLogos = PartnerLogo::where('is_active', true)->get();
 
-        // Paramètres globaux
-        $settings = [
-            'hero_description' => Setting::getValue('hero_description', 'Barayoro est la solution SaaS tout-en-un pour gérer vos ventes, factures, stocks, projets et équipes. Accédez à vos données partout, même hors ligne.'),
-            'meta_description' => Setting::getValue('meta_description', 'Barayoro est la solution SaaS tout-en-un pour gérer votre entreprise. Facturation, stocks, projets, équipes. Essai gratuit 30 jours.'),
-        ];
-        
-        $featuresTitle = Setting::getValue('features_title', 'Tout ce dont votre entreprise a besoin');
-        $featuresSubtitle = Setting::getValue('features_subtitle', 'Une solution complète pour gérer l\'ensemble de vos activités professionnelles');
+    // Paramètres globaux
+    $settings = [
+        'hero_description' => Setting::getValue('hero_description', 'Barayoro est la solution SaaS tout-en-un pour gérer vos ventes, factures, stocks, projets et équipes. Accédez à vos données partout, même hors ligne.'),
+        'meta_description' => Setting::getValue('meta_description', 'Barayoro est la solution SaaS tout-en-un pour gérer votre entreprise. Facturation, stocks, projets, équipes. Essai gratuit 30 jours.'),
+    ];
+    
+    $featuresTitle = Setting::getValue('features_title', 'Tout ce dont votre entreprise a besoin');
+    $featuresSubtitle = Setting::getValue('features_subtitle', 'Une solution complète pour gérer l\'ensemble de vos activités professionnelles');
 
-        return view('welcome', compact(
-            'jobOffers',
-            'companyTypes',
-            'features',
-            'pricingPlans',
-            'totalCompaniesCount',
-            'trustedCompanies',
-            'partnerLogos',
-            'settings',
-            'featuresTitle',
-            'featuresSubtitle'
-        ));
-    }
-
+    return view('welcome', compact(
+        'jobOffers',
+        'companyTypes',
+        'features',
+        'pricingPlans',
+        'totalCompaniesCount',
+        'trustedCompanies',
+        'partnerLogos',
+        'settings',
+        'featuresTitle',
+        'featuresSubtitle'
+    ));
+}
     /**
      * Page À propos
      */
@@ -181,7 +182,7 @@ class PageController extends Controller
                 ],
                 (object)[
                     'name' => 'Premium',
-                    'price' => 490,
+                    'price' => 49000,
                     'period' => 'an',
                     'features' => ['Utilisateurs illimités', 'Toutes les fonctionnalités', 'Support prioritaire 24/7', 'Stockage: 100GB', 'API dédiée', 'Formation incluse'],
                     'button_text' => 'Choisir Premium',
@@ -226,6 +227,50 @@ class PageController extends Controller
     {
         return view('pages.contact');
     }
+
+
+    /**
+ * Page Fonctionnalités
+ */
+public function features()
+{
+    $features = Feature::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
+    
+    return view('pages.features', compact('features'));
+}
+
+/**
+ * Page Offres d'emploi
+ */
+public function jobs()
+{
+    $jobOffers = JobOffer::where('is_active', true)
+        ->where(function($q) {
+            $q->whereNull('expires_at')
+              ->orWhere('expires_at', '>', now());
+        })
+        ->with('company')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+    
+    $companyTypes = Company::whereNotNull('type')
+        ->distinct()
+        ->select('type as name', DB::raw("LOWER(REPLACE(REPLACE(type, ' ', '-'), 'é', 'e')) as slug"))
+        ->get();
+    
+    return view('pages.jobs', compact('jobOffers', 'companyTypes'));
+}
+
+/**
+ * Détail offre d'emploi
+ */
+public function jobDetail($id)
+{
+    $job = JobOffer::with('company')->findOrFail($id);
+    return view('pages.job-detail', compact('job'));
+}
 
     /**
      * Traiter le formulaire de contact

@@ -92,48 +92,74 @@ class ProfileController extends Controller
     /**
      * Mettre à jour l'avatar.
      */
-    public function updateAvatar(Request $request)
-    {
+
+// app/Http/Controllers/ProfileController.php
+
+/**
+ * Mettre à jour l'avatar.
+ */
+public function updateAvatar(Request $request)
+{
+    try {
         $user = Auth::user();
 
         $request->validate([
             'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ]);
 
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+        // Récupérer le vrai chemin stocké en base, sans accessseur
+        $oldAvatar = $user->getRawOriginal('avatar');
+
+        // Supprimer l'ancien avatar
+        if ($oldAvatar && Storage::disk('public')->exists($oldAvatar)) {
+            Storage::disk('public')->delete($oldAvatar);
         }
 
+        // Stocker le nouvel avatar
         $path = $request->file('avatar')->store('avatars', 'public');
-        
-        $user->update(['avatar' => $path]);
+
+        // Enregistrer seulement le chemin en base
+        $user->forceFill([
+            'avatar' => $path,
+        ])->save();
 
         return response()->json([
             'success' => true,
-            'avatar_url' => $user->avatar_url,
-            'message' => 'Avatar mis à jour avec succès.'
+            'avatar_url' => asset('storage/' . $path),
+            'message' => 'Avatar mis à jour avec succès.',
         ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de l’upload : ' . $e->getMessage(),
+        ], 500);
     }
+}
 
     /**
      * Supprimer l'avatar.
      */
     public function deleteAvatar(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-        }
+    $oldAvatar = $user->getRawOriginal('avatar');
 
-        $user->update(['avatar' => null]);
-
-        return response()->json([
-            'success' => true,
-            'avatar_url' => $user->avatar_url,
-            'message' => 'Avatar supprimé avec succès.'
-        ]);
+    if ($oldAvatar && Storage::disk('public')->exists($oldAvatar)) {
+        Storage::disk('public')->delete($oldAvatar);
     }
+
+    $user->forceFill([
+        'avatar' => null,
+    ])->save();
+
+    return response()->json([
+        'success' => true,
+        'avatar_url' => $user->avatar_url,
+        'message' => 'Avatar supprimé avec succès.',
+    ]);
+}
 
     /**
      * Mettre à jour les préférences utilisateur.

@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use App\Models\HelpArticle;
+use App\Models\HelpCategory;
+
 
 class PageController extends Controller
 {
@@ -485,7 +489,7 @@ public function sendContact(Request $request)
      */
     public function helpCenter()
     {
-        $popularArticles = HelpArticle::where('is_active', true)
+        /* $popularArticles = HelpArticle::where('is_active', true)
             ->where('is_popular', true)
             ->orderBy('views', 'desc')
             ->take(5)
@@ -495,9 +499,9 @@ public function sendContact(Request $request)
             ->with(['articles' => function($q) {
                 $q->where('is_active', true)->limit(5);
             }])
-            ->get();
+            ->get(); */
         
-        return view('pages.help-center', compact('popularArticles', 'categories'));
+        return view('pages.help-center'/* , compact('popularArticles', 'categories') */);
     }
 
     /**

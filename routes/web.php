@@ -52,19 +52,25 @@ use App\Http\Controllers\SubscriptionController;
 Route::get('/', [PageController::class, 'home'])->name('home');
 
 Route::get('/conditions-utilisation', [PageController::class, 'terms'])->name('terms');
+
 Route::get('/politique-confidentialite', [PageController::class, 'privacy'])->name('privacy');
 
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
 Route::post('/contact', [PageController::class, 'sendContact'])->name('contact.send');
 
 Route::get('/help-center', [PageController::class, 'helpCenter'])->name('help.center');
+
 Route::get('/about', [PageController::class, 'about'])->name('about');
+
 Route::get('/faq', [PageController::class, 'faq'])->name('faq');
 
 Route::get('/pricing', [PageController::class, 'pricing'])->name('pricing');
+
 Route::get('/payment-page', [PageController::class, 'payment'])->name('payment.page');
 
 Route::get('/maintenance', [PageController::class, 'maintenance'])->name('maintenance');
+
 Route::get('/coming-soon', [PageController::class, 'comingSoon'])->name('coming.soon');
 
 /*
@@ -74,6 +80,7 @@ Route::get('/coming-soon', [PageController::class, 'comingSoon'])->name('coming.
 */
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.list');
+
 Route::get('/blog/grid', [BlogController::class, 'grid'])->name('blog.grid');
 
 /*
@@ -99,9 +106,11 @@ Route::get('/tours', [TourController::class, 'index'])->name('tours.list');
 */
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -113,9 +122,11 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 */
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotForm'])->name('password.request');
+
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
 
 Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 /*
@@ -262,55 +273,99 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     */
 
     Route::resource('users', UserController::class);
+
     Route::resource('clients', ClientController::class);
+
     Route::resource('products', ProductController::class);
+
     Route::resource('orders', OrderController::class);
+
     Route::resource('invoices', InvoiceController::class);
+
+Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])
+    ->name('invoices.pdf');
+
+Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'send'])
+    ->name('invoices.send');
+
+Route::post('/invoices/{invoice}/mark-paid', [InvoiceController::class, 'markAsPaid'])
+    ->name('invoices.mark-paid');
+
     Route::resource('payments', PaymentController::class);
 
-    // Routes Orange Money
-    Route::middleware(['auth'])->prefix('payments')->name('payments.')->group(function () {
-        Route::get('/orange-money/subscription', [PaymentController::class, 'showOrangeMoneySubscription'])->name('orange-money.subscription');
-        Route::get('/orange-money/invoice/{invoice}', [PaymentController::class, 'showOrangeMoneyInvoice'])->name('orange-money.invoice');
-        Route::post('/orange-money/initiate', [PaymentController::class, 'initiateOrangeMoneyPayment'])->name('orange-money.initiate');
-        Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])->name('subscription.plans');
-        Route::post('/process', [SubscriptionController::class, 'process'])->name('subscription.process');
-        Route::get('/success', [SubscriptionController::class, 'success'])->name('subscription.success');
-        
-        // Callbacks Orange Money (sans middleware auth)
-        Route::get('/callback', [SubscriptionController::class, 'callback'])->name('subscription.callback');
-        Route::post('/webhook', [SubscriptionController::class, 'webhook'])->name('subscription.webhook');
+    /*
+    |--------------------------------------------------------------------------
+    | ORANGE MONEY
+    |--------------------------------------------------------------------------
+    */
+
+    Route::prefix('payments')->name('payments.')->group(function () {
+
+        Route::get('/orange-money/subscription', [PaymentController::class, 'showOrangeMoneySubscription'])
+            ->name('orange-money.subscription');
+
+        Route::get('/orange-money/invoice/{invoice}', [PaymentController::class, 'showOrangeMoneyInvoice'])
+            ->name('orange-money.invoice');
+
+        Route::post('/orange-money/initiate', [PaymentController::class, 'initiateOrangeMoneyPayment'])
+            ->name('orange-money.initiate');
+
+        Route::get('/subscription/plans', [SubscriptionController::class, 'plans'])
+            ->name('subscription.plans.payment');
+
+        Route::post('/process', [SubscriptionController::class, 'process'])
+            ->name('subscription.process.payment');
+
+        Route::get('/success', [SubscriptionController::class, 'success'])
+            ->name('subscription.success.payment');
+
+        Route::get('/callback', [SubscriptionController::class, 'callback'])
+            ->name('subscription.callback');
+
+        Route::post('/webhook', [SubscriptionController::class, 'webhook'])
+            ->name('subscription.webhook');
     });
-    Route::get('/payments/orange-money/subscription', [PaymentController::class, 'showOrangeMoneySubscription'])->name('payments.orange-money.subscription');
 
-    // Webhook Orange Money
-    
-    
-    ////
-    Route::prefix('payments/orange-money')->name('payments.orange-money.')->middleware(['auth'])->group(function () {
-    
-    Route::get('/waiting/{payment}', [PaymentController::class, 'waitingOrangeMoneyPayment'])->name('waiting');
-    Route::get('/callback', [PaymentController::class, 'orangeMoneyCallback'])->name('callback');
-    Route::get('/cancel/{payment}', [PaymentController::class, 'orangeMoneyCancel'])->name('cancel');
-    });
+    Route::get('/payments/orange-money/subscription', [PaymentController::class, 'showOrangeMoneySubscription'])
+        ->name('payments.orange-money.subscription');
 
-    // Webhook (public)
-    Route::post('/webhooks/orange-money', [PaymentController::class, 'orangeMoneyWebhook'])->name('payments.orange-money.webhook');
+    Route::prefix('payments/orange-money')
+        ->name('payments.orange-money.')
+        ->group(function () {
 
-    // Simulation (dev only)
+            Route::get('/waiting/{payment}', [PaymentController::class, 'waitingOrangeMoneyPayment'])
+                ->name('waiting');
+
+            Route::get('/callback', [PaymentController::class, 'orangeMoneyCallback'])
+                ->name('callback');
+
+            Route::get('/cancel/{payment}', [PaymentController::class, 'orangeMoneyCancel'])
+                ->name('cancel');
+        });
+
+    Route::post('/webhooks/orange-money', [PaymentController::class, 'orangeMoneyWebhook'])
+        ->name('payments.orange-money.webhook');
+
     if (app()->environment('local')) {
+
         Route::get('/payments/orange-money/simulate/{payment}', [PaymentController::class, 'orangeMoneySimulate'])
             ->name('payments.orange-money.simulate');
     }
 
-    
-    ///
+    /*
+    |--------------------------------------------------------------------------
+    | GESTION
+    |--------------------------------------------------------------------------
+    */
 
-    // Gestion des dépenses
     Route::resource('expenses', ExpenseController::class);
+
     Route::resource('expense-categories', ExpenseCategoryController::class);
+
     Route::resource('departments', DepartmentController::class);
+
     Route::resource('projects', ProjectController::class);
+
     Route::resource('tasks', TaskController::class);
 
     /*
@@ -321,14 +376,40 @@ Route::middleware(['auth', 'subscription'])->group(function () {
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
 
-    Route::get('/kanban', [KanbanController::class, 'index'])->name('kanban');
+  
 
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 
+   
+
+
+
+     /*
+    |--------------------------------------------------------------------------
+    | GESTIONNAIRE DE FICHIERS
+    |--------------------------------------------------------------------------
+    */
     Route::get('/files', [FileManagerController::class, 'index'])->name('files.index');
-    Route::post('/files/create', [FileManagerController::class, 'createFolder'])->name('ffiles.create-folder');
+    Route::post('/files/create-folder', [FileManagerController::class, 'createFolder'])->name('files.create-folder');
+    Route::post('/files/upload', [FileManagerController::class, 'upload'])->name('files.upload');
+    Route::get('/files/{file}/download', [FileManagerController::class, 'download'])->name('files.download');
+    Route::get('/files/{file}', [FileManagerController::class, 'show'])->name('files.show');
+    Route::put('/files/{file}/rename', [FileManagerController::class, 'rename'])->name('files.rename');
+    Route::put('/files/{file}/move', [FileManagerController::class, 'move'])->name('files.move');
+    Route::delete('/files/{file}', [FileManagerController::class, 'destroy'])->name('files.destroy');
+    Route::get('/files/search', [FileManagerController::class, 'search'])->name('files.search');
+    Route::post('/files/set-view', [FileManagerController::class, 'setView'])->name('files.set-view');
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | KANBAN
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/kanban', [KanbanController::class, 'index'])->name('kanban');
+    Route::put('/kanban/update-status', [KanbanController::class, 'updateTaskStatus'])->name('kanban.update-status');
+    Route::put('/kanban/update-order', [KanbanController::class, 'updateTaskOrder'])->name('kanban.update-order');
+    Route::post('/kanban/quick-task', [KanbanController::class, 'quickTask'])->name('kanban.quick-task');
+    Route::get('/kanban/tasks', [KanbanController::class, 'getTasks'])->name('kanban.tasks');
     /*
     |--------------------------------------------------------------------------
     | FINANCE & ANALYTICS
@@ -369,31 +450,24 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     });
 });
 
-// Ajoutez ces routes dans votre fichier web.php
-
 /*
 |--------------------------------------------------------------------------
 | PAGES STATIQUES
 |--------------------------------------------------------------------------
 */
-// Routes pour les pages statiques
+
 Route::get('/fonctionnalites', [PageController::class, 'features'])->name('features');
-Route::get('/offres-emploi', [PageController::class, 'jobs'])->name('jobs.list');
-Route::get('/tarifs', [PageController::class, 'pricing'])->name('pricing');
-Route::get('/contact', [PageController::class, 'contact'])->name('contact');
-Route::get('/offre-emploi/{id}', [PageController::class, 'jobDetail'])->name('jobs.details');
+
+Route::get('/offres-emploi', [PageController::class, 'jobs'])->name('pages.jobs');
+
+Route::get('/tarifs', [PageController::class, 'pricing'])->name('pricing.fr');
+
+Route::get('/offre-emploi/{id}', [PageController::class, 'jobDetail'])
+    ->name('pages.jobs.details');
 
 /*
 |--------------------------------------------------------------------------
-| ROUTES PUBLIQUES DYNAMIQUES
-|--------------------------------------------------------------------------
-| TOUJOURS À LA FIN POUR ÉVITER LES CONFLITS
-|--------------------------------------------------------------------------
-*/
-
-/*
-|--------------------------------------------------------------------------
-| BLOG
+| BLOG DYNAMIQUE
 |--------------------------------------------------------------------------
 */
 
@@ -402,7 +476,7 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])
 
 /*
 |--------------------------------------------------------------------------
-| JOBS
+| JOBS DYNAMIQUE
 |--------------------------------------------------------------------------
 */
 
@@ -417,7 +491,7 @@ Route::get('/jobs/{id}', [JobController::class, 'show'])
 
 /*
 |--------------------------------------------------------------------------
-| TOURS
+| TOURS DYNAMIQUE
 |--------------------------------------------------------------------------
 */
 
@@ -454,9 +528,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/backups/{backup}', [BackupController::class, 'destroy'])
             ->name('backups.destroy');
 
+        Route::resource('tours', TourController::class)->except(['show']);
 
-            Route::resource('tours', TourController::class)->except(['show']);
-    Route::get('/tours/{id}', [TourController::class, 'show'])->name('tours.show');
+        Route::get('/tours/{id}', [TourController::class, 'show'])
+            ->name('tours.show');
     });
 
 /*

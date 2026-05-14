@@ -372,7 +372,7 @@ public function sendContact(Request $request)
     $emailDomain = substr(strrchr($cleanedEmail, "@"), 1);
     
     if (in_array($emailDomain, $temporaryDomains)) {
-        RateLimiter::hit($throttleKey, 3600);
+        RateLimiter::hit($throttleKey, 300);
         
         if ($request->wantsJson()) {
             return response()->json([

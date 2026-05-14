@@ -104,40 +104,115 @@
                         </div>
                     @endif
                     
-                    <form action="{{ route('contact.send') }}" method="POST">
-                        @csrf
-                        <!-- Honeypot anti-spam -->
-                        <input type="text" name="_website" style="display:none" tabindex="-1" autocomplete="off">
-                        
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">Nom complet *</label>
-                            <input type="text" name="name" value="{{ old('name') }}" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom">
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">Email *</label>
-                            <input type="email" name="email" value="{{ old('email') }}" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom">
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">Téléphone</label>
-                            <input type="tel" name="phone" value="{{ old('phone') }}" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom">
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label class="block text-gray-700 mb-2">Message *</label>
-                            <textarea name="message" rows="5" required 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom">{{ old('message') }}</textarea>
-                        </div>
-                        
-                        <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
-                            Envoyer le message
-                            <i class="fas fa-paper-plane ml-2"></i>
-                        </button>
-                    </form>
+                  
+<form 
+    action="{{ route('contact.send') }}" 
+    method="POST"
+    autocomplete="off"
+    id="contactForm"
+>
+    @csrf
+
+    {{-- Honeypot anti-spam --}}
+    <div class="hidden">
+        <input 
+            type="text" 
+            name="website" 
+            tabindex="-1" 
+            autocomplete="off"
+        >
+    </div>
+
+    {{-- Timestamp anti-bot --}}
+    <input type="hidden" name="form_time" value="{{ time() }}">
+
+    <div class="mb-4">
+        <label class="block text-gray-700 mb-2">
+            Nom complet *
+        </label>
+
+        <input 
+            type="text" 
+            name="name"
+            maxlength="100"
+            minlength="2"
+            value="{{ old('name') }}"
+            required
+            autocomplete="name"
+            spellcheck="false"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom"
+        >
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-gray-700 mb-2">
+            Email *
+        </label>
+
+        <input 
+            type="email"
+            name="email"
+            maxlength="150"
+            value="{{ old('email') }}"
+            required
+            autocomplete="email"
+            spellcheck="false"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom"
+        >
+    </div>
+
+    <div class="mb-4">
+        <label class="block text-gray-700 mb-2">
+            Téléphone
+        </label>
+
+        <input 
+            type="tel"
+            name="phone"
+            maxlength="20"
+            value="{{ old('phone') }}"
+            autocomplete="tel"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom"
+        >
+    </div>
+
+    <div class="mb-6">
+        <label class="block text-gray-700 mb-2">
+            Message *
+        </label>
+
+        <textarea
+            name="message"
+            rows="5"
+            minlength="10"
+            maxlength="5000"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-custom focus:border-orange-custom"
+        >{{ old('message') }}</textarea>
+    </div>
+
+    <button 
+        type="submit"
+        id="submitBtn"
+        class="w-full gradient-bg text-white py-3 rounded-lg font-semibold hover:shadow-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+        Envoyer le message
+        <i class="fas fa-paper-plane ml-2"></i>
+    </button>
+</form>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', function () {
+
+    const btn = document.getElementById('submitBtn');
+
+    btn.disabled = true;
+
+    btn.innerHTML = 'Envoi en cours...';
+});
+</script>
+
+
                 </div>
             </div>
         </div>

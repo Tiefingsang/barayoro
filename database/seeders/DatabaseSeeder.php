@@ -35,5 +35,18 @@ class DatabaseSeeder extends Seeder
         $this->command->info('✓ Installation terminée !');
         $this->command->info('Email: admin@barayoro.com');
         $this->command->info('Mot de passe: password');
+
+
+                // ========== 2. CRÉER LES FONCTIONNALITÉS ==========
+        $this->call(FeatureSeeder::class);
+        $this->command->info('✓ Fonctionnalités créées !');
+
+        // ========== 3. CRÉER LES PLANS TARIFAIRES ==========
+        $this->call(PricingPlanSeeder::class);
+        $this->command->info('✓ Plans tarifaires créés !');
+
+        // ========== 4. CRÉER LE BLOG (CATÉGORIES ET ARTICLES) ==========
+        $this->call(BlogSeeder::class);
+        $this->command->info('✓ Blog (catégories et articles) créé !');    
     }
 }

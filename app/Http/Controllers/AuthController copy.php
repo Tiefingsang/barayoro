@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Company;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
+use App\Models\Company;
+
+
+use Illuminate\Support\Facades\DB;
+
 
 class AuthController extends Controller
 {
@@ -25,19 +30,19 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        //dd('rrrr');
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
+        //dd('rrrr');
+
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
             // Mettre à jour la dernière connexion
-            Auth::user()->update([
-                'last_login_at' => now(),
-                'last_activity_at' => now(),
-            ]);
+            Auth::user()->update(['last_login_at' => now()]);
 
             return redirect()->intended('/dashboard');
         }
@@ -56,199 +61,199 @@ class AuthController extends Controller
     }
 
     /**
-     * Traiter l'inscription d'une entreprise
+     * Traiter l'inscription
      */
-    public function register(Request $request)
+    /* public function register(Request $request)
     {
-        // Validation des données
-        $validated = $request->validate([
-            // Informations entreprise
+        // Validation
+        $request->validate([
             'company_name' => 'required|string|max:255',
-            'siret' => 'nullable|string|max:50|unique:companies,siret',
-            'phone' => 'nullable|string|max:20',
-            'country' => 'nullable|string|max:100',
-            'subscription_plan' => 'required|in:trial,premium',
-
-            // Informations administrateur
             'admin_name' => 'required|string|max:255',
-            'admin_position' => 'nullable|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8|confirmed',
+            'subscription_plan' => 'required|in:trial,premium',
             'terms' => 'accepted',
         ]);
 
-        // 1. Création de l'entreprise
+        // Création de l'entreprise
         $company = Company::create([
-            'uuid' => (string) Str::uuid(),
+            'uuid' => Str::uuid(),
             'name' => $request->company_name,
             'slug' => Str::slug($request->company_name . '-' . Str::random(6)),
             'email' => $request->email,
-            'phone' => $request->phone,
-            'country' => $request->country,
-            'siret' => $request->siret,
             'is_active' => true,
-            'subscription_status' => $request->subscription_plan === 'trial' ? 'active' : 'pending',
-            'subscription_started_at' => $request->subscription_plan === 'trial' ? now() : null,
+            'subscription_status' => $request->subscription_plan === 'trial' ? 'trial' : 'pending',
             'subscription_expires_at' => $request->subscription_plan === 'trial' ? now()->addDays(30) : null,
             'max_users' => $request->subscription_plan === 'trial' ? 5 : 999,
-            'settings' => [
-                'currency' => 'XOF',
-                'timezone' => 'Africa/Dakar',
-                'language' => 'fr',
-                'date_format' => 'd/m/Y',
-            ],
+            'trial_ends_at' => now()->addDays(30),
+            'subscription_started_at' => now(),
         ]);
 
-        // 2. Vérifier que les rôles existent, sinon les créer
-        $this->ensureRolesExist();
-
-        // 3. Création de l'utilisateur administrateur
+        // Création de l'utilisateur admin
         $user = User::create([
-            'uuid' => (string) Str::uuid(),
-            'company_id' => $company->id,
-            'name' => $request->admin_name,
-            'username' => Str::slug($request->admin_name) . '-' . Str::random(4),
-            'email' => $request->email,
-            'position' => $request->admin_position ?? 'Administrateur',
-            'password' => Hash::make($request->password),
-            'is_active' => true,
-            'email_verified_at' => now(),
-            'timezone' => 'Africa/Dakar',
-            'language' => 'fr',
-            'preferences' => [
-                'theme' => 'light',
-                'notifications' => true,
-                'dashboard_widgets' => ['tasks', 'stats', 'recent_activity'],
-            ],
-        ]);
-
-        // 4. Assigner le rôle ADMIN à l'utilisateur
-        $user->assignRole('admin');
-
-        // 5. Créer automatiquement un département par défaut
-        $this->createDefaultDepartment($company, $user);
-
-        // 6. Créer des tâches de bienvenue
-        $this->createWelcomeTasks($company, $user);
-
-        // 7. Connecter l'utilisateur automatiquement
-        Auth::login($user);
-
-        // 8. Redirection vers le tableau de bord avec message de bienvenue
-        return redirect()->route('dashboard')->with('success', 'Bienvenue sur Barayoro ! Votre entreprise a été créée avec succès. Vous êtes maintenant administrateur et pouvez ajouter des utilisateurs.');
-    }
-
-    /**
-     * S'assurer que les rôles existent
-     */
-    private function ensureRolesExist()
-    {
-        $roles = ['admin', 'manager', 'employee'];
-
-        foreach ($roles as $role) {
-            if (!\Spatie\Permission\Models\Role::where('name', $role)->exists()) {
-                \Spatie\Permission\Models\Role::create(['name' => $role]);
-            }
-        }
-
-        // Créer les permissions si elles n'existent pas
-        $permissions = [
-            'view_users', 'create_users', 'edit_users', 'delete_users',
-            'view_tasks', 'create_tasks', 'edit_tasks', 'delete_tasks', 'assign_tasks',
-            'view_projects', 'create_projects', 'edit_projects', 'delete_projects',
-            'view_clients', 'create_clients', 'edit_clients', 'delete_clients',
-            'view_invoices', 'create_invoices', 'edit_invoices', 'delete_invoices', 'pay_invoices',
-            'view_reports', 'export_reports',
-            'manage_settings', 'manage_company',
-        ];
-
-        foreach ($permissions as $perm) {
-            \Spatie\Permission\Models\Permission::firstOrCreate(['name' => $perm]);
-        }
-
-        // Assigner les permissions aux rôles
-        $adminRole = \Spatie\Permission\Models\Role::findByName('admin');
-        $managerRole = \Spatie\Permission\Models\Role::findByName('manager');
-        $employeeRole = \Spatie\Permission\Models\Role::findByName('employee');
-
-        // Admin : toutes les permissions
-        $adminRole->syncPermissions(\Spatie\Permission\Models\Permission::all());
-
-        // Manager : permissions de gestion
-        $managerRole->syncPermissions([
-            'view_users', 'create_users', 'edit_users',
-            'view_tasks', 'create_tasks', 'edit_tasks', 'assign_tasks',
-            'view_projects', 'create_projects', 'edit_projects',
-            'view_clients', 'create_clients', 'edit_clients',
-            'view_invoices', 'create_invoices', 'edit_invoices',
-            'view_reports', 'export_reports',
-        ]);
-
-        // Employee : accès limité
-        $employeeRole->syncPermissions([
-            'view_tasks', 'edit_tasks',
-            'view_projects',
-            'view_clients',
-        ]);
-    }
-
-    /**
-     * Créer un département par défaut
-     */
-    private function createDefaultDepartment($company, $user)
-    {
-        \App\Models\Department::create([
             'uuid' => Str::uuid(),
             'company_id' => $company->id,
-            'name' => 'Général',
-            'code' => 'GEN-' . strtoupper(Str::random(4)),
-            'description' => 'Département par défaut',
-            'manager_id' => $user->id,
+            'name' => $request->admin_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             'is_active' => true,
         ]);
+
+        $user->assignRole('admin');
+        Auth::login($user);
+
+        return redirect()->route('dashboard')->with('success', 'Compte créé avec succès !');
+    } */
+
+        public function register(Request $request)
+{
+    // Validation
+    $request->validate([
+        'company_name' => 'required|string|max:255',
+        'admin_name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:8|confirmed',
+        'subscription_plan' => 'required|in:trial,premium',
+        'terms' => 'accepted',
+    ]);
+
+    // Création de l'entreprise
+    $company = Company::create([
+        'uuid' => Str::uuid(),
+        'name' => $request->company_name,
+        'slug' => Str::slug($request->company_name . '-' . Str::random(6)),
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'country' => $request->country,
+        'siret' => $request->siret,
+        'is_active' => true,
+        'subscription_status' => 'trial',  // Maintenant 'trial' est accepté
+        'subscription_expires_at' => null,
+        'max_users' => 5,
+        'trial_ends_at' => now()->addDays(30),
+        'subscription_started_at' => now(),
+        'subscription_price' => 0,
+    ]);
+
+    // Création de l'utilisateur admin
+    $user = User::create([
+        'uuid' => Str::uuid(),
+        'company_id' => $company->id,
+        'name' => $request->admin_name,
+        'email' => $request->email,
+        'position' => $request->admin_position ?? 'Administrateur',
+        'password' => Hash::make($request->password),
+        'is_active' => true,
+    ]);
+
+    $user->assignRole('admin');
+    Auth::login($user);
+
+    return redirect()->route('dashboard')->with('success', 'Compte créé avec succès ! Vous bénéficiez de 30 jours d\'essai gratuit.');
+}
+
+
+    /**
+     * Afficher le formulaire de mot de passe oublié
+     */
+    public function showForgotForm()
+    {
+        return view('auth.forgot-password');
     }
 
     /**
-     * Créer des tâches de bienvenue
+     * Envoyer le lien de réinitialisation
      */
-    private function createWelcomeTasks($company, $user)
+    public function sendResetLink(Request $request)
     {
-        $tasks = [
-            [
-                'title' => 'Bienvenue sur Barayoro !',
-                'description' => 'Découvrez toutes les fonctionnalités de la plateforme',
-                'priority' => 'high',
-                'due_date' => now()->addDays(7),
-            ],
-            [
-                'title' => 'Ajoutez vos premiers collaborateurs',
-                'description' => 'Invitez vos collègues à rejoindre votre entreprise',
-                'priority' => 'high',
-                'due_date' => now()->addDays(14),
-            ],
-            [
-                'title' => 'Créez votre premier projet',
-                'description' => 'Commencez à organiser vos activités',
-                'priority' => 'medium',
-                'due_date' => now()->addDays(21),
-            ],
-        ];
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
 
-        foreach ($tasks as $task) {
-            \App\Models\Task::create([
-                'uuid' => Str::uuid(),
-                'company_id' => $company->id,
-                'assigned_to' => $user->id,
-                'created_by' => $user->id,
-                'title' => $task['title'],
-                'description' => $task['description'],
-                'status' => 'pending',
-                'priority' => $task['priority'],
-                'due_date' => $task['due_date'],
-                'sync_status' => 'synced',
-            ]);
+        // Supprimer l'ancien token
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        // Récupérer le token créé (non haché pour le log)
+        $tokenRecord = DB::table('password_reset_tokens')->where('email', $request->email)->first();
+
+        // Le token est haché dans la base, mais on peut voir qu'il a été créé
+        \Log::info('Token créé pour: ' . $request->email);
+        \Log::info('Token hash dans DB: ' . ($tokenRecord ? $tokenRecord->token : 'non créé'));
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return redirect()->route('password.confirmation', ['email' => $request->email])
+                            ->with('status', 'Un lien de réinitialisation vous a été envoyé par email.');
         }
+
+        return back()->withErrors(['email' => 'Une erreur est survenue. Veuillez réessayer.']);
     }
+
+
+    public function showConfirmation(Request $request)
+    {
+        $email = $request->email;
+        return view('auth.forgot-password-confirmation', compact('email'));
+    }
+    /**
+     * Afficher le formulaire de réinitialisation
+     */
+    public function showResetForm($token)
+    {
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    /**
+     * Réinitialiser le mot de passe
+     */
+    public function resetPassword(Request $request)
+{
+    \Log::info('Tentative de réinitialisation', [
+        'email' => $request->email,
+        'token' => $request->token
+    ]);
+
+    // Vérifier si le token existe dans password_reset_tokens
+    $reset = DB::table('password_reset_tokens')
+        ->where('email', $request->email)
+        ->where('token', $request->token)
+        ->first();
+
+    \Log::info('Token trouvé dans DB: ' . ($reset ? 'Oui' : 'Non'));
+
+    $request->validate([
+        'token' => 'required',
+        'email' => 'required|email|exists:users,email',
+        'password' => 'required|min:8|confirmed',
+    ]);
+
+    $status = Password::reset(
+        $request->only('email', 'password', 'password_confirmation', 'token'),
+        function ($user, $password) {
+            \Log::info('Réinitialisation pour: ' . $user->email);
+            $user->forceFill([
+                'password' => Hash::make($password),
+                'remember_token' => Str::random(60),
+            ])->save();
+
+            event(new PasswordReset($user));
+        }
+    );
+
+    \Log::info('Statut de réinitialisation: ' . $status);
+
+    if ($status === Password::PASSWORD_RESET) {
+        // Supprimer le token après utilisation
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return redirect()->route('login')->with('status', 'Votre mot de passe a été réinitialisé avec succès. Connectez-vous avec votre nouveau mot de passe.');
+    }
+
+    return back()->withErrors(['email' => 'Une erreur est survenue. Veuillez réessayer.']);
+}
 
     /**
      * Déconnecter l'utilisateur
@@ -260,6 +265,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect('/');
     }
 }

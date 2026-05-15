@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ asset('assets/images/Barayoro_logo.png') }}" type="image/x-icon" />
     
     <title>@yield('title', 'Barayoro - Solution SaaS de gestion d\'entreprise')</title>
     <meta name="description" content="@yield('description', 'Barayoro est la solution SaaS tout-en-un pour gérer vos ventes, factures, stocks, projets et équipes.')" />

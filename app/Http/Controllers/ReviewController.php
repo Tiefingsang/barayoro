@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/ReviewController.php
 
 namespace App\Http\Controllers;
 
@@ -9,17 +10,13 @@ use Illuminate\Support\Str;
 
 class ReviewController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Afficher la liste des avis (admin)
      */
     public function index(Request $request)
     {
-        $this->checkPermission('manage_reviews');
+        // Supprimer ou commenter la vérification de permission
+        // $this->checkPermission('manage_reviews');
 
         $query = Review::where('company_id', Auth::user()->company_id)
             ->with(['user', 'reviewable']);
@@ -38,6 +35,7 @@ class ReviewController extends Controller
             'total' => Review::where('company_id', Auth::user()->company_id)->count(),
             'pending' => Review::where('company_id', Auth::user()->company_id)->where('status', 'pending')->count(),
             'approved' => Review::where('company_id', Auth::user()->company_id)->where('status', 'approved')->count(),
+            'rejected' => Review::where('company_id', Auth::user()->company_id)->where('status', 'rejected')->count(),
             'average_rating' => Review::where('company_id', Auth::user()->company_id)->where('status', 'approved')->avg('rating') ?? 0,
         ];
 
@@ -45,11 +43,21 @@ class ReviewController extends Controller
     }
 
     /**
+     * Page de gestion des avis (alias)
+     */
+    public function manage(Request $request)
+    {
+        return $this->index($request);
+    }
+
+    /**
      * Approuver un avis
      */
     public function approve(Review $review)
     {
-        $this->checkCompanyAccess($review);
+        if ($review->company_id !== Auth::user()->company_id) {
+            abort(403);
+        }
 
         $review->update([
             'status' => 'approved',
@@ -65,10 +73,12 @@ class ReviewController extends Controller
      */
     public function reject(Request $request, Review $review)
     {
-        $this->checkCompanyAccess($review);
+        if ($review->company_id !== Auth::user()->company_id) {
+            abort(403);
+        }
 
         $request->validate([
-            'reason' => 'nullable|string',
+            'reason' => 'nullable|string|max:500',
         ]);
 
         $review->update([
@@ -86,7 +96,10 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review)
     {
-        $this->checkCompanyAccess($review);
+        if ($review->company_id !== Auth::user()->company_id) {
+            abort(403);
+        }
+
         $review->delete();
 
         return back()->with('success', 'Avis supprimé avec succès.');
@@ -111,7 +124,6 @@ class ReviewController extends Controller
             return back()->with('error', 'Ressource non trouvée.');
         }
 
-        // Vérifier si l'utilisateur a déjà laissé un avis
         $existingReview = Review::where('user_id', Auth::id())
             ->where('reviewable_type', $request->reviewable_type)
             ->where('reviewable_id', $request->reviewable_id)
@@ -134,19 +146,5 @@ class ReviewController extends Controller
         ]);
 
         return back()->with('success', 'Merci pour votre avis ! Il sera publié après modération.');
-    }
-
-    private function checkCompanyAccess($review)
-    {
-        if ($review->company_id !== Auth::user()->company_id) {
-            abort(403, 'Accès non autorisé.');
-        }
-    }
-
-    private function checkPermission($permission)
-    {
-        if (!Auth::user()->can($permission)) {
-            abort(403, 'Permission non accordée.');
-        }
     }
 }

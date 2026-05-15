@@ -14,79 +14,87 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
+use App\Models\HelpArticle;
+use App\Models\HelpCategory;
+
 
 class PageController extends Controller
 {
     /**
      * Page d'accueil dynamique
      */
-    public function home()
-    {
-        if (auth()->check()) {
-            return redirect()->route('dashboard');
-        }
+   /**
+ * Page d'accueil dynamique
+ */
+public function home()
+{
+  
 
-        // Récupérer les offres d'emploi actives
-        $jobOffers = JobOffer::where('is_active', true)
-            ->where(function($q) {
-                $q->whereNull('expires_at')
-                  ->orWhere('expires_at', '>', now());
-            })
-            ->with('company')
-            ->orderBy('created_at', 'desc')
-            ->take(10)
-            ->get();
+    // Récupérer les offres d'emploi actives
+    $jobOffers = JobOffer::where('is_active', true)
+        ->where(function($q) {
+            $q->whereNull('expires_at')
+              ->orWhere('expires_at', '>', now());
+        })
+        ->with('company')
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
 
-        // Types d'entreprises pour le filtre
-        $companyTypes = Company::whereNotNull('type')
-            ->distinct()
-            ->select('type as name', DB::raw("LOWER(REPLACE(REPLACE(type, ' ', '-'), 'é', 'e')) as slug"))
-            ->get();
+    // Types d'entreprises pour le filtre
+    $companyTypes = Company::whereNotNull('type')
+        ->distinct()
+        ->select('type as name', DB::raw("LOWER(REPLACE(REPLACE(type, ' ', '-'), 'é', 'e')) as slug"))
+        ->get();
 
-        // Fonctionnalités
-        $features = Feature::where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
+    // Fonctionnalités
+    $features = Feature::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
 
-        // Plans tarifaires
-        $pricingPlans = PricingPlan::where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
+    // Plans tarifaires
+    $pricingPlans = PricingPlan::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
 
-        // Statistiques
-        $totalCompaniesCount = Company::count();
-        
-        // Entreprises de confiance (avec logo)
-        $trustedCompanies = Company::whereNotNull('logo')
-            ->take(3)
-            ->get();
-        
-        // Logos partenaires
-        $partnerLogos = PartnerLogo::where('is_active', true)->get();
+    // Statistiques
+    $totalCompaniesCount = Company::count();
+    
+    // Entreprises de confiance - Récupère les entreprises avec ou sans logo
+    $trustedCompanies = Company::where('is_active', true)
+        ->take(6)
+        ->get();
+    
+    // Logos partenaires
+    $partnerLogos = PartnerLogo::where('is_active', true)->get();
 
-        // Paramètres globaux
-        $settings = [
-            'hero_description' => Setting::getValue('hero_description', 'Barayoro est la solution SaaS tout-en-un pour gérer vos ventes, factures, stocks, projets et équipes. Accédez à vos données partout, même hors ligne.'),
-            'meta_description' => Setting::getValue('meta_description', 'Barayoro est la solution SaaS tout-en-un pour gérer votre entreprise. Facturation, stocks, projets, équipes. Essai gratuit 30 jours.'),
-        ];
-        
-        $featuresTitle = Setting::getValue('features_title', 'Tout ce dont votre entreprise a besoin');
-        $featuresSubtitle = Setting::getValue('features_subtitle', 'Une solution complète pour gérer l\'ensemble de vos activités professionnelles');
+    // Paramètres globaux
+    $settings = [
+        'hero_description' => Setting::getValue('hero_description', 'Barayoro est la solution SaaS tout-en-un pour gérer vos ventes, factures, stocks, projets et équipes. Accédez à vos données partout, même hors ligne.'),
+        'meta_description' => Setting::getValue('meta_description', 'Barayoro est la solution SaaS tout-en-un pour gérer votre entreprise. Facturation, stocks, projets, équipes. Essai gratuit 30 jours.'),
+    ];
+    
+    $featuresTitle = Setting::getValue('features_title', 'Tout ce dont votre entreprise a besoin');
+    $featuresSubtitle = Setting::getValue('features_subtitle', 'Une solution complète pour gérer l\'ensemble de vos activités professionnelles');
 
-        return view('welcome', compact(
-            'jobOffers',
-            'companyTypes',
-            'features',
-            'pricingPlans',
-            'totalCompaniesCount',
-            'trustedCompanies',
-            'partnerLogos',
-            'settings',
-            'featuresTitle',
-            'featuresSubtitle'
-        ));
-    }
-
+    return view('welcome', compact(
+        'jobOffers',
+        'companyTypes',
+        'features',
+        'pricingPlans',
+        'totalCompaniesCount',
+        'trustedCompanies',
+        'partnerLogos',
+        'settings',
+        'featuresTitle',
+        'featuresSubtitle'
+    ));
+}
     /**
      * Page À propos
      */
@@ -178,7 +186,7 @@ class PageController extends Controller
                 ],
                 (object)[
                     'name' => 'Premium',
-                    'price' => 490,
+                    'price' => 49000,
                     'period' => 'an',
                     'features' => ['Utilisateurs illimités', 'Toutes les fonctionnalités', 'Support prioritaire 24/7', 'Stockage: 100GB', 'API dédiée', 'Formation incluse'],
                     'button_text' => 'Choisir Premium',
@@ -224,10 +232,54 @@ class PageController extends Controller
         return view('pages.contact');
     }
 
+
+    /**
+ * Page Fonctionnalités
+ */
+public function features()
+{
+    $features = Feature::where('is_active', true)
+        ->orderBy('sort_order')
+        ->get();
+    
+    return view('pages.features', compact('features'));
+}
+
+/**
+ * Page Offres d'emploi
+ */
+public function jobs()
+{
+    $jobOffers = JobOffer::where('is_active', true)
+        ->where(function($q) {
+            $q->whereNull('expires_at')
+              ->orWhere('expires_at', '>', now());
+        })
+        ->with('company')
+        ->orderBy('created_at', 'desc')
+        ->paginate(10);
+    
+    $companyTypes = Company::whereNotNull('type')
+        ->distinct()
+        ->select('type as name', DB::raw("LOWER(REPLACE(REPLACE(type, ' ', '-'), 'é', 'e')) as slug"))
+        ->get();
+    
+    return view('pages.jobs', compact('jobOffers', 'companyTypes'));
+}
+
+/**
+ * Détail offre d'emploi
+ */
+public function jobDetail($id)
+{
+    $job = JobOffer::with('company')->findOrFail($id);
+    return view('pages.job-detail', compact('job'));
+}
+
     /**
      * Traiter le formulaire de contact
      */
-    public function sendContact(Request $request)
+    /* public function sendContact(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -268,14 +320,176 @@ class PageController extends Controller
         }
 
         return redirect()->route('contact')->with('success', 'Votre message a été envoyé avec succès !');
+    } */
+public function sendContact(Request $request)
+{
+    // 1. Vérification anti-spam (rate limiting)
+    $throttleKey = 'contact:' . $request->ip();
+    
+    if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+        $seconds = RateLimiter::availableIn($throttleKey);
+        $minutes = ceil($seconds / 60);
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => "Trop de messages envoyés. Veuillez réessayer dans {$minutes} minute(s)."
+            ], 429);
+        }
+        
+        return back()->with('error', "Trop de messages envoyés. Veuillez réessayer dans {$minutes} minute(s).")
+            ->withInput();
     }
+    
+    // 2. Validation stricte des entrées (sans subject car pas dans le formulaire)
+    $validated = $request->validate([
+        'name' => 'required|string|max:100|regex:/^[a-zA-Z\s\-\'àâäéèêëïîôöùûüçÀÂÄÉÈÊËÏÎÔÖÙÛÜÇ]+$/u',
+        'email' => 'required|email|max:255|regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+        'phone' => 'nullable|string|max:20|regex:/^[0-9+\-\s]{8,20}$/',
+        'message' => 'required|string|min:10|max:5000',
+    ]);
+    
+    // 3. Anti-bot (honeypot - champ caché à ajouter dans le formulaire)
+    $honeypot = $request->input('_website', '');
+    if (!empty($honeypot)) {
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Message envoyé']);
+        }
+        return redirect()->route('contact')->with('success', 'Message envoyé');
+    }
+    
+    // 4. Nettoyage anti-XSS
+    $cleanedName = htmlspecialchars(trim($validated['name']), ENT_QUOTES, 'UTF-8');
+    $cleanedEmail = filter_var(trim($validated['email']), FILTER_SANITIZE_EMAIL);
+    $cleanedPhone = $validated['phone'] ? preg_replace('/[^0-9+]/', '', $validated['phone']) : null;
+    $cleanedMessage = htmlspecialchars(trim($validated['message']), ENT_QUOTES, 'UTF-8');
+    
+    // Sujet par défaut (pas de champ subject dans le formulaire)
+    $cleanedSubject = 'Message depuis le site Barayoro';
+    
+    // 5. Vérification anti-spam (emails temporaires)
+    $temporaryDomains = ['tempmail.com', '10minutemail.com', 'guerrillamail.com', 'mailinator.com', 'yopmail.com', 'temp-mail.org'];
+    $emailDomain = substr(strrchr($cleanedEmail, "@"), 1);
+    
+    if (in_array($emailDomain, $temporaryDomains)) {
+        RateLimiter::hit($throttleKey, 300);
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Veuillez utiliser une adresse email valide et permanente.'
+            ], 422);
+        }
+        
+        return back()->with('error', 'Veuillez utiliser une adresse email valide et permanente.')
+            ->withInput();
+    }
+    
+    // 6. Vérification des mots-clés de spam
+    $spamKeywords = ['viagra', 'casino', 'poker', 'lottery', 'winner', 'prize', 'bitcoin', 'crypto', 'gagner', 'argent facile'];
+    $messageLower = strtolower($cleanedMessage);
+    $spamCount = 0;
+    
+    foreach ($spamKeywords as $keyword) {
+        if (strpos($messageLower, $keyword) !== false) {
+            $spamCount++;
+        }
+    }
+    
+    if ($spamCount > 2) {
+        RateLimiter::hit($throttleKey, 3600);
+        
+        \Log::warning('Spam détecté dans formulaire de contact', [
+            'ip' => $request->ip(),
+            'email' => $cleanedEmail,
+            'spam_keywords_count' => $spamCount
+        ]);
+        
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Votre message contient des termes inappropriés.'
+            ], 422);
+        }
+        
+        return back()->with('error', 'Votre message contient des termes inappropriés.')->withInput();
+    }
+    
+    // 7. Sauvegarde en base avec données nettoyées
+    $contact = \App\Models\ContactMessage::create([
+        'name' => $cleanedName,
+        'email' => $cleanedEmail,
+        'phone' => $cleanedPhone,
+        'subject' => $cleanedSubject,  // Sujet par défaut
+        'message' => $cleanedMessage,
+        'ip_address' => $request->ip(),
+        'user_agent' => substr($request->userAgent() ?? 'Unknown', 0, 500),
+        'status' => 'pending',
+        'submitted_at' => now(),
+    ]);
+    
+    // 8. Incrémenter le compteur de tentatives
+    RateLimiter::hit($throttleKey, 3600);
+    
+    // 9. Envoyer une notification par email
+    $emailSent = false;
+    try {
+        $adminEmail = config('mail.admin_address', 'admin@barayoro.com');
+        
+        \Mail::send('emails.contact-notification', [
+            'name' => $cleanedName,
+            'email' => $cleanedEmail,
+            'phone' => $cleanedPhone ?? 'Non fourni',
+            'subject' => $cleanedSubject,
+            'message' => $cleanedMessage,
+            'contact_id' => $contact->id,
+            'ip' => $request->ip(),
+        ], function($mail) use ($adminEmail, $cleanedEmail, $cleanedName) {
+            $mail->to($adminEmail)
+                ->subject('📬 Nouveau message de contact - Barayoro')
+                ->replyTo($cleanedEmail, $cleanedName)
+                ->from(config('mail.from.address'), 'Barayoro Contact');
+        });
+        
+        $emailSent = true;
+        $contact->update(['email_sent_at' => now(), 'email_sent' => true]);
+        
+    } catch (\Exception $e) {
+        \Log::error('Erreur envoi email contact: ' . $e->getMessage(), [
+            'contact_id' => $contact->id,
+            'email' => $cleanedEmail
+        ]);
+        $contact->update(['email_error' => $e->getMessage()]);
+    }
+    
+    // 10. Journalisation
+    \Log::channel('audit')->info('Message de contact reçu', [
+        'contact_id' => $contact->id,
+        'email' => substr($cleanedEmail, 0, 3) . '***@***',
+        'ip' => $request->ip(),
+        'email_sent' => $emailSent
+    ]);
+    
+    // 11. Réponse
+    $successMessage = 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.';
+    
+    if ($request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => $successMessage,
+            'contact_id' => $contact->id
+        ]);
+    }
+    
+    return redirect()->route('contact')->with('success', $successMessage);
+}
 
     /**
      * Page Centre d'aide
      */
     public function helpCenter()
     {
-        $popularArticles = HelpArticle::where('is_active', true)
+        /* $popularArticles = HelpArticle::where('is_active', true)
             ->where('is_popular', true)
             ->orderBy('views', 'desc')
             ->take(5)
@@ -285,9 +499,9 @@ class PageController extends Controller
             ->with(['articles' => function($q) {
                 $q->where('is_active', true)->limit(5);
             }])
-            ->get();
+            ->get(); */
         
-        return view('pages.help-center', compact('popularArticles', 'categories'));
+        return view('pages.help-center'/* , compact('popularArticles', 'categories') */);
     }
 
     /**

@@ -10,7 +10,7 @@
                  width="36" 
                  height="36"
                  class="object-contain dark:hidden">
-            <img src="{{ asset('assets/images/Barayoro_logo_white.png') }}" 
+            <img src="{{ asset('assets/images/Barayoro_logo.png') }}" 
                  alt="Barayoro Logo" 
                  width="36" 
                  height="36"
@@ -359,6 +359,7 @@
                     <span>Chat</span>
                 </a>
             </li>
+            
         </ul>
 
         <!-- RAPPORTS -->

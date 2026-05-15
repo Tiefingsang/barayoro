@@ -9,6 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -189,11 +190,7 @@ class User extends Authenticatable
     }
 
     // Accessors
-    public function getAvatarUrlAttribute()
-    {
-        return $this->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
-    }
-
+ 
     public function getFullNameAttribute()
     {
         return $this->name;
@@ -238,4 +235,70 @@ class User extends Authenticatable
     {
         return $this->company_id === $user->company_id && ($this->isAdmin() || $this->id === $user->manager_id);
     }
+
+    // app/Models/User.php - Ajoutez ces méthodes
+
+public function referrals()
+{
+    return $this->hasMany(Referral::class, 'referrer_id');
+}
+
+public function referredBy()
+{
+    return $this->hasMany(Referral::class, 'referred_id');
+}
+
+public function referralRewards()
+{
+    return $this->hasMany(ReferralReward::class);
+}
+
+
+
+
+/**
+ * Get the user's avatar URL (pour la compatibilité avec le dashboard)
+ */
+/**
+ * Get profile photo (alias pour compatibilité)
+ */
+/**
+ * Get the user's avatar URL
+ */
+public function getAvatarUrlAttribute()
+{
+    $avatar = $this->getRawOriginal('avatar');
+
+    if ($avatar && Storage::disk('public')->exists($avatar)) {
+        return asset('storage/' . $avatar);
+    }
+
+    return 'https://ui-avatars.com/api/?background=ff6c00&color=fff&name=' . urlencode($this->name) . '&size=128';
+}
+
+public function getProfilePhotoAttribute()
+{
+    return $this->avatar_url;
+}
+
+/**
+ * Get profile photo (alias pour la vue)
+ */
+
+/**
+ * Get the user's avatar URL (accesseur principal)
+ */
+
+
+/**
+ * Get avatar for display (alias)
+ */
+public function getAvatarAttribute($value)
+{
+    if ($value && Storage::disk('public')->exists($value)) {
+        return asset('storage/' . $value);
+    }
+    
+    return 'https://ui-avatars.com/api/?background=ff6c00&color=fff&name=' . urlencode($this->name);
+}
 }

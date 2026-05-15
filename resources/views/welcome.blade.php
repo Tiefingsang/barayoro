@@ -237,7 +237,7 @@
                 Des formules pour tous les besoins
             </h2>
             <p class="text-xl text-gray-600">
-                Choisissez le plan qui correspond à votre activité. Sans engagement.
+                Choisissez le plan qui correspond à votre activité. Sans engagement. 
             </p>
         </div>
         

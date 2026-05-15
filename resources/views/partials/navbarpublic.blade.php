@@ -3,12 +3,10 @@
     <div class="container mx-auto px-4 md:px-6 py-4">
         <div class="flex flex-wrap justify-between items-center">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
-                    <span class="text-white font-bold text-xl">B</span>
-                </div>
-                <span class="text-2xl font-bold text-gray-800">Barayoro</span>
-            </a>
+           <a href="{{ route('home') }}" class="flex items-center space-x-2">
+    <img src="{{ asset('assets/images/barayoro_ligne.jpeg') }}" alt="Barayoro Logo" class="h-10 w-auto">
+   {{--  <span class="text-2xl font-bold text-gray-800">Barayoro</span> --}}
+</a>
 
             <!-- Menu Desktop -->
             <div class="hidden md:flex items-center space-x-8">

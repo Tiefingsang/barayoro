@@ -4,12 +4,10 @@
         <div class="grid md:grid-cols-4 gap-8 mb-12">
             <!-- Colonne 1: Logo et description -->
             <div>
-                <div class="flex items-center space-x-2 mb-4">
-                    <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">B</span>
-                    </div>
-                    <span class="text-2xl font-bold text-white">Barayoro</span>
-                </div>
+               <div class="flex items-center space-x-2 mb-4">
+                <img src="{{ asset('assets/images/Barayoro_logo.png') }}" alt="Barayoro Logo" class="h-20 w-auto">
+                {{-- <span class="text-2xl font-bold text-white">Barayoro</span> --}}
+            </div>
                 <p class="text-gray-400 text-sm mb-4 leading-relaxed">
                     La solution SaaS complète pour la gestion d'entreprise en Afrique. Gérez vos ventes, 
                     factures, stocks, projets et équipes en un seul endroit.

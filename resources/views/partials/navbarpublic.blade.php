@@ -13,7 +13,7 @@
                 <a href="{{ route('home') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Accueil</a>
                 <a href="{{ route('features') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Fonctionnalités</a>
                 <a href="{{ route('jobs.list') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Offres d'emploi</a>
-                <a href="{{ route('pricing') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Tarifs</a>
+                {{-- <a href="{{ route('pricing') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Tarifs</a> --}}
                 <a href="{{ route('contact') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Contact</a>
                 <a href="{{ route('blog.list') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Blog</a>
             </div>

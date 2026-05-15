@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Sitemap: {{ url('/sitemap.xml') }}
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /register
+
+# Crawl-delay for heavy bots
+Crawl-delay: 5
+
+# Host
+Host: barayoro.com

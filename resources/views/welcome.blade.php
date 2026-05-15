@@ -3,6 +3,12 @@
 
 @section('title', 'Barayoro - Solution SaaS de gestion d\'entreprise | Par Masadigitale')
 @section('description', 'Barayoro est la solution SaaS tout-en-un pour gérer vos ventes, factures, stocks, projets et équipes. Essai gratuit 30 jours.')
+@section('description', 'Barayoro est la plateforme de gestion tout-en-un qui aide les entreprises africaines à gérer leurs ventes, factures, stocks et équipes. Essai gratuit 30 jours.')
+@section('keywords', 'gestion entreprise, SaaS, facturation, gestion projet, Orange Money, Wave, logiciel gestion PME, Barayoro')
+@section('og:title', 'Barayoro - Gérez votre entreprise simplement')
+@section('og:description', 'Découvrez Barayoro, la solution SaaS qui transforme la gestion de votre entreprise. Factures, tâches, projets, tout en un seul endroit.')
+@section('breadcrumb-schema')
+
 
 @section('content')
     <!-- Hero Section -->

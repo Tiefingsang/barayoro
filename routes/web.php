@@ -601,6 +601,21 @@ Route::middleware(['auth'])
 |--------------------------------------------------------------------------
 */
 
+
+// routes/web.php
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => url('/'), 'priority' => '1.0', 'changefreq' => 'weekly'],
+        ['loc' => route('features'), 'priority' => '0.9', 'changefreq' => 'monthly'],
+        ['loc' => route('pricing'), 'priority' => '0.9', 'changefreq' => 'weekly'],
+        ['loc' => route('contact'), 'priority' => '0.8', 'changefreq' => 'monthly'],
+        ['loc' => route('blog.index'), 'priority' => '0.7', 'changefreq' => 'daily'],
+        ['loc' => route('help.center'), 'priority' => '0.6', 'changefreq' => 'weekly'],
+    ];
+    
+    return response()->view('sitemap', compact('urls'))->header('Content-Type', 'text/xml');
+})->name('sitemap');
+
 Route::fallback(function () {
     return view('errors.404');
 });

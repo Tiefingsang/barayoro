@@ -36,31 +36,12 @@ class PricingPlanSeeder extends Seeder
                 'sort_order' => 1,
                 'is_active' => true,
             ],
-            [
-                'name' => 'Starter',
-                'subtitle' => 'Pour les petites entreprises',
-                'price' => 15000,
-                'period' => 'mois',
-                'features' => json_encode([
-                    'Jusqu\'à 10 utilisateurs',
-                    'Toutes les fonctionnalités',
-                    'Support prioritaire',
-                    'Stockage: 20GB',
-                    'Facturation illimitée',
-                    'Rapports avancés',
-                ]),
-                'button_text' => 'Choisir Starter',
-                'button_url' => '/register',
-                'icon' => 'las la-rocket',
-                'is_popular' => false,
-                'sort_order' => 2,
-                'is_active' => true,
-            ],
+            
             [
                 'name' => 'Business',
                 'subtitle' => 'Pour les PME en croissance',
-                'price' => 45000,
-                'period' => 'mois',
+                'price' => 49000,
+                'period' => 'an',
                 'features' => json_encode([
                     'Utilisateurs illimités',
                     'Toutes les fonctionnalités',
@@ -75,28 +56,10 @@ class PricingPlanSeeder extends Seeder
                 'button_url' => '/register',
                 'icon' => 'las la-chart-line',
                 'is_popular' => true,
-                'sort_order' => 3,
+                'sort_order' => 2,
                 'is_active' => true,
             ],
-            [
-                'name' => 'Annuel',
-                'subtitle' => 'Économisez 2 mois',
-                'price' => 490000,
-                'period' => 'an',
-                'features' => json_encode([
-                    'Tout le plan Business',
-                    '2 mois gratuits',
-                    'Support prioritaire',
-                    'Stockage: 200GB',
-                    'Formation offerte',
-                ]),
-                'button_text' => 'Choisir Annuel',
-                'button_url' => '/register',
-                'icon' => 'las la-calendar-check',
-                'is_popular' => false,
-                'sort_order' => 4,
-                'is_active' => true,
-            ],
+           
         ];
 
         foreach ($plans as $plan) {

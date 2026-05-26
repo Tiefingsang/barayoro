@@ -25,7 +25,7 @@
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition {{ $plan->is_popular ? 'ring-2 ring-orange-custom transform scale-105' : '' }}">
                     @if($plan->is_popular)
                     <div class="bg-orange-custom text-white text-center py-2 text-sm font-semibold">
-                        🌟 Le plus populaire
+                        Le plus populaire
                     </div>
                     @endif
                     
@@ -51,12 +51,14 @@
                         </a>
                         
                         <ul class="space-y-3">
+
                             @foreach(is_array($plan->features) ? $plan->features : (is_string($plan->features) ? json_decode($plan->features, true) ?? explode(',', $plan->features) : []) as $feature)
                             <li class="flex items-center gap-3">
                                 <i class="fas fa-check-circle text-green-500"></i>
                                 <span class="text-gray-600">{{ $feature }}</span>
                             </li>
                             @endforeach
+
                         </ul>
                     </div>
                 </div>

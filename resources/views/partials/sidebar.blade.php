@@ -262,21 +262,22 @@
             </li>
 
             <!-- Blog -->
-            <li class="relative">
-                <button :class="opened=='blog' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('blog')" class="submenu-btn-v">
-                    <span class="flex items-center gap-2">
-                        <i class="las la-newspaper text-xl text-primary-300"></i>
-                        <span>Blog</span>
-                    </span>
-                    <i :class="opened=='blog' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
-                </button>
-                <div x-show="opened=='blog'" x-collapse>
-                    <ul class="submenu-v" data-submenu="blog">
-                        <li><a href="{{ route('blog.list') }}" class="dropdown-link submenu-link-v">Articles publiés</a></li>
-                        <li><a href="{{ route('blog.create') }}" class="dropdown-link submenu-link-v">Ajouter un article</a></li>
-                    </ul>
-                </div>
-            </li>
+           <li class="relative">
+    <button :class="opened=='blog' ? 'bg-primary-50 text-primary-300' : ''" @click="openMenu('blog')" class="submenu-btn-v">
+        <span class="flex items-center gap-2">
+            <i class="las la-newspaper text-xl text-primary-300"></i>
+            <span>Blog</span>
+        </span>
+        <i :class="opened=='blog' ? 'las la-minus rotate-180 text-primary-300' : 'las la-plus'" class="text-lg duration-300"></i>
+    </button>
+    <div x-show="opened=='blog'" x-collapse>
+        <ul class="submenu-v" data-submenu="blog">
+            <li><a href="{{ route('blog.list') }}" class="dropdown-link submenu-link-v">Articles publiés</a></li>
+            <li><a href="{{ route('blog.create') }}" class="dropdown-link submenu-link-v">Ajouter un article</a></li>
+            <li><a href="{{ route('blog.index') }}" class="dropdown-link submenu-link-v">Gérer le Blog</a></li>
+        </ul>
+    </div>
+</li>
 
             <!-- Offres d'emploi -->
             <li class="relative">
@@ -384,6 +385,8 @@
                 </div>
             </li>
         </ul>
+
+                <p class="text-xs font-semibold mb-3 mt-5">Fin</p>
 
         <!-- ADMINISTRATION -->
         @can('access_admin')

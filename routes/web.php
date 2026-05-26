@@ -250,20 +250,26 @@ Route::middleware(['auth', 'subscription'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
+  /*
+    |--------------------------------------------------------------------------
+    | REVIEWS
+    |--------------------------------------------------------------------------
+    */
+
     Route::prefix('reviews')->name('reviews.')->group(function () {
 
         Route::get('/', [ReviewController::class, 'index'])->name('index');
 
         Route::get('/manage', [ReviewController::class, 'manage'])->name('manage');
 
-        Route::post('/{review}/approve', [ReviewController::class, 'approve'])
-            ->name('approve');
+        // AJOUTEZ CETTE LIGNE ICI POUR FIXER L'ERREUR :
+        Route::post('/store', [ReviewController::class, 'store'])->name('store');
 
-        Route::post('/{review}/reject', [ReviewController::class, 'reject'])
-            ->name('reject');
+        Route::post('/{review}/approve', [ReviewController::class, 'approve'])->name('approve');
 
-        Route::delete('/{review}', [ReviewController::class, 'destroy'])
-            ->name('destroy');
+        Route::post('/{review}/reject', [ReviewController::class, 'reject'])->name('reject');
+
+        Route::delete('/{review}', [ReviewController::class, 'destroy'])->name('destroy');
     });
 
     /*

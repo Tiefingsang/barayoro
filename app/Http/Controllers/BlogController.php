@@ -36,7 +36,7 @@ class BlogController extends Controller
         $posts = $query->orderBy('published_at', 'desc')->paginate(12);
         $categories = BlogCategory::where('is_active', true)->get();
 
-        return view('blog.list', compact('posts', 'categories'));
+        return view('blog.index', compact('posts', 'categories'));
     }
 
     /**

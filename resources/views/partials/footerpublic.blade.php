@@ -63,7 +63,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('blog.list') }}" class="text-gray-400 hover:text-orange-custom transition flex items-center gap-2">
+                        <a href="{{ route('pages.blog.public') }}" class="text-gray-400 hover:text-orange-custom transition flex items-center gap-2">
                             <i class="fas fa-chevron-right text-xs"></i>
                             <span>Blog</span>
                         </a>

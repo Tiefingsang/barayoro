@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\BlogPost;
+use App\Models\BlogCategory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -164,6 +165,9 @@ public function home()
     /**
      * Page Tarifs (dynamique depuis base de données)
      */
+   /**
+     * Page Tarifs (dynamique depuis base de données)
+     */
     public function pricing()
     {
         // Récupérer les plans depuis la base de données
@@ -171,10 +175,10 @@ public function home()
             ->orderBy('sort_order')
             ->get();
         
-        // Si pas de plans en base, utiliser les données par défaut
+        // Si pas de plans en base, utiliser les données par défaut (instances du Modèle)
         if ($plans->isEmpty()) {
             $plans = collect([
-                (object)[
+                new PricingPlan([
                     'name' => 'Essai',
                     'price' => 0,
                     'period' => '30 jours',
@@ -183,8 +187,8 @@ public function home()
                     'button_url' => route('register'),
                     'is_popular' => false,
                     'icon' => 'las la-gem',
-                ],
-                (object)[
+                ]),
+                new PricingPlan([
                     'name' => 'Premium',
                     'price' => 49000,
                     'period' => 'an',
@@ -193,13 +197,43 @@ public function home()
                     'button_url' => route('register'),
                     'is_popular' => true,
                     'icon' => 'las la-crown',
-                ],
+                ]),
             ]);
         }
 
         $currentPlan = Auth::check() ? Auth::user()->company->subscription_status ?? null : null;
 
         return view('pages.pricing', compact('plans', 'currentPlan'));
+    }
+
+
+    public function publicList(Request $request)
+    {
+        // On prépare la requête pour récupérer uniquement les articles publiés
+        $query = BlogPost::where('status', 'published')
+            ->with(['category', 'author']);
+
+        // Filtre par catégorie si demandé
+        if ($request->has('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Recherche par mot-clé si demandée
+        if ($request->has('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                  ->orWhere('excerpt', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        // On pagine à 9 articles par page pour un affichage propre en grille (3x3)
+        $posts = $query->orderBy('published_at', 'desc')->paginate(9);
+        
+        // On récupère uniquement les catégories actives pour les filtres
+        $categories = BlogCategory::where('is_active', true)->get();
+
+        // On renvoie vers la NOUVELLE vue Blade publique
+        return view('pages.blog-public', compact('posts', 'categories'));
     }
 
     /**

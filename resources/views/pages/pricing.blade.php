@@ -51,7 +51,7 @@
                         </a>
                         
                         <ul class="space-y-3">
-                            @foreach($plan->features ?? [] as $feature)
+                            @foreach(is_array($plan->features) ? $plan->features : (is_string($plan->features) ? json_decode($plan->features, true) ?? explode(',', $plan->features) : []) as $feature)
                             <li class="flex items-center gap-3">
                                 <i class="fas fa-check-circle text-green-500"></i>
                                 <span class="text-gray-600">{{ $feature }}</span>

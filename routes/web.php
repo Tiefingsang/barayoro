@@ -78,6 +78,7 @@ Route::get('/coming-soon', [PageController::class, 'comingSoon'])->name('coming.
 | BLOG PUBLIC
 |--------------------------------------------------------------------------
 */
+Route::get('/actualites', [PageController::class, 'publicList'])->name('pages.blog.public');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.list');
 

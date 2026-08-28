@@ -18,7 +18,7 @@
                 <a href="{{ route('pages.blog.public') }}" class="text-gray-600 hover:text-orange-custom transition duration-300">Blog</a>
             </div>
 
-            <!-- Boutons connexion/inscription -->
+            <!-- Boutons connexion/inscription --> 
             <div class="hidden md:flex items-center space-x-4">
                 @auth
                     <a href="{{ route('dashboard') }}" class="px-5 py-2 bg-orange-custom text-white rounded-lg hover:bg-orange-700 transition">
